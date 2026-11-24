@@ -1,0 +1,413 @@
+
+--- page 1 ---
+UI/UX Design & Frontend 
+Fundamentals
+Your  Name
+School/Unit
+Presentation Date
+Presentation Location
+CSC 419
+Advances in Web, Mobile and Blockchain
+--- page 2 ---
+Task 1
+This is the last section. Kindly list in the next slide(s) future projects or what to expect in subsequent months.
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+
+--- page 3 ---
+What is UI?
+
+--- page 4 ---
+What is UX?
+
+--- page 5 ---
+What is makes 
+them different?
+
+--- page 6 ---
+UI / UX
+● How a product feels to use
+● Flow, logic & task completion
+● Research, personas, journeys
+● Wireframing & prototyping
+● Usability testing & iteration
+User Experience (UX)
+● How a product looks visually
+● Colors, typography & spacing
+● Buttons, cards, icons & layout
+● Animations & micro-interactions
+● Design systems & style guides
+User Interface (UI)
+--- page 7 ---
+What are the core principles of 
+UI/UX?
+This is the last section. Kindly list in the next slide(s) future projects or what to expect in subsequent months.
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+
+--- page 8 ---
+Feedback
+Every user action needs a system 
+response. Hover states, loading 
+spinners, error messages — silence is 
+confusing.
+--- page 9 ---
+Example 1: Login Form.
+--- page 10 ---
+There is still on 
+problem with 
+this form.
+View password.
+--- page 11 ---
+Visibility
+Users should always know what the 
+system is doing. Status, feedback, and 
+affordances must be visible at a glance.
+--- page 12 ---
+Example 1: https://www.jumia.com.ng
+--- page 13 ---
+Visibility vs Feedback
+Visibility is passive — it's about the system's current state being 
+readable at any moment (e.g. a cart badge showing "3 items" 
+whether the user did anything or not). 
+Feedback is reactive — it's a direct response to something the user 
+just did. Clicking a button should trigger a hover state, a press 
+animation, then either a success message or an error. No action 
+should disappear into silence. 
+--- page 14 ---
+Consistency
+Same actions → same outcomes. 
+Inconsistency is a bug. It breaks trust 
+and creates cognitive load.
+Note: Design systems
+--- page 15 ---
+
+--- page 16 ---
+
+--- page 17 ---
+Hierarchy
+Not everything is equally important. 
+Visual weight guides the eye. Primary → 
+secondary → tertiary — always.
+--- page 18 ---
+
+--- page 19 ---
+Hierarchy
+Hierarchy helps users recognise key 
+information and distinguish it from less 
+important elements at a glance. Think of it 
+like a book: navigational cues on every page 
+remind you where you are, so you never get 
+lost.
+--- page 20 ---
+Example : https://userinyerface.com/
+--- page 21 ---
+Visual cues designers use to 
+establish hierarchy:
+Font size and weight — large and bold fonts emphasise 
+important information and calls to action
+Contrast — strategic use of contrasting colors directs 
+users to key elements
+Spacing — thoughtful spacing between elements shows 
+how different UI elements are related
+
+--- page 22 ---
+Accessibility - Design for Everyone  
+Design for the full spectrum of users. 
+WCAG contrast ratios, keyboard nav, 
+screen readers — non-negotiable.
+--- page 23 ---
+Example : Be my eyes
+--- page 24 ---
+Accessibility - Semantic HTML  
+Use <button> not <div onclick>. Use <nav>, 
+<main>, <h1>. Semantic elements give screen 
+readers the context they need to narrate your 
+UI correctly. Correct HTML is always the ﬁrst 
+step — ARIA is a last resort.
+--- page 25 ---
+Accessibility - Color Contrast  
+WCAG AA requires 4.5:1 contrast for body text 
+and 3:1 for large text. Use tools like Colour 
+Contrast Analyser. Never rely on color alone to 
+convey information — always pair it with text or 
+iconography.
+--- page 26 ---
+Accessibility - Keyboard Navigation 
+Every interactive element must be reachable 
+and operable via keyboard alone. Focus 
+indicators must be clearly visible. Tab order 
+must follow a logical reading sequence.
+--- page 27 ---
+Accessibility - ARIA Labels 
+aria-label, aria-describedby, role="..." ﬁll 
+semantic gaps HTML can't cover. Use them 
+sparingly — correct HTML ﬁrst, ARIA only where 
+HTML falls short
+--- page 28 ---
+Accessibility - Alt Text
+Every informative image needs descriptive alt 
+text. Decorative images get alt="". Complex 
+charts need long descriptions or an accessible 
+data table alternative.
+--- page 29 ---
+Accessibility - WCAG 2.2 AA
+The Web Content Accessibility Guidelines, 
+Level AA, is the legal standard in most 
+jurisdictions. Built around four principles — 
+Perceivable, Operable, Understandable, 
+Robust (POUR).
+--- page 30 ---
+Key requirements from WCAG (Web Content Accessibility 
+Guidelines):
+Sufficient contrast between foreground and background 
+colors (≥ 4.5:1 for body text)
+Alternative text for all informative images
+Proper keyboard navigation for all interactive elements
+Compatibility with assistive technology (screen readers, 
+switch controls)
+Appropriate padding and touch target sizes for motor 
+accessibility
+
+--- page 31 ---
+Cognitive Load
+Reduce mental effort. Show only what is 
+needed, group related things, and 
+never make users memorise.
+--- page 32 ---
+Example : Progressive disclosure:
+Osisi Onboarding screen.
+--- page 33 ---
+Example : Osisi Onboarding screen.
+--- page 34 ---
+Who can read the next slide?
+This is the last section. Kindly list in the next slide(s) future projects or what to expect in subsequent months.
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+
+--- page 35 ---
+Contrast
+Contrast directs attention. Use it 
+strategically to highlight what matters 
+most, and suppress it for secondary 
+actions.
+--- page 36 ---
+Contrast
+Contrast directs attention. Use it 
+strategically to highlight what matters 
+most, and suppress it for secondary 
+actions.
+--- page 37 ---
+Contrast
+A "Delete account" button in red on a white background 
+commands immediate attention and signals danger
+A secondary "Keep account" option in grey recedes — 
+reducing the chance of an accidental destructive action
+For critical information, higher, more jarring contrast 
+commands attention; for supportive content, softer 
+contrast keeps it from competing
+
+--- page 38 ---
+Proximity
+Things that belong together should stay 
+together. Users naturally perceive UI 
+elements that are close to each other as 
+related — this creates intuitive 
+groupings without needing labels or 
+dividers.
+--- page 39 ---
+Example : https://www.are.na/block/48
+57939
+--- page 40 ---
+Proximity
+On a video player: Play, Rewind, and 
+Fast-forward sit together because they 
+share a function. The Quit or Close button 
+lives separately — not just for aesthetics, 
+but to prevent accidental clicks that would 
+interrupt the experience.
+--- page 41 ---
+Alignment
+Clean lines make designs feel professional 
+and trustworthy. A strong grid system 
+establishes order and visual balance — 
+even when the grid itself is invisible, users 
+feel its presence in how easy it is to read 
+and navigate the interface.
+--- page 42 ---
+Alignment
+Consistent alignment creates 
+predictability. When elements line up with 
+each other, users can scan quickly. When 
+they don't, the eye stops and the brain has 
+to work harder to parse the layout.
+--- page 43 ---
+UI / UX Dark Parterns
+This is the last section. Kindly list in the next slide(s) future projects or what to expect in subsequent months.
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+
+--- page 44 ---
+Example
+https://www.eleken.co/blog-posts/da
+rk-patterns-examples
+--- page 45 ---
+The Design Process
+This is the last section. Kindly list in the next slide(s) future projects or what to expect in subsequent months.
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+
+--- page 46 ---
+Step Focus What it produces
+• Research
+• Define
+• Ideate
+• Prototype 
+• Test
+• Know the problem before 
+you design anything
+• Align on what success looks 
+like
+• Quantity over quality — 
+explore widely
+• Make it testable without 
+building it 
+• Watch, don't explain — 
+every insight is gold 
+• User interviews, competitive 
+analysis, analytics insights
+• Personas, user stories, 
+problem statements
+• Sketches, mood boards, 
+low-fidelity wireframes
+• Clickable mockups in 
+Figma or code 
+• Usability test recordings, 
+findings, prioritised fixes 
+The Design Process
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+--- page 47 ---
+The Frontend Stack
+Three layers. Every web interface is built from exactly these.
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+
+--- page 48 ---
+The skeleton
+● Elements: div, section, header, nav, main, footer
+● Semantic tags → better SEO + accessibility automatically
+● DOM: Document Object Model — the live tree JS manipulates
+● Forms, tables, media embedding
+● Attributes: id, class, data-*, aria-*
+HTML — Structure & Semantics
+--- page 49 ---
+The skin
+Cascade, specificity & inheritance — understand these deeply
+Box model: content / padding / border / margin
+Flexbox → 1D layout (rows or columns)
+Grid → 2D layout (rows and columns simultaneously)
+Custom properties (--tokens) for design system values
+Responsive design: media queries & container queries
+CSS — Presentation & Layout
+--- page 50 ---
+The muscles
+DOM manipulation & event handling
+Fetch API / async-await for data fetching
+ES Modules & bundlers (Vite, Webpack)
+Frameworks: React, Vue, Svelte, Solid
+State management patterns
+TypeScript for type safety at scale
+JavaScript — Behaviour & Interactivity
+--- page 51 ---
+Component-Based Architecture 
+Build once. Use everywhere. Change in one place, update everything.
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+
+--- page 52 ---
+Atomic Design 
+(Brad Frost) is 
+the standard 
+mental model
+https://atomicdesign.bradfr
+ost.com/chapter-2/
+--- page 53 ---
+Reusability — write a component once, use it in 50 places
+Encapsulation — a component owns its own styles and logic
+Single source of truth — one definition, no duplication
+Props → data in — parent passes data down to children
+Events → data out — children communicate up via callbacks
+Composition over inheritance — combine small things, don't extend 
+large ones
+Key Principles
+--- page 54 ---
+Design Systems
+The infrastructure layer that makes teams scale without chaos.
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+
+--- page 55 ---
+Named values for every design decision — the single source of truth 
+shared between design tools and code.
+--color-primary: #3B82F6;
+--space-4: 1rem;
+--text-lg: 1.125rem;
+--radius-md: 0.375rem;
+--shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+--bp-tablet: 768px;
+Design Tokens
+--- page 56 ---
+Shared coded components, built once and used by the whole team.
+● Button (all variants + states: default, hover, focus, disabled)
+● Input / Select / Checkbox / Radio
+● Modal / Drawer / Toast / Tooltip
+● Card / Badge / Avatar / Skeleton
+● Navigation patterns (sidebar, topnav, breadcrumbs)
+● Data tables + pagination
+Component Library
+--- page 57 ---
+A design system is only as good as its docs. Teams that skip this end up 
+with drift and inconsistency within months.
+● Usage guidelines and when-to-use for every component
+● Do / Don't visual examples
+● Accessibility notes per component
+● Copy & tone guidelines
+● Pattern and template library
+● Hosted in Storybook or Zeroheight
+Documentation
+--- page 58 ---
+Key Takeaways
+This is the last section. Kindly list in the next slide(s) future projects or what to expect in subsequent months.
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+
+--- page 59 ---
+Reusability — write a component once, use it in 50 places
+Encapsulation — a component owns its own styles and logic
+Single source of truth — one definition, no duplication
+Props → data in — parent passes data down to children
+Events → data out — children communicate up via callbacks
+Composition over inheritance — combine small things, don't extend 
+large ones
+Key Principles
+--- page 60 ---
+https://atomicdesign.bradfrost.com/chapter-2/ (only chapter 2)
+https://www.are.na/block/4857939 the whole book
+https://www.eleken.co/blog-posts/dark-patterns-examples this blog
+Consider these links to be part of this note.
+--- page 61 ---
+Thank you
+Any Questions
+www.pau.edu.ng pau_Nigeria
+ Pan-Atlantic University

@@ -45,15 +45,15 @@ Mocks take 10 objective items (from `quiz`) and `mockTheory` (default 4) theory 
 - Every essay-style answer in any course uses: Background → Answer and solution → Scenario → How they combine → Conclusion.
 - COS409: fill-in-the-gaps, MCQ, theory. Ethics: scenario with follow-up questions. CSC420: queries.
 - Courses without past papers follow the style of the papers that exist.
-- He has ADHD: short cards, one idea each, quick wins.
+- She has ADHD: short cards, one idea each, quick wins.
 
 ## Daily goals
 120 min on class days (23–26 Nov), 210 on free days, 240 in exam week, 60 on an exam day.
 
 ## Open tasks
-1. **Coverage audit (priority).** Omotayo found notes missing from the app. Compare each course against its source notes (slides/PDFs/study guides in his "1st Semester" folder) and add missing points as cards, recall items and quiz items. Keep the existing schema. Done 24 Nov: cos409 (Lectures 0–5 + syllabus) ins401 (all 11 slide decks) and sen412 (decks 0–3, 5, 7 + class exercises 28 Oct and 17 Nov; decks 1–2 are image-only PDFs, read from extracted slide images) and sen401 (weeks 2–6, 8–11 slides + teaching plan; weeks 1, 12, 13 have no slides yet). Next: sen408, csc420, sen418, sen419.
+1. **Coverage audit (priority).** Omotayo found notes missing from the app. Compare each course against its source notes (slides/PDFs/study guides in her "1st Semester" folder) and add missing points as cards, recall items and quiz items. Keep the existing schema. Done 24 Nov: cos409 (Lectures 0–5 + syllabus) ins401 (all 11 slide decks) and sen412 (decks 0–3, 5, 7 + class exercises 28 Oct and 17 Nov; decks 1–2 are image-only PDFs, read from extracted slide images) and sen401 (weeks 2–6, 8–11 slides + teaching plan; weeks 1, 12, 13 have no slides yet). Next: sen408, csc420, sen418, sen419.
 2. ~~Add `quiz` items to INS401 topics so its mock has a Section A.~~ Done 24 Nov (131 items).
-3. Add in-class transcripts when he provides them; tag those points "Said in class".
+3. Add in-class transcripts when she provides them; tag those points "Said in class".
 4. SEN419 blockchain topic once notes exist.
 5. Replace the claude.ai leaderboard with a real backend, or hide the live board on GitHub Pages.
 6. After each edit, open every route headlessly and check for "undefined", "NaN" or "went wrong".

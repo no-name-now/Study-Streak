@@ -1,0 +1,147 @@
+
+--- page 1 ---
+CSC 419
+Advances in Web, Mobile and Blockchain Development
+Deployment
+--- page 2 ---
+Why Does 
+Deployment 
+Matter?
+--- page 3 ---
+Why Deployment Matters
+● Building an app is only the ﬁrst half — it only delivers value when users can 
+access it.
+● Deployment is the bridge between “it works on my machine” and “real users 
+on real devices”.
+● Mistakes in deployment cost time, money, user trust.
+--- page 4 ---
+What is 
+deployment?
+--- page 5 ---
+What is deployment?
+Deployment refers to the process of making your application available to your 
+users.
+Web app deployment
+making a web application available on the internet so users can interact with it.
+Mobile app deployment
+delivering a mobile app to devices and making it available for use.
+--- page 6 ---
+Development 
+Process
+--- page 7 ---
+Development Process
+
+--- page 8 ---
+Key Steps For Web Deployment.
+ ● Prepare the code for deployment
+● Conﬁgure for production
+● Mistakes in deployment cost time, money, user trust.
+● Transfer to production environment
+● Launch publicly
+--- page 9 ---
+Key Steps For Web Deployment.
+ ● For Android: developer account, metadata, simple review process.
+● For iOS: stricter review, developer account, specify metadata, can take longer.
+● Consider testing (beta), deployment to internal/external users, store 
+requirements.
+● Additional issues: device fragmentation (Android versions/devices), app size, 
+app permissions.
+● Strategy for updates: iterative vs big releases.
+--- page 10 ---
+Hosting & 
+Platform Choices
+--- page 11 ---
+Things to consider
+ ● Static vs dynamic (static site, serverless functions, full backend).
+● Platform options: e.g., Vercel, Netlify, traditional VM/cloud, container platforms.
+● Considerations: cost, scalability, integration with CI/CD, ease of updates, 
+infrastructure management.
+--- page 12 ---
+
+--- page 13 ---
+Deployment 
+Strategies.
+--- page 14 ---
+Best Practices
+ ● Use version control (Git). 
+● Use environment variables, separate dev/staging/production conﬁgs.
+● Automate builds and deployments (CI/CD).
+● Minimise manual steps to reduce error.
+● Monitor performance and errors in production.
+● Rollback strategy: know how to revert.
+● Security: HTTPS, CORS, access controls.
+● For mobile: handle store updates, versioning, clear changelog
+--- page 15 ---
+Common Pitfalls
+ ● “Works on my machine” but fails in production because conﬁgs diﬀer.
+● Manual deployments cause drift and human error.
+● Neglecting rollback or hotﬁx planning.
+● Ignoring monitoring so you don’t know when things break.
+● Deploying without testing/staging environment.
+● For mobile: releasing bad version, missing store rules, fragmented devices 
+causing bugs.
+--- page 16 ---
+Mobile VS Web
+--- page 17 ---
+Mobile vs Web – What’s Different
+Web apps
+1. often easier to deploy/iterate 
+(just update server).
+2. immediate URL, instant 
+updates.
+3. low cost of distribution
+Mobile apps
+1. more constraints (app stores, 
+device versions, oﬄine 
+installs)
+2. version distribution, store 
+review, user installs/updates.
+3. High Cost of distribution
+--- page 18 ---
+Real-World 
+Example (Osisi)
+--- page 19 ---
+Osisi’s Stack
+ ● Frontend: Next.js (React) deployed via Vercel.
+● Backend: Convex.
+● Static assets: Cloudﬂare for images.
+● Transaction Emails: Resend.
+● Payments: Paystack.
+● Authentication: Auth0.
+--- page 20 ---
+Hands On
+--- page 21 ---
+Monitoring, 
+Maintenance & 
+Iteration
+--- page 22 ---
+Things to consider
+ ● Deployment isn’t the end. Y ou need to monitor performance, track errors, 
+collect user feedback.
+● Use logging tools, analytics, set alerts.
+● Plan updates: new features, bug ﬁxes, security patches.
+● For mobile: update app, make sure version compatibility, handle deprecated 
+APIs.
+● Maintain documentation of your deployment process for team continuity.
+--- page 23 ---
+Emerging Topics 
+& Future Trends
+--- page 24 ---
+The future
+ ● Containerization and orchestration (e.g., Kubernetes) for scaling. 
+● Serverless / edge deployments (faster, cheaper).
+● Hybrid web‐mobile apps (PWA) narrowing gap.
+● Continuous deployment and automatic rollbacks.
+● Security and compliance increasingly crucial.
+--- page 25 ---
+Summary & Key 
+Takeaways
+--- page 26 ---
+Summary
+ ● Deployment is as important as development.
+● For web and mobile apps, know the pipeline
+● Choose tools that match your project scope; avoid over‐engineering.
+● Automate, test, monitor.
+● Remember: deployment is ongoing.
+--- page 27 ---
+Any Questions?

@@ -1,0 +1,177 @@
+
+--- page 1 ---
+CSC 419
+Advances in Web, Mobile and Blockchain Development
+Deployment Practical
+--- page 2 ---
+Prerequisites
+1. Y ou must have a github account.
+2. Y ou must have a vercel account.
+3. Y ou must have git installed.
+4. Y our git must be connected to your github account.
+5. Y ou must have node.js installed
+--- page 3 ---
+Github
+--- page 4 ---
+Step 1 1. Go to 
+https://github.com/<username>
+--- page 5 ---
+Step 2 1. Click on Repositories
+
+--- page 6 ---
+Step 3 1. Click on New
+--- page 7 ---
+Step 4
+1. Repository name: 
+CSC-419-DEPLOYMENT
+2. Conﬁguration
+a. Choose visibility: Public
+b. Add README: True
+c. MIT Licence
+--- page 8 ---
+It should look like this.
+
+--- page 9 ---
+Click the “Code” Button.
+
+--- page 10 ---
+Copy the link to clone the repo
+
+--- page 11 ---
+Local Directory
+--- page 12 ---
+Steps
+● Create a folder called “CSC_419”
+● Within the “CSC_419” folder create new folder called “deployments”
+● Then clone the repo re just created.
+
+--- page 13 ---
+Steps
+● cd into “CSC-419-DEPLOYMENT”
+● Y ou should be here
+
+--- page 14 ---
+Installation
+--- page 15 ---
+Installing Vite
+--- page 16 ---
+Steps
+1. Go to this website: https://docs.convex.dev/quickstart/react
+2. In your command line run step one: 
+a. npm create vite@latest my-app -- --template react-ts 
+b. Then Select a linter (choose ESLint)
+
+--- page 17 ---
+Steps
+● The select Y es for the next question
+
+--- page 18 ---
+If successful, your terminal should look 
+like this.
+
+--- page 19 ---
+If successful, your “my-app” folder 
+should look like this.
+
+--- page 20 ---
+Installing 
+Convex
+--- page 21 ---
+Steps
+● Install - ‘npm install convex’
+● Set up a Convex dev deployment - ‘npx convex dev’
+
+--- page 22 ---
+Steps
+● Signup or login to convex.
+● Follow the steps
+
+--- page 23 ---
+You should see something like this in you 
+browser: Click conﬁrm.
+
+--- page 24 ---
+● Create a new project.
+Steps
+
+--- page 25 ---
+● Project Name: my-app
+Steps
+
+--- page 26 ---
+● Use the cloud deployment.
+Steps
+
+--- page 27 ---
+You should have a new folder called convex 
+in your “my-app” project.
+
+--- page 28 ---
+Your terminal should look like this.
+
+--- page 29 ---
+Your ‘.env.local’ ﬁle should have something 
+like this.
+The values will be diﬀerent for each person.
+--- page 30 ---
+Push to github.
+--- page 31 ---
+Steps
+● git add .
+● git commit -m ‘added nextjs and convex project’
+● git push
+--- page 32 ---
+Your repo should look like this.
+
+--- page 33 ---
+Hosting on 
+vercel.
+--- page 34 ---
+● In your vercel dashboard, click the “Add New” button.
+Steps
+
+--- page 35 ---
+● Then select “Project”
+Steps
+
+--- page 36 ---
+● Connect to your Git provider
+○ On the New Project page, under the Import Git Repository section, select the Git provider that 
+you would like to import your project from.
+○ Follow the prompts to sign in to either your GitHub, GitLab, or BitBucket account.
+Steps
+--- page 37 ---
+● Import your repository
+○ Find the repository in the list that you would like to import and select Import.
+Steps
+
+--- page 38 ---
+Change the ‘project name’ to whatever you want.
+
+--- page 39 ---
+Edit the Root Directory to point to “my-app”
+
+--- page 40 ---
+Select “my-app”.
+--- page 41 ---
+1. Y our Framework Preset should be - “Next.js”
+2. Y our Root Directory - “my-app”
+
+--- page 42 ---
+1. Y our Framework Preset should be - “Next.js”
+2. Y our Root Directory - “my-app”
+
+--- page 43 ---
+1. Click Deploy.
+
+--- page 44 ---
+You should have something like this.
+
+--- page 45 ---
+1. Click the ‘Continue to 
+Dashboard’ button.
+
+--- page 46 ---
+1. Click the ‘Visit’ button to see your deployed website.
+--- page 47 ---
+Thank you

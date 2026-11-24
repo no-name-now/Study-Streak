@@ -1,0 +1,483 @@
+
+--- page 1 ---
+Quick ones
+Convex: A Short, Practical Tutorial
+We'll back the audiobook player with a real database. Three tables power the screen:
+Table What it stores Where it shows in the UI
+books Title, author, narrator, 
+duration, chapters, cover
+Cover art, "UNABRIDGED" badge, 
+"Ch. 2" picker, "35:00 total"
+playbackProgressWhere each user stopped, 
+and their speed
+The 12:34 position and the "1.0x" 
+button
+bookmarks Saved timestamps with 
+optional notes
+The bookmarks list
+The bookmark rules stay the same: max 10 per chapter, notes up to 80 characters, sorted by
+timestamp, tap to seek, delete. The difference is that the data now lives on a server, syncs
+across devices, and updates live.
+What is Convex? A backend platform with a database, server functions, and real-time sync
+built in. You write TypeScript functions on the server, call them from React, and the UI
+updates automatically whenever the underlying data changes. No REST endpoints, no
+manual cache invalidation, no websocket code.
+Convex vs. Zustand, in one line: Zustand holds client state (is the audio playing, which
+panel is open). Convex holds server state (the library, progress, bookmarks). Use both. Don't
+put server data in Zustand.
+1. Setup
+Wire up React once at the root:
+// src/main.tsx
+import{ConvexProvider,ConvexReactClient}from'convex/react';
+const convex =newConvexReactClient(import.meta.env.VITE_CONVEX_URLas
+string);
+ReactDOM.createRoot(document.getElementById('root')!).render(
+<ConvexProviderclient={convex}>
+<App/>
+--- page 2 ---
+(Next.js uses NEXT_PUBLIC_CONVEX_URL instead.)
+2. Define the schema
+The schema is TypeScript, and it gives you end-to-end types from database to component.
+</ConvexProvider>
+);
+// convex/schema.ts
+import{ defineSchema, defineTable }from'convex/server';
+import{ v }from'convex/values';
+exportdefaultdefineSchema({
+// Table 1: the catalog. Shared by all users.
+books:defineTable({
+title: v.string(),
+author: v.string(),
+narrator: v.string(),
+isUnabridged: v.boolean(),
+durationSeconds: v.number(),
+coverStorageId: v.optional(v.id('_storage')),// Convex file storage
+chapters: v.array(
+v.object({ title: v.string(), startTime: v.number()})
+),
+}),
+// Table 2: one row per user per book.
+playbackProgress:defineTable({
+userId: v.string(),
+bookId: v.id('books'),
+position: v.number(),// seconds
+speed: v.number(), // 1.0, 1.25, ...
+updatedAt: v.number(),
+}).index('by_user_book',['userId','bookId']),
+// Table 3: many rows per user per book.
+bookmarks:defineTable({
+userId: v.string(),
+bookId: v.id('books'),
+chapter: v.number(),
+time: v.number(),// seconds
+note: v.optional(v.string()),
+}).index('by_user_book_chapter_time',['userId','bookId','chapter',
+'time']),
+});
+--- page 3 ---
+Convex adds _id and _creationTime to every document automatically.
+Three design decisions worth understanding:
+3. Write server functions
+Three function types matter:
+Type Purpose Can write to 
+DB?
+Can call external 
+APIs?
+query Read data. Reactive, cached, live.No No
+mutationWrite data. Transactional. Yes No
+actionCall third-party services (payments, 
+AI, email).
+Via mutationsYes
+Books: read the catalog
+v.id('books') is a typed relation. A bookmark can only point at a real book, and
+TypeScript knows which table the ID belongs to. Use it instead of v.string() for any
+reference between tables.
+Chapters are embedded, not a fourth table. They're small, they never change per
+user, and you always read them with the book. Make a separate table only when the
+data grows unbounded, is queried on its own, or changes independently. Splitting
+everything into tables is a habit from SQL that Convex doesn't need.
+The bookmark index returns results already sorted by time. That's your "auto-
+sorted by timestamp" requirement, with no sorting code and no full table scans.
+// convex/books.ts
+import{ query, internalMutation }from'./_generated/server';
+import{ v }from'convex/values';
+exportconst get =query({
+args:{ id: v.id('books')},
+handler:async(ctx,{ id })=>{
+const book =await ctx.db.get(id);
+if(!book)returnnull;
+const coverUrl = book.coverStorageId
+?await ctx.storage.getUrl(book.coverStorageId)
+:null;
+return{...book, coverUrl };
+},
+--- page 4 ---
+internalMutation can't be called from the browser, only from other server code or the CLI.
+Use it for anything users must never trigger.
+Progress: save and restore the position
+});
+// Seed one book for development. Run: npx convex run books:seed
+exportconst seed =internalMutation({
+args:{},
+handler:async(ctx)=>{
+returnawait ctx.db.insert('books',{
+title:'The Science of Deduction',
+author:'Arthur Conan Doyle',
+narrator:'Stephen Fry',
+isUnabridged:true,
+durationSeconds:2100,// 35:00
+chapters:[
+{ title:'Chapter 1', startTime:0},
+{ title:'Chapter 2', startTime:600},
+{ title:'Chapter 3', startTime:1500},
+],
+});
+},
+});
+// convex/progress.ts
+import{ query, mutation }from'./_generated/server';
+import{ v, ConvexError }from'convex/values';
+exportconst get =query({
+args:{ bookId: v.id('books')},
+handler:async(ctx,{ bookId })=>{
+const identity =await ctx.auth.getUserIdentity();
+if(!identity)returnnull;
+returnawait ctx.db
+.query('playbackProgress')
+.withIndex('by_user_book',(q)=>
+q.eq('userId', identity.tokenIdentifier).eq('bookId', bookId)
+)
+.unique();// at most one row per user+book
+},
+});
+// "Upsert": update if a row exists, insert if not.
+exportconst save =mutation({
+args:{ bookId: v.id('books'), position: v.number(), speed: v.number()},
+handler:async(ctx, args)=>{
+--- page 5 ---
+Joining tables: there is no JOIN, and that's fine
+Convex doesn't have SQL joins. You join in TypeScript inside the query. This is how a library
+screen shows each book with the user's progress:
+const identity =await ctx.auth.getUserIdentity();
+if(!identity)thrownewConvexError('Not signed in');
+const userId = identity.tokenIdentifier;
+const book =await ctx.db.get(args.bookId);
+if(!book)thrownewConvexError('Book not found');
+const data ={
+// Never trust the client: clamp to the real duration.
+position: Math.min(Math.max(args.position,0), book.durationSeconds),
+speed: Math.min(Math.max(args.speed,0.5),3),
+updatedAt: Date.now(),
+};
+const existing =await ctx.db
+.query('playbackProgress')
+.withIndex('by_user_book',(q)=>
+q.eq('userId', userId).eq('bookId', args.bookId)
+)
+.unique();
+if(existing){
+await ctx.db.patch(existing._id, data);
+}else{
+await ctx.db.insert('playbackProgress',{ userId, bookId: args.bookId,
+...data });
+}
+},
+});
+// convex/books.ts (add to the file)
+exportconst listWithProgress =query({
+args:{},
+handler:async(ctx)=>{
+const identity =await ctx.auth.getUserIdentity();
+const books =await ctx.db.query('books').collect();
+returnawaitPromise.all(
+books.map(async(book)=>{
+const progress = identity
+?await ctx.db
+.query('playbackProgress')
+.withIndex('by_user_book',(q)=>
+q.eq('userId', identity.tokenIdentifier).eq('bookId',
+--- page 6 ---
+Fine for a few hundred books. If the catalog grows into the thousands, paginate (see "Where
+to go from here").
+Bookmarks: list, add, delete
+book._id)
+)
+.unique()
+:null;
+return{...book, position: progress?.position ??0};
+})
+);
+},
+});
+// convex/bookmarks.ts
+import{ query, mutation }from'./_generated/server';
+import{ v, ConvexError }from'convex/values';
+constMAX_PER_CHAPTER=10;
+constMAX_NOTE_LENGTH=80;
+exportconst listByChapter =query({
+args:{ bookId: v.id('books'), chapter: v.number()},
+handler:async(ctx,{ bookId, chapter })=>{
+const identity =await ctx.auth.getUserIdentity();
+if(!identity)return[];
+returnawait ctx.db
+.query('bookmarks')
+.withIndex('by_user_book_chapter_time',(q)=>
+q
+.eq('userId', identity.tokenIdentifier)
+.eq('bookId', bookId)
+.eq('chapter', chapter)
+)
+.collect();// already sorted by time
+},
+});
+exportconst add =mutation({
+args:{
+bookId: v.id('books'),
+chapter: v.number(),
+time: v.number(),
+note: v.optional(v.string()),
+},
+handler:async(ctx, args)=>{
+--- page 7 ---
+Non-negotiable rule: the client is untrusted. Validate and authorize inside the function,
+every time. The 10-bookmark cap in the UI is a convenience; the cap in the mutation is the
+actual rule. Mutations run as a transaction, so two devices adding a bookmark
+simultaneously can't sneak past the limit.
+const identity =await ctx.auth.getUserIdentity();
+if(!identity)thrownewConvexError('Not signed in');
+const userId = identity.tokenIdentifier;
+const book =await ctx.db.get(args.bookId);
+if(!book)thrownewConvexError('Book not found');
+const existing =await ctx.db
+.query('bookmarks')
+.withIndex('by_user_book_chapter_time',(q)=>
+q.eq('userId', userId).eq('bookId', args.bookId).eq('chapter',
+args.chapter)
+)
+.collect();
+if(existing.length >=MAX_PER_CHAPTER){
+thrownewConvexError('Max 10 bookmarks per chapter');
+}
+returnawait ctx.db.insert('bookmarks',{
+userId,
+bookId: args.bookId,
+chapter: args.chapter,
+time: args.time,
+note: args.note?.slice(0,MAX_NOTE_LENGTH),
+});
+},
+});
+exportconst remove =mutation({
+args:{ id: v.id('bookmarks')},
+handler:async(ctx,{ id })=>{
+const identity =await ctx.auth.getUserIdentity();
+if(!identity)thrownewConvexError('Not signed in');
+const bookmark =await ctx.db.get(id);
+if(!bookmark || bookmark.userId !== identity.tokenIdentifier){
+thrownewConvexError('Not found');
+}
+await ctx.db.delete(id);
+},
+});
+--- page 8 ---
+4. Use it in React
+The header: book info and progress
+The bookmark list
+// src/components/TrackHeader.tsx
+import{ useQuery }from'convex/react';
+import{ api }from'../../convex/_generated/api';
+importtype{Id}from'../../convex/_generated/dataModel';
+exportfunctionTrackHeader({ bookId }:{ bookId:Id<'books'>}){
+const book =useQuery(api.books.get,{ id: bookId });
+const progress =useQuery(api.progress.get,{ bookId });
+if(book ===undefined)return<p>Loading…</p>;// undefined = still
+loading
+if(book ===null)return<p>Book not found</p>;// null = loaded, doesn't
+exist
+return(
+<header>
+{book.coverUrl&&<imgsrc={book.coverUrl}alt={book.title}/>}
+{book.isUnabridged&&<span>UNABRIDGED</span>}
+<h2>{book.title}</h2>
+<p>{book.author} • Read by {book.narrator}</p>
+<p>Resume at {formatTime(progress?.position ??0)} of 
+{formatTime(book.durationSeconds)}</p>
+<select>
+{book.chapters.map((c, i)=>(
+<optionkey={i}value={i}>{c.title}</option>
+))}
+</select>
+</header>
+);
+}
+// src/components/BookmarkList.tsx
+import{ useQuery, useMutation }from'convex/react';
+import{ api }from'../../convex/_generated/api';
+importtype{Id}from'../../convex/_generated/dataModel';
+exportfunctionBookmarkList({
+bookId,
+chapter,
+onSeek,
+}:{
+bookId:Id<'books'>;
+--- page 9 ---
+Add a bookmark
+chapter:number;
+onSeek:(seconds:number)=>void;
+}){
+const bookmarks =useQuery(api.bookmarks.listByChapter,{ bookId, chapter 
+});
+const removeBookmark =useMutation(api.bookmarks.remove);
+if(bookmarks ===undefined)return<p>Loading…</p>;
+return(
+<section>
+<h3>BOOKMARKS ({bookmarks.length})</h3>
+<ul>
+{bookmarks.map((b)=>(
+<likey={b._id}>
+<buttononClick={()=>onSeek(b.time)}>▶ {formatTime(b.time)}
+</button>
+<span>{b.note?`"${b.note}"`:'(no note)'}</span>
+<buttononClick={()=>removeBookmark({ id: b._id})}>🗑
+</button>
+</li>
+))}
+</ul>
+<small>{bookmarks.length} / 10 used</small>
+</section>
+);
+}
+constformatTime=(s:number)=>
+`${Math.floor(s /60)}:${String(Math.floor(s %60)).padStart(2,'0')}`;
+// src/components/AddBookmarkButton.tsx
+import{ useMutation }from'convex/react';
+import{ConvexError}from'convex/values';
+import{ api }from'../../convex/_generated/api';
+importtype{Id}from'../../convex/_generated/dataModel';
+exportfunctionAddBookmarkButton({
+bookId,
+chapter,
+time,
+}:{
+bookId:Id<'books'>;
+chapter:number;
+time:number;
+}){
+const addBookmark =useMutation(api.bookmarks.add);
+--- page 10 ---
+What you get for free:
+5. Save progress without hammering the database
+Playback position changes every second. Writing it every second is wasteful and slow. Save
+it on pause, on chapter change, and on a slow timer. Position itself lives in Zustand.
+consthandleClick=async()=>{
+try{
+awaitaddBookmark({ bookId, chapter, time });
+}catch(err){
+if(err instanceofConvexError)alert(err.data);// "Max 10 bookmarks
+per chapter"
+elsethrow err;
+}
+};
+return<buttononClick={handleClick}>🔖  {formatTime(time)}</button>;
+}
+Live updates. Add a bookmark on your phone and it appears on your tablet instantly.
+There's no refetching, polling, or invalidateQueries.
+Types. api.bookmarks.add autocompletes, and passing the wrong argument, or a
+bookmark ID where a book ID belongs, is a compile error.
+Consistency. Every query result reflects a single consistent snapshot of the database.
+// src/hooks/useSyncProgress.ts
+import{ useEffect }from'react';
+import{ useMutation }from'convex/react';
+import{ api }from'../../convex/_generated/api';
+importtype{Id}from'../../convex/_generated/dataModel';
+import{ usePlayerStore }from'../stores/usePlayerStore';
+exportfunctionuseSyncProgress(bookId:Id<'books'>, isPlaying:boolean){
+const save =useMutation(api.progress.save);
+// Every 20 seconds while playing
+useEffect(()=>{
+if(!isPlaying)return;
+const id =setInterval(()=>{
+const{ position, speed }= usePlayerStore.getState();// read without
+subscribing
+save({ bookId, position, speed });
+},20_000);
+return()=>clearInterval(id);
+--- page 11 ---
+usePlayerStore.getState() reads the latest value without re-rendering the component
+every second. This is where Zustand and Convex meet: Zustand is the fast local source of
+truth, and Convex is the durable copy.
+6. Optimistic updates (make it feel instant)
+By default the UI waits for the server round trip. For snappy deletes, update the local result
+first. Convex rolls it back automatically if the mutation fails.
+Rules that matter
+Do Don't
+Query through indexes (withIndex) Use .filter() over a whole table. It 
+gets slower as data grows.
+Use v.id('table') for references between 
+tables
+Use v.string() for IDs. You lose type 
+safety and validation.
+},[bookId, isPlaying, save]);
+// Once when playback pauses
+useEffect(()=>{
+if(isPlaying)return;
+const{ position, speed }= usePlayerStore.getState();
+save({ bookId, position, speed });
+},[bookId, isPlaying, save]);
+}
+const removeBookmark =
+useMutation(api.bookmarks.remove).withOptimisticUpdate(
+(localStore,{ id })=>{
+const current = localStore.getQuery(api.bookmarks.listByChapter,{
+bookId, chapter });
+if(current !==undefined){
+localStore.setQuery(
+api.bookmarks.listByChapter,
+{ bookId, chapter },
+current.filter((b)=> b._id!== id)
+);
+}
+}
+);
+--- page 12 ---
+Do Don't
+Embed small, always-together data (chapters) 
+in the parent document
+Create a table for everything
+Use an index plus .unique() for one-row-per-
+user records
+Query a list and take [0]
+Validate args with v.*, check auth, and 
+clamp values in every function
+Trust anything sent from the client
+Enforce business rules in mutations Rely on UI checks alone
+Handle undefined from useQuery as 
+"loading"
+Assume data exists on first render
+Use internalMutation for seeding and 
+admin work
+Expose admin operations as public 
+mutations
+Put external API calls in actions Call fetch inside queries or mutations
+Throw ConvexError for user-facing errorsThrow plain Error and expect clean 
+messages in production
+Keep high-frequency UI state in ZustandSync it to the database on every tick
+Where to go from here
+Exercises
+Authentication: Convex Auth, Clerk, or any OIDC provider. Without it,
+getUserIdentity() returns null and the user-scoped functions above won't work.
+Pagination: usePaginatedQuery for long lists such as a big library.
+File uploads: the schema already references _storage for covers. Add an upload flow
+using ctx.storage.generateUploadUrl().
+Scheduled functions and crons: run cleanup jobs or "continue listening" reminders on
+a schedule.
+Convex components: drop-in backend modules (rate limiting, payments, and more) that
+live inside your Convex project.
+1. Add an update mutation so users can edit a bookmark's note (enforce the 80-character
+limit on the server).
+2. Add a listByBook query that returns bookmarks across all chapters, grouped by
+chapter.
+3. Build a library screen with listWithProgress and show a progress bar on each book.
+4. Add a lastListenedAt index on playbackProgress and build a "Continue listening"
+row from the most recent three books.
+5. Add an optimistic update to add so a new bookmark appears instantly.

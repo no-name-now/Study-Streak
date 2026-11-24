@@ -1,0 +1,212 @@
+
+--- page 1 ---
+CSC 419
+Advances in Web, Mobile and Blockchain Development
+Concepts + Architecture
+--- page 2 ---
+Why Backend 
+Matters?
+--- page 3 ---
+Why Backend Matters?
+● The backend is more than “just a server” – it’s the logic, data, infrastructure 
+that powers functionality, maintains integrity, enables scale.
+● Without a solid backend: security holes, data inconsistencies, poor 
+performance, bad developer experience.
+● For mobile + web apps: the backend often deﬁnes oﬄine/online, sync, 
+real-time collaboration, versioning, etc.
+--- page 4 ---
+What is Backend 
+Development?
+--- page 5 ---
+What is Backend Development?
+The backend is the server-side logic that powers applications.
+1. Data Management
+2. Business Logic
+3. Security & Authentication.
+--- page 6 ---
+Core Backend Concepts
+ 1. Data Modeling
+2. APIs (Application Programming Interfaces)
+3. Business Logic
+4. Authentication & Authorization.
+5. Data Validation
+--- page 7 ---
+Data Modeling: 
+osisi Example
+--- page 8 ---
+osisi's core entities and their relationships.
+ 1. Users
+2. Families
+3. Family Members
+4. Relationships
+5. Messaging
+Key concept: One user owns many families. One family has many members. 
+Members are connected via relationships.
+--- page 9 ---
+What makes good 
+schema design?
+--- page 10 ---
+Schema Design Principles.
+ 1. Normalization
+a. Avoid data duplication. Store each piece of data once.
+b. Example: Family member stored once, referenced in multiple relationships
+2. Relationships & Indexes
+a. Use foreign keys and indexes for eﬃcient queries
+b. Example: Index on family_id to quickly ﬁnd all members
+3. Validation
+a. Deﬁne data types and constraints at schema level
+b. Example: Email must be valid format, names have max length
+--- page 11 ---
+APIs
+--- page 12 ---
+APIs:The Contract Between Frontend & 
+Backend
+APIs deﬁne how clients interact with your server. They specify:
+1. Endpoints
+a. Functions clients can call
+b. Example: createFamily(), getFamilyMembers(), updateRelationship()
+2. Input Parameters
+a. What data the function needs
+b. Example: createFamily needs name, owner_id, is_public
+3. Return Values
+a. What data the function returns
+b. Example: getFamilyMembers returns array of member objects
+--- page 13 ---
+Business Logic
+--- page 14 ---
+Business logic
+Business logic enforces rules and processes data according to requirements:
+1. Complex Calculations
+a. Match algorithm: Compare family members across trees to ﬁnd potential relatives
+2. Data Integrity Rules
+a. A person can't be their own parent; partnership requires two distinct members
+3. Cascading Operations
+a. Deleting a family member removes all their relationships
+4. Business Workﬂows
+a. Collaboration requests: send notiﬁcation → await approval → grant access
+--- page 15 ---
+Authentication 
+& Authorization
+--- page 16 ---
+Authentication
+1. Verifying who the user is
+2. User logs in with email/password or OAuth (Google, Facebook)
+3. Backend validates credentials and issues a session token
+--- page 17 ---
+Authorization
+1. Determining what user can do
+2. Check if user owns family before allowing edits
+3. Collaborators have diﬀerent permission levels (viewer, editor, owner)
+Security is Critical
+- osisi stores sensitive family data. Every API call must verify user identity and 
+permissions.
+--- page 18 ---
+Authorization in osisi
+1. Owner - All Access
+a. Full control: create, read, update, delete
+2. Editor - Write Access
+a. Can add/edit family members and relationships
+3. Viewer - Read Only
+a. Can only view family tree, no modiﬁcations
+4. Limited - Partial Access
+a. Restricted view, certain members hidden
+Backend checks role before every operation
+--- page 19 ---
+Data Validation
+--- page 20 ---
+Where does data 
+validation happen 
+in your 
+application?
+--- page 21 ---
+Validation happens at multiple levels to 
+ensure data integrity:
+1. Type Validation
+a. Ensure correct data types (string, number, boolean, date)
+2. Format Validation
+a. Check format rules (email format, phone number patterns)
+3. Business Rules Validation
+a. Enforce domain-speciﬁc constraints
+4. Existence Validation
+a. Verify referenced entities exist
+--- page 22 ---
+Query 
+Optimization
+--- page 23 ---
+Making data retrieval efficient is crucial for 
+performance:
+1. Indexes
+a. Speed up searches by creating indexes on frequently queried ﬁelds
+2. Selective Queries
+a. Only fetch the data you need, not everything
+3. Pagination
+a. Load data in chunks rather than all at once
+--- page 24 ---
+Scalability 
+Considerations
+--- page 25 ---
+As your application grows, backend must 
+handle increased load:
+1. Caching
+a. Store frequently accessed data in memory for faster retrieval
+2. Database Optimization
+a. Proper indexes and query design prevent slowdowns
+3. Async Operations
+a. Long-running tasks shouldn't block user requests
+4. Resource Limits
+a. Prevent abuse with rate limiting and usage quotas
+--- page 26 ---
+Error Handling
+--- page 27 ---
+Backends must handle failures gracefully and 
+provide clear feedback:
+1. Validation Errors
+a. Return clear messages when input is invalid
+b. "Family name must be between 2-100 characters"
+2. Authorization Errors
+a. Inform user they lack permission
+b. "Y ou don't have permission to delete this family"
+3. Server Errors
+a. Log errors for debugging, show user-friendly message
+b. "Something went wrong. Please try again later"
+4. Not Found Errors
+a. Handle missing resources gracefully
+b. "Family not found or has been deleted"
+--- page 28 ---
+Testing Backend 
+Code
+--- page 29 ---
+Testing ensures backend behaves correctly 
+before deployment
+1. Unit Tests
+a. Test individual functions in isolation
+b. Test createFamilyMember validates name length correctly
+2. Integration Tests
+a. Test how multiple components work together
+b. Test creating member, adding relationship, and querying descendants
+3. Edge Cases
+a. Test unusual or boundary conditions
+b. What happens with circular relationships? Empty families?
+--- page 30 ---
+Summary & Key 
+Takeaways
+--- page 31 ---
+Summary
+ ● Backend is the brain: it manages data, enforces rules, and protects 
+security
+● Good data modeling is foundation of everything else
+● APIs are contracts: they deﬁne how clients interact with your system
+● Security (auth/authz) is non-negotiable, especially with sensitive data
+● Validation, error handling, and testing prevent bugs and bad data
+● Performance matters: indexes, caching, and query optimization are 
+essential
+--- page 32 ---
+Any Questions?
+--- page 33 ---
+What does a 
+good API need 
+to have?
+
+--- page 34 ---
+In class Project
+An AI Chat bot that allows you you interact with your family three.
