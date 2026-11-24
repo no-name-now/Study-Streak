@@ -1,0 +1,14 @@
+const fs=require('fs');
+const old=fs.readFileSync('/home/claude/ins401/index.html','utf8');
+const tStart=old.indexOf('const TOPICS = [');const cStart=old.indexOf('/* calculation drills */');
+const pStart=old.indexOf('/* study plan */');
+const T=eval(old.slice(tStart+'const TOPICS = '.length, cStart).trim().replace(/;\s*$/,''));
+const C=eval(old.slice(old.indexOf('const CALC = [')+'const CALC = '.length,pStart).trim().replace(/;\s*$/,''));
+const first=eval(fs.readFileSync('build/ins401_t1_6.js','utf8'));
+const ids=['t7','t8','t9','t10','t11'];
+T.forEach((t,i)=>{t.id=ids[i];delete t.c;});
+const topics=first.concat(T);
+const out={topics, calc:C};
+fs.writeFileSync('data/ins401.js','COURSE_DATA["ins401"] = '+JSON.stringify(out)+';\n');
+console.log(topics.map(t=>t.id+' '+t.title+' cards:'+t.cards.length+' recall:'+t.recall.length+' theory:'+t.theory.length).join('\n'));
+console.log('calc',C.length, 'bytes', fs.statSync('data/ins401.js').size);
