@@ -7,11 +7,16 @@ Open `index.html` in a browser, or `npx serve .`. To publish: push to GitHub and
 
 ## Files
 - `index.html`: the whole engine (HTML + CSS + JS in one file).
-  - Router: `render()` reads `location.hash`. Routes: `home, plan, courses, course-<cid>, lesson-<cid>-<tid>-<n>, recall-, quiz-, theory-, feyn-, past-<cid>, review, flash-<cid>, calc-<cid>, mock-<cid>, cheat-<cid>, exams, board, me`.
+  - Router: `render()` reads `location.hash`. Routes: `home, plan, courses, course-<cid>, lesson-<cid>-<tid>-<n>, recall-, quiz-, theory-, feyn-, past-<cid>, review, flash-<cid>, calc-<cid>, mock-<cid>, cheat-<cid>, exams, board, me, guides, guide-<cid>, eve-<cid>, essay-<cid>[-<tid|past>-<i>], sit-<cid>`.
+  - Features added 25 Nov: dark mode (🌓 button; `localStorage` key `pau400sen_theme`; colours are CSS variables on `:root`), Study guides page (downloads from `assets/course-guides/<cid>/`, listed in `COURSE_GUIDES`) and a printable full guide per course, topic confidence dots (`ST.conf`) feeding the exam-eve sheet, the five-part essay trainer (`ST.essays`, drafts autosave), and "Sit the real paper" (`ST.sitDraft` / `ST.sits`; timed, resumable, self-marked).
+  - A topic with `noExam:true` is kept out of mocks and the roadmap (used for SEN412 defense prep).
   - State: `localStorage` key `pau400sen_v1`. Backup/restore codes (base64 JSON) are under Me.
   - Leaderboard: uses `window.claude.use('db')`, which exists only inside claude.ai artifacts. The code is guarded, so on GitHub Pages the live board is inert. Replacing it (e.g. Supabase/Firebase) is an open task. The WhatsApp share card works everywhere.
 - `data/catalog.js`: exam timetable, electives, class days, formats, topic titles, `status`.
-- `data/<course>.js`: one file per course. Each needs a `<script src>` tag in index.html.
+- `data/<course>.js`: one file per course. Each needs a `<script src>` tag in index.html and an entry in `sw.js` CORE.
+- `data/*_extra.js`, `data/sen419_chain.js`: additions pushed onto existing courses (SEN412 Feb 2026 paper + defense prep, SEN401 weeks 1/12/13, SEN419 blockchain, SEN418 lectures 5–7 gap).
+- `data/past_rules.js`: per-paper `rule`, `mins`, `compulsory` used by sit mode. Questions group by the start of `h` (`Q1`, `Exam Q2`, `Section A`, `CA1`).
+- `sw.js`: network-first for app + data, cache-first for `assets/`. Bump `CACHE` when the file list changes.
 - `build/`: one-off scripts used to assemble INS401 from an older app.
 
 ## Course data schema
@@ -62,9 +67,9 @@ Mocks take 10 objective items (from `quiz`) and `mockTheory` (default 4) theory 
    - `sen418` (Lectures 1, 2, 3, 4, 8, 9 `.pptx` decks, Coursework Assignment, CA2 Azure AlmaLinux report, and study guides)
 2. ~~Add `quiz` items to INS401 topics so its mock has a Section A.~~ Done 24 Nov (131 items).
 3. Add in-class transcripts when she provides them; tag those points "Said in class".
-4. SEN419 blockchain topic once notes exist.
+4. ~~SEN419 blockchain topic~~ Added 25 Nov as additional context (t8). Replace if the lecturer shares notes. Same for SEN401 weeks 1/12/13 (t10–t12) and SEN418 lectures 5–7 (t7): built from the teaching plan + standard sources because no slides exist.
 5. Replace the claude.ai leaderboard with a real backend, or hide the live board on GitHub Pages.
-6. ~~After each edit, open every route headlessly and check for "undefined", "NaN" or "went wrong".~~ Automated via `node build/routecheck.js <cids...>` (JSDOM headless route verifier).
+6. ~~After each edit, open every route headlessly and check for "undefined", "NaN" or "went wrong".~~ Automated via `node build/routecheck.js <cids...>` (JSDOM headless route verifier; also covers guides, eve, essay and sit write/mark phases). Takes ~2 min for all 8.
 
 ## Token-saving habits
 - Edit one course file at a time; don't reread index.html unless changing the engine.

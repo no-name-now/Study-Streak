@@ -1,5 +1,12 @@
 # Study Streak: handoff report (25 Nov 2026)
 
+## Update, 25 Nov 2026 (afternoon)
+- **Features:** dark/light/auto theme; 📥 Study guides page (21 downloadable files incl. newer SEN412/CSC420 exam guides, CSC420 lab guide, SEN401 weeks 2–5, INS401 short guide) + printable full guide per course; 🔴🟠🟢 topic confidence; 🌙 exam-eve sheet (shaky topics first, all traps and hooks); ✍️ five-part essay trainer; 🎓 sit the real past paper under exam time with self-marking; service worker now network-first so updates reach phones.
+- **SEN412:** past paper replaced with the real Feb 2026 paper transcribed from the scan (16 parts, 81 marks: Q1 17 + four 16-mark questions) with model answers; defense prep topic for the C vs Python project (`noExam`).
+- **Gap topics (additional context, no slides):** SEN401 weeks 1, 12, 13; SEN419 blockchain; SEN418 lectures 5–7. Real titles of SEN418 L5–7 are unknown.
+- Route check: 1081 routes, 0 errors (one deliberate "undefined" JS quiz option in sen412 t7 can surface depending on shuffle).
+
+
 Handoff for whoever continues this work. Read `CLAUDE.md` first: it has the app structure, data schema, content rules and the open-task list. This file covers everything completed across the 24–25 Nov 2026 sessions and what remains.
 
 ---

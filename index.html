@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Study Streak · PAU 400L SEN Exam Prep</title>
+<meta name="theme-color" content="#2f5d50">
+<script>try{var _t=localStorage.getItem("pau400sen_theme");if(_t==="dark"||_t==="light")document.documentElement.dataset.theme=_t}catch(e){}</script><link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -11,7 +13,25 @@
   --accent:#2f5d50; --accent-soft:#e3eee9; --warn:#b4541a; --warn-soft:#fbeee3;
   --good:#2e7d4f; --good-soft:#e5f3ea; --bad:#b3261e; --bad-soft:#fbe9e7;
   --fire:#ff7a1a; --xp:#6a4bd6; --gold:#d9a400; --c:var(--accent);
+  --on-ink:#fff; --soft:#faf9f6; --soft2:#f1efe9; --input:#fff; --blue-soft:#eef1f8; --blue:#3b5b92;
+  --hl:#fff8e6; --warm:#fffdf5; --card2:#fbfaf7; --fire-soft:#fff1e6; --xp-soft:#efeafe; --bar-off:#c9c5ba;
+  --red:#d64545; --amber:#e0a100; --green:#2e9d5b;
+  color-scheme:light;
 }
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141512; --card:#1e1f1b; --ink:#ecebe5; --muted:#a3a097; --line:#35362f;
+  --accent:#72b8a2; --accent-soft:#1f3830; --warn:#f2a66e; --warn-soft:#3a291c;
+  --good:#5cc489; --good-soft:#1b3326; --bad:#ff8a80; --bad-soft:#3c1f1d; --xp:#a08cff;
+  --on-ink:#141512; --soft:#191a17; --soft2:#2a2b26; --input:#161714; --blue-soft:#1d2538; --blue:#9db4e8;
+  --hl:#352e1c; --warm:#211f19; --card2:#1b1c19; --fire-soft:#3a2617; --xp-soft:#28223f; --bar-off:#45463f;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141512; --card:#1e1f1b; --ink:#ecebe5; --muted:#a3a097; --line:#35362f;
+  --accent:#72b8a2; --accent-soft:#1f3830; --warn:#f2a66e; --warn-soft:#3a291c;
+  --good:#5cc489; --good-soft:#1b3326; --bad:#ff8a80; --bad-soft:#3c1f1d; --xp:#a08cff;
+  --on-ink:#141512; --soft:#191a17; --soft2:#2a2b26; --input:#161714; --blue-soft:#1d2538; --blue:#9db4e8;
+  --hl:#352e1c; --warm:#211f19; --card2:#1b1c19; --fire-soft:#3a2617; --xp-soft:#28223f; --bar-off:#45463f;
+  color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:16.5px;line-height:1.55;padding-bottom:96px}
@@ -28,7 +48,7 @@ a{color:var(--accent)}
 nav{max-width:920px;margin:0 auto;padding:0 10px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
 nav button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;color:var(--ink)}
-nav button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+nav button.on{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
 main{max-width:920px;margin:0 auto;padding:16px 14px}
 h1{font-size:25px;line-height:1.2;margin:4px 0 6px;letter-spacing:-.2px}
 h2{font-size:20px;margin:22px 0 8px}
@@ -40,9 +60,11 @@ p{margin:8px 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
 .grid .card{margin:0}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:6px;border:none;background:var(--ink);color:#fff;font-weight:700;padding:11px 16px;border-radius:12px;cursor:pointer;margin:4px 6px 4px 0;box-shadow:0 3px 0 rgba(0,0,0,.25);transition:transform .05s}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;background:var(--ink);color:var(--on-ink);font-weight:700;padding:11px 16px;border-radius:12px;cursor:pointer;margin:4px 6px 4px 0;box-shadow:0 3px 0 rgba(0,0,0,.25);transition:transform .05s}
 .btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
 .btn.green{background:var(--good)} .btn.red{background:var(--bad)} .btn.purple{background:var(--xp)} .btn.orange{background:var(--fire)}
+.btn.green,.btn.red,.btn.purple,.btn.orange{color:#fff}:root[data-theme="dark"] .btn.green,:root[data-theme="dark"] .btn.red,:root[data-theme="dark"] .btn.purple{color:#111}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.green,:root:not([data-theme="light"]) .btn.red,:root:not([data-theme="light"]) .btn.purple{color:#111}}
 .btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none}
 .btn.small{padding:6px 11px;font-size:14px;border-radius:10px}
 .btn.big{padding:14px 22px;font-size:17px}
@@ -50,25 +72,25 @@ p{margin:8px 0}
 .bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--c);width:0;border-radius:99px;transition:width .4s}
 .pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--line);color:var(--ink);margin:2px 4px 2px 0}
-.pill.m{background:var(--good-soft);color:var(--good)} .pill.l{background:#eef1f8;color:#3b5b92} .pill.r{background:var(--warn-soft);color:var(--warn)} .pill.o{background:#f1efe9;color:var(--muted)}
+.pill.m{background:var(--good-soft);color:var(--good)} .pill.l{background:var(--blue-soft);color:var(--blue)} .pill.r{background:var(--warn-soft);color:var(--warn)} .pill.o{background:var(--soft2);color:var(--muted)}
 .hook{background:var(--accent-soft);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:15px}
 .hook:before{content:"🧠 Memory hook: ";font-weight:700}
 .trap{background:var(--warn-soft);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:15px}
 .trap:before{content:"⚠️ Exam trap: ";font-weight:700}
-.trig{background:#eef1f8;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:15px}
+.trig{background:var(--blue-soft);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:15px}
 .trig:before{content:"🎯 If you see: ";font-weight:700}
-.def{border-left:4px solid var(--c);padding:6px 12px;margin:10px 0;background:#faf9f6;border-radius:0 8px 8px 0}
+.def{border-left:4px solid var(--c);padding:6px 12px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
 .def b:first-child{display:block;font-size:12.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
 table{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0;display:block;overflow-x:auto}
 th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
-th{background:#f1efe9}
+th{background:var(--soft2)}
 .flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
 .flow span{background:var(--c);color:#fff;border-radius:8px;padding:5px 10px;font-size:14px;font-weight:600}
 .flow em{color:var(--muted);font-style:normal}
 .prog{display:flex;gap:4px;margin:10px 0 14px}
 .prog i{flex:1;height:7px;border-radius:99px;background:var(--line)}
 .prog i.d{background:var(--c)}
-textarea,input[type=text],input[type=number]{width:100%;font:inherit;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}
+textarea,input[type=text],input[type=number]{width:100%;font:inherit;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--input);color:var(--ink)}
 textarea{min-height:100px}
 .reveal{display:none}.reveal.show{display:block}
 .pts label{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px dashed var(--line);cursor:pointer}
@@ -102,9 +124,9 @@ textarea{min-height:100px}
 .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
 .lb{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
 .lb .rk{width:28px;font-weight:900;color:var(--muted)}
-.lb.me{background:#fff8e6}
+.lb.me{background:var(--hl)}
 /* timer */
-#timer{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;z-index:30}
+#timer{position:fixed;left:0;right:0;bottom:0;background:#1b1a17;color:#fff;z-index:30}
 #timer .w{max-width:920px;margin:0 auto;padding:9px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 #timer .clock{font-size:23px;font-weight:900;font-variant-numeric:tabular-nums;min-width:72px}
 #timer button{background:#ffffff22;color:#fff;border:none;border-radius:8px;padding:7px 10px;font-size:13.5px;cursor:pointer}
@@ -115,7 +137,7 @@ textarea{min-height:100px}
 #modal .card{max-width:430px;width:100%;text-align:center;animation:pop .25s ease}
 @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
 #toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none}
-#toast div{background:var(--ink);color:#fff;padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;animation:pop .2s ease;box-shadow:0 4px 14px #0003}
+#toast div{background:var(--ink);color:var(--on-ink);padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;animation:pop .2s ease;box-shadow:0 4px 14px #0003}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:55}
 .bigemoji{font-size:58px;line-height:1}
 .xpgain{font-size:34px;font-weight:900;color:var(--xp)}
@@ -123,17 +145,42 @@ ul{padding-left:22px;margin:6px 0} li{margin:3px 0}
 @media(max-width:560px){#timer .lbl{display:none}#timer .clock{font-size:21px;min-width:64px}#timer .w{flex-wrap:nowrap}body{padding-bottom:70px}}
 .mono{font-family:ui-monospace,Menlo,monospace;font-size:14px}
 .onb{max-width:560px;margin:20px auto}
-.opt{display:flex;gap:12px;align-items:flex-start;padding:12px;border:2px solid var(--line);border-radius:14px;margin:8px 0;cursor:pointer;background:#fff}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:12px;border:2px solid var(--line);border-radius:14px;margin:8px 0;cursor:pointer;background:var(--card)}
 .opt.on{border-color:var(--good);background:var(--good-soft)}
 .opt input{transform:scale(1.4);margin-top:5px}
 .warnbox{background:var(--warn-soft);border:1px solid #f0d3bd;border-radius:12px;padding:10px 12px;font-size:14.5px}
+#search{border:1px solid var(--line);border-radius:10px;background:var(--input);color:var(--ink);padding:7px 10px;width:min(220px,38vw);font:inherit}
+.searchResult{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--ink);padding:12px;cursor:pointer}
+@media print{:root{--bg:#fff;--card:#fff;--ink:#111;--muted:#555;--line:#bbb;--soft:#f6f6f6;--soft2:#eee}body{background:#fff;padding:0;font-size:11pt}#top,#timer,#toast,#confetti,.no-print,button,textarea{display:none!important}main{max-width:none;padding:0}.card{break-inside:avoid;border:0;border-bottom:1px solid #bbb;border-radius:0;padding:8px 0;margin:0}details>*{display:block!important}details>summary{display:none!important}h1,h2,h3{break-after:avoid}}
+td[style*="#f6d4d1"]{color:#111}
+a.btn{text-decoration:none}
+.brand{white-space:nowrap}
+#search{min-width:0;flex:0 1 220px}
+@media(max-width:640px){.brand .bt{display:none}#top .w{gap:6px}.chip{padding:4px 8px;font-size:13px}}
+@media(max-width:430px){.chip.xp{display:none}}
+#themeBtn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 9px;cursor:pointer;font-size:15px}
+.conf{display:inline-flex;gap:4px;margin-left:auto}
+.conf button{width:28px;height:28px;border-radius:99px;border:2px solid var(--line);background:var(--card);cursor:pointer;padding:0;font-size:12px}
+.conf button.r.on{background:var(--red);border-color:var(--red)} .conf button.a.on{background:var(--amber);border-color:var(--amber)} .conf button.g.on{background:var(--green);border-color:var(--green)}
+.conf button.r{border-color:var(--red)} .conf button.a{border-color:var(--amber)} .conf button.g{border-color:var(--green)}
+.frame{border-left:5px solid var(--c);padding-left:12px;margin:14px 0}
+.frame h3{margin:0 0 2px}.frame .kbd{margin-bottom:6px}
+.frame textarea{min-height:90px}
+.sticky{position:sticky;top:calc(var(--toph,100px) + 6px);z-index:15}
+.qgrp{display:flex;gap:10px;align-items:flex-start;padding:10px;border:2px solid var(--line);border-radius:12px;margin:8px 0;cursor:pointer;background:var(--card)}
+.qgrp.on{border-color:var(--good);background:var(--good-soft)}
+.eve-trap{background:var(--warn-soft);border-radius:8px;padding:6px 10px;margin:6px 0;font-size:14.5px}
+.eve-hook{background:var(--accent-soft);border-radius:8px;padding:6px 10px;margin:6px 0;font-size:14.5px}
 </style>
 </head>
 <body>
 <div id="top"><div class="w">
-  <div class="brand" onclick="go('home')">🔥 Study Streak</div>
+  <div class="brand" onclick="go('home')">🔥 <span class="bt">Study Streak</span></div>
+  <input id="search" type="text" placeholder="Search · Ctrl+K" aria-label="Search lessons and questions" oninput="searchAll(this.value)" onkeydown="if(event.key==='Escape'){this.value='';searchAll('')}" />
+  <button id="themeBtn" onclick="cycleTheme()" title="Theme: auto / light / dark" aria-label="Switch theme">🌓</button>
   <div class="stats" id="stats"></div>
 </div><nav id="nav"></nav></div>
+<div id="searchResults" class="card" style="display:none;position:fixed;z-index:40;top:58px;left:50%;transform:translateX(-50%);width:min(880px,94vw);max-height:70vh;overflow:auto"></div>
 <main id="app"><div class="card">Loading…</div></main>
 
 <div id="timer"><div class="w">
@@ -153,11 +200,16 @@ ul{padding-left:22px;margin:6px 0} li{margin:3px 0}
 <script src="data/ins401.js"></script>
 <script src="data/ins401_past.js"></script>
 <script src="data/sen412.js"></script>
+<script src="data/sen412_extra.js"></script>
 <script src="data/sen401.js"></script>
+<script src="data/sen401_extra.js"></script>
 <script src="data/sen419.js"></script>
+<script src="data/sen419_chain.js"></script>
 <script src="data/sen408.js"></script>
 <script src="data/csc420.js"></script>
 <script src="data/sen418.js"></script>
+<script src="data/sen418_extra.js"></script>
+<script src="data/past_rules.js"></script>
 <script>
 /* =====================================================================
    STUDY STREAK — engine. All progress lives in this browser (localStorage).
@@ -166,7 +218,7 @@ const KEY='pau400sen_v1';
 const APP_VERSION=1;
 let ST=load();
 function blank(){return{v:APP_VERSION,profile:null,xp:0,days:{},streak:{count:0,last:null,best:0},freezes:0,
-  badges:{},topics:{},srs:{},examsDone:{},mocks:{},planCache:{},quests:{},feyn:{},flags:{},lastSeen:null}}
+  badges:{},topics:{},srs:{},examsDone:{},mocks:{},planCache:{},quests:{},feyn:{},flags:{},weak:{},conf:{},essays:{},sits:{},sitDraft:{},lastSeen:null}}
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v)return Object.assign(blank(),s)}catch(e){}return blank()}
 let saveT=null;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}},150)}
 function saveNow(){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}}
@@ -189,6 +241,18 @@ const COURSES=CATALOG.courses.map(c=>{
   return Object.assign({},c,{topics,data:data||null,examDay:c.exam.slice(0,10)});
 });
 const CBY=Object.fromEntries(COURSES.map(c=>[c.id,c]));
+const COURSE_GUIDES={
+  cos409:[{name:'Complete study guide',file:'study-guide.docx',type:'docx'}],
+  ins401:[{name:'Complete study guide',file:'study-guide.docx',type:'docx'},{name:'Shorter study guide (9 Nov)',file:'short-guide.docx',type:'docx',note:'Earlier, shorter version.'}],
+  sen412:[{name:'Exam study guide (17 Nov, newest)',file:'exam-guide.docx',type:'docx',note:'Covers decks up to Data Types.'},{name:'Complete study guide (6 Oct)',file:'study-guide.docx',type:'docx',note:'Earlier guide: decks 0–3 only.'}],
+  sen401:[{name:'Complete study guide',file:'study-guide.docx',type:'docx'},{name:'Weeks 2–5 study guide',file:'weeks2to5-guide.docx',type:'docx'}],
+  sen419:[{name:'UI/UX and Front-end Development',file:'ui-ux.pdf',type:'pdf'},{name:'Front-end Practical',file:'frontend-practical.pdf',type:'pdf'},{name:'Backend Development',file:'backend-development.pdf',type:'pdf'},{name:'Backend Practical',file:'backend-practical.pdf',type:'pdf'},{name:'Mobile Development',file:'mobile-development.pdf',type:'pdf'},{name:'Deployment',file:'deployment.pdf',type:'pdf'},{name:'Deployment Practical',file:'deployment-practical.pdf',type:'pdf'},{name:'Exam review',file:'exam-review.pdf',type:'pdf'}],
+  sen408:[{name:'Complete study guide',file:'study-guide.docx',type:'docx'}],
+  csc420:[{name:'Exam study guide (17 Nov, newest)',file:'exam-guide.docx',type:'docx'},{name:'Complete study guide (27 Oct)',file:'study-guide.docx',type:'docx',note:'Earlier guide, before the MongoDB lectures.'},{name:'Practical exam lab guide',file:'lab-guide.docx',type:'docx'}],
+  sen418:[{name:'Complete study guide',file:'study-guide.docx',type:'docx'},{name:'Easy study guide (PDF)',file:'quick-guide.pdf',type:'pdf'}]
+};
+function studyResources(cid){const resources=COURSE_GUIDES[cid]||[],base='assets/course-guides/'+cid+'/';if(!resources.length)return'';
+  const isChain=cid==='sen419';return`<div class="card"><h3 style="margin-top:0">📚 ${isChain?'Course study materials':'Study guide'}</h3><p class="kbd">${isChain?'No single complete study-guide file was in the Blockchain folder, so the available topic notes and exam review are collected here.':'Your course guide is attached here. Download it to study in Word or another document app.'}</p><div class="grid">${resources.map(r=>`<div class="card" style="margin:0"><b>${esc(r.name)}</b><div class="row" style="margin-top:8px"><a class="btn small green" href="${base+r.file}" download>⬇ Download</a><a class="btn small ghost" href="${base+r.file}" target="_blank" rel="noopener">${r.type==='pdf'?'📖 Study / preview':'📄 Open file'}</a></div></div>`).join('')}</div></div>`}
 function activeCourses(){const el=(ST.profile&&ST.profile.electives)||[];return COURSES.filter(c=>(!c.elective||el.includes(c.id)))}
 function pendingCourses(){return activeCourses().filter(c=>!ST.examsDone[c.id])}
 
@@ -266,6 +330,8 @@ const BADGES=[
  {id:'master1',e:'⭐',n:'Topic master',d:'Master your first topic',f:()=>masteredCount()>=1},
  {id:'master10',e:'🌟',n:'Ten down',d:'Master 10 topics',f:()=>masteredCount()>=10},
  {id:'mock1',e:'📝',n:'Mock survivor',d:'Finish a timed mock exam',f:()=>Object.keys(ST.mocks).length>=1},
+ {id:'sit1',e:'🎓',n:'Real thing',d:'Sit and mark a real past paper',f:()=>Object.values(ST.sits||{}).some(a=>a.length)},
+ {id:'essay5',e:'✍️',n:'Five-part pro',d:'Mark 5 essays in the 5-part frame',f:()=>Object.values(ST.essays||{}).filter(e=>e.best!=null).length>=5},
  {id:'chest',e:'🎁',n:'Quest clearer',d:'Complete all daily quests',f:()=>Object.values(ST.quests).some(q=>q.chest)},
  {id:'exam1',e:'🎉',n:'One down',d:'Mark your first exam done',f:()=>Object.keys(ST.examsDone).length>=1},
  {id:'allex',e:'🏁',n:'Semester finished',d:'Mark every exam done',f:()=>activeCourses().every(c=>ST.examsDone[c.id])}
@@ -307,7 +373,7 @@ function buildPlan(){
   courses.forEach(c=>{const pre=addDays(c.examDay,-1);const d=D[pre]||D[t];if(d)put(d,{c:c.id,type:'mock',min:60,label:'Timed mock + fix weak spots'});
     const e=D[c.examDay];if(e)put(e,{c:c.id,type:'cheat',min:30,label:'Cheat-sheet + flashcards before the exam'})});
   // 3) topic units
-  const queue={};courses.forEach(c=>{queue[c.id]=c.topics.filter(tp=>topicState(c.id,tp.id)!=='mastered').map(tp=>{const p=ST.topics[tkey(c.id,tp.id)];const read=tp.outline?false:(p&&tp.cards&&p.cards.length>=tp.cards.length);const lm=tp.outline?45:Math.min(70,Math.max(35,tp.cards.length*6+20));return{c:c.id,t:tp.id,type:read?'practice':'learn',min:read?20:lm,label:(tp.outline?'Study from guide: ':read?'Recall + theory: ':'Learn + recall: ')+tp.title}})});
+  const queue={};courses.forEach(c=>{queue[c.id]=c.topics.filter(tp=>!tp.noExam&&topicState(c.id,tp.id)!=='mastered').map(tp=>{const p=ST.topics[tkey(c.id,tp.id)];const read=tp.outline?false:(p&&tp.cards&&p.cards.length>=tp.cards.length);const lm=tp.outline?45:Math.min(70,Math.max(35,tp.cards.length*6+20));return{c:c.id,t:tp.id,type:read?'practice':'learn',min:read?20:lm,label:(tp.outline?'Study from guide: ':read?'Recall + theory: ':'Learn + recall: ')+tp.title}})});
   const deadline=c=>addDays(c.examDay,-1);
   let last=null;
   days.forEach(d=>{
@@ -343,15 +409,15 @@ function confetti(){const cv=document.getElementById('confetti'),x=cv.getContext
   const P=Array.from({length:140},()=>({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight/3,vx:(Math.random()-.5)*14,vy:-Math.random()*12-4,r:Math.random()*6+3,c:cols[Math.random()*cols.length|0],a:Math.random()*6}));
   let f=0;(function tick(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore()});if(++f<110)requestAnimationFrame(tick);else x.clearRect(0,0,cv.width,cv.height)})()}
 function ring(val,max,color,label,sub){const r=46,C=2*Math.PI*r,p=Math.min(1,max?val/max:0);
-  return`<div class="ring"><svg width="108" height="108"><circle cx="54" cy="54" r="${r}" stroke="#e5e2d9" stroke-width="10" fill="none"/><circle cx="54" cy="54" r="${r}" stroke="${color}" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}"/></svg><div class="lbl">${label}<small>${sub}</small></div></div>`}
+  return`<div class="ring"><svg width="108" height="108"><circle cx="54" cy="54" r="${r}" style="stroke:var(--line)" stroke-width="10" fill="none"/><circle cx="54" cy="54" r="${r}" stroke="${color}" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}"/></svg><div class="lbl">${label}<small>${sub}</small></div></div>`}
 function countdown(iso){const ms=new Date(iso)-new Date();if(ms<=0)return'now';const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return d>0?`${d}d ${h}h`:`${h}h ${Math.floor(ms%36e5/6e4)}m`}
 
 function renderStats(){if(!ST.profile){document.getElementById('stats').innerHTML='';return}
   const d=day(),g=goalFor(TODAY()),L=levelOf(ST.xp),alive=streakAlive();
   document.getElementById('stats').innerHTML=`<span class="chip fire ${alive?'':'dim'}" onclick="go('me')" title="Streak">🔥 ${alive?ST.streak.count:0}</span><span class="chip goal" onclick="go('home')" title="Today">🎯 ${d.min}/${g}</span><span class="chip xp" onclick="go('me')" title="XP">⚡ ${ST.xp}</span>`}
 function navBar(){if(!ST.profile){document.getElementById('nav').innerHTML='';return}const cur=(location.hash.slice(1)||'home').split('-')[0];
-  const items=[['home','🏠 Today'],['plan','🗺 Roadmap'],['courses','📚 Courses'],['review','🔁 Review'],['exams','📅 Exams'],['board','🏆 Board'],['me','👤 Me']];
-  document.getElementById('nav').innerHTML=items.map(([k,l])=>`<button class="${cur===k||(k==='courses'&&['course','lesson','recall','theory','mock','flash','calc','cheat','quiz','past','feyn'].includes(cur))?'on':''}" onclick="go('${k}')">${l}${k==='review'&&dueItems().length?' · '+dueItems().length:''}</button>`).join('')}
+  const items=[['home','🏠 Today'],['plan','🗺 Roadmap'],['courses','📚 Courses'],['review','🔁 Review'],['weak','🎯 Weak spots'],['exams','📅 Exams'],['guides','📥 Guides'],['board','🏆 Board'],['me','👤 Me']];
+  document.getElementById('nav').innerHTML=items.map(([k,l])=>`<button class="${cur===k||((k==='guides'&&cur==='guide')||k==='courses'&&['course','lesson','recall','theory','mock','flash','calc','cheat','quiz','past','feyn','eve','essay','sit'].includes(cur))?'on':''}" onclick="go('${k}')">${l}${k==='review'&&dueItems().length?' · '+dueItems().length:''}${k==='weak'&&Object.keys(ST.weak||{}).length?' · '+Object.keys(ST.weak).length:''}</button>`).join('')}
 
 /* ---------- router ---------- */
 function render(){
@@ -371,6 +437,7 @@ function render(){
   if(v==='quiz')return quiz(parts[1],parts[2]);
   if(v==='past')return past(parts[1]);
   if(v==='review')return review();
+  if(v==='weak')return weakDrill();
   if(v==='flash')return flash(parts[1]);
   if(v==='calc')return calc(parts[1]);
   if(v==='mock')return mock(parts[1]);
@@ -378,9 +445,35 @@ function render(){
   if(v==='exams')return exams();
   if(v==='board')return board();
   if(v==='me')return me();
+  if(v==='guides')return guides();
+  if(v==='guide')return fullGuide(parts[1]);
+  if(v==='eve')return eve(parts[1]);
+  if(v==='essay')return essay(parts[1],parts[2],parts[3]==null?null:+parts[3]);
+  if(v==='sit')return sit(parts[1]);
   }catch(e){app.innerHTML=`<div class="card no">Something went wrong: ${esc(e.message)}</div><button class="btn" onclick="go('home')">Home</button>`;console.error(e);return}
   home();
 }
+
+/* ---------- global search + weak spots ---------- */
+let SEARCH_INDEX=null;
+function plainHTML(s){const d=document.createElement('div');d.innerHTML=String(s||'');return(d.textContent||'').replace(/\s+/g,' ').trim()}
+function searchIndex(){if(SEARCH_INDEX)return SEARCH_INDEX;SEARCH_INDEX=[];COURSES.forEach(c=>{
+  SEARCH_INDEX.push({c,t:null,label:c.code+' · '+c.title,text:c.code+' '+c.title,target:'course-'+c.id});
+  c.topics.forEach(t=>{SEARCH_INDEX.push({c,t,label:c.code+' · '+t.n+' · '+t.title,text:t.title+' '+(t.cards||[]).map(x=>x.h+' '+plainHTML(x.b)).join(' '),target:t.outline?'course-'+c.id:'lesson-'+c.id+'-'+t.id+'-0'});
+    (t.recall||[]).forEach(r=>SEARCH_INDEX.push({c,t,label:c.code+' · '+t.n+' · Recall',text:r[0]+' '+r[1],target:'recall-'+c.id+'-'+t.id}));
+    (t.quiz||[]).forEach(q=>SEARCH_INDEX.push({c,t,label:c.code+' · '+t.n+' · Quiz',text:q.q+' '+(q.o||[]).join(' ')+' '+(q.w||''),target:'quiz-'+c.id+'-'+t.id}));
+  });if(c.data&&c.data.past)c.data.past.qs.forEach((q,i)=>SEARCH_INDEX.push({c,t:null,label:c.code+' · Past paper · '+(q.h||('Q'+(i+1))),text:q.q+' '+plainHTML(q.model),target:'past-'+c.id}));
+});return SEARCH_INDEX}
+function searchAll(raw){const box=document.getElementById('searchResults'),q=raw.trim().toLowerCase();if(!box)return;if(q.length<2){box.style.display='none';return}
+  const hits=searchIndex().filter(x=>x.text.toLowerCase().includes(q)).slice(0,30);
+  box.innerHTML=`<div class="row" style="justify-content:space-between"><b>Search results (${hits.length}${hits.length===30?' shown':''})</b><button class="btn small ghost" onclick="document.getElementById('searchResults').style.display='none'">Close</button></div>${hits.length?hits.map(x=>`<button class="searchResult" onclick="document.getElementById('searchResults').style.display='none';document.getElementById('search').value='';go('${x.target}')"><b>${esc(x.label)}</b><div class="kbd">${esc(x.text.slice(0,180))}</div></button>`).join(''):'<p class="kbd">No matches. Try a shorter term.</p>'}`;box.style.display='block'}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();const s=document.getElementById('search');s.focus();s.select()}if(e.key==='Escape')document.getElementById('searchResults').style.display='none'});
+function rememberMiss(cid,tid,q){const id=cid+'-'+tid+'-'+hash(q.q);const old=ST.weak[id]||{cid,tid,q:q.q,count:0};old.count++;ST.weak[id]=old;save()}
+function rememberCorrect(cid,tid,q){const id=cid+'-'+tid+'-'+hash(q.q),old=ST.weak[id];if(old){old.count--;if(old.count<=0)delete ST.weak[id];save()}}
+function weakDrill(){const list=Object.entries(ST.weak||{}).filter(([,x])=>x.count>0).map(([id,x])=>{const c=CBY[x.cid],t=c&&c.topics.find(z=>z.id===x.tid),q=t&&(t.quiz||[]).find(z=>z.q===x.q);return q?{id,c,t,q,count:x.count}:null}).filter(Boolean).slice(0,10);
+  app.innerHTML=`<h1>🎯 Weak spots</h1><p class="sub">Questions you missed in objective quizzes. A correct answer removes one miss.</p>${list.length?`<div class="card">${list.map(x=>`<div class="block"><div class="what"><b>${esc(x.c.code)} · ${esc(x.t.n)}</b><div>${esc(x.q.q)}</div></div><span class="pill r">${x.count} miss${x.count===1?'':'es'}</span></div>`).join('')}<button class="btn green big" onclick="runWeakQuiz()">Drill ${list.length} question${list.length===1?'':'s'} →</button></div>`:'<div class="card"><p>No missed questions saved yet. Missed objective questions will appear here.</p><button class="btn" onclick="go(\'courses\')">Browse courses</button></div>'}`}
+function runWeakQuiz(){const items=Object.entries(ST.weak||{}).map(([id,x])=>{const c=CBY[x.cid],t=c&&c.topics.find(z=>z.id===x.tid),q=t&&(t.quiz||[]).find(z=>z.q===x.q);return q?{id,c,t,q}:null}).filter(Boolean).slice(0,10);if(!items.length)return weakDrill();let k=0,got=0;
+  function show(){if(k>=items.length){app.innerHTML=`<div class="card"><h1>Drill complete</h1><p>${got}/${items.length} correct.</p><button class="btn green" onclick="go('weak')">Back to weak spots</button></div>`;return}const x=items[k],q=x.q;app.innerHTML=`<div class="kbd">${x.c.code} · ${k+1}/${items.length}</div><h1>${esc(q.q)}</h1><div class="card"><div>${objHTML(q,'wq')}</div><button id="wcheck" class="btn">Check</button><div id="wfb"></div></div>`;document.getElementById('wcheck').onclick=()=>{const ok=objCheck(q,'wq');if(ok){got++;rememberCorrect(x.c.id,x.t.id,q)}else rememberMiss(x.c.id,x.t.id,q);document.getElementById('wfb').innerHTML=`<p class="${ok?'ok':'no'}">${ok?'Correct!':'Answer: '+esc(objAnswer(q))}</p><button class="btn green" onclick="window._wqn()">Next →</button>`;document.getElementById('wcheck').style.display='none'};window._wqn=()=>{k++;show()}}show()}
 
 /* ---------- onboarding ---------- */
 let OB={name:'',electives:[]};
@@ -413,7 +506,7 @@ function home(){
   app.innerHTML=`
   <h1>Hi ${esc(ST.profile.name)} 👋</h1><p class="sub">${pretty(TODAY())}${cls?' · 🏫 '+cls:''}</p>
   <div class="card hero">${ring(d.min,g,'#2e7d4f',d.min+'<span style="font-size:12px;color:#999">/'+g+'</span>','minutes today')}
-   <div><div class="row"><span class="pill" style="background:#fff1e6;color:var(--fire)">🔥 ${streakAlive()?ST.streak.count:0}-day streak</span><span class="pill" style="background:#efeafe;color:var(--xp)">Lv ${L.lvl} · ${L.name}</span>${ST.freezes?`<span class="pill">🧊 ×${ST.freezes}</span>`:''}</div>
+   <div><div class="row"><span class="pill" style="background:var(--fire-soft);color:var(--fire)">🔥 ${streakAlive()?ST.streak.count:0}-day streak</span><span class="pill" style="background:var(--xp-soft);color:var(--xp)">Lv ${L.lvl} · ${L.name}</span>${ST.freezes?`<span class="pill">🧊 ×${ST.freezes}</span>`:''}</div>
    <div class="bar" style="margin:8px 0;--c:var(--xp)"><i style="width:${Math.round(100*L.into/L.need)}%"></i></div><div class="kbd">${L.need-L.into} XP to level ${L.lvl+1}</div>
    ${d.met?'<p class="ok" style="margin-top:8px">Goal met today. Anything more is bonus.</p>':`<p style="margin:8px 0 0"><b>${g-d.min} minutes</b> to keep your streak.</p>`}</div></div>
   ${!timerRun?`<div class="card" style="border-left:6px solid var(--fire)"><b>Start here:</b> press <b>▶ Start</b> on the timer, then open the first block below. One card at a time.</div>`:''}
@@ -437,22 +530,23 @@ function plan(){const P=buildPlan();const t=TODAY();
    ${(d.k===t?todayPlan():d.blocks).map(b=>{const c=b.c?CBY[b.c]:null;return`<div class="kbd" style="padding:2px 0">• <b style="color:${c?c.color:'#666'}">${c?c.code:'Review'}</b> ${esc(b.label)} <span>(${b.min}m)</span></div>`}).join('')||'<div class="kbd">Rest / buffer</div>'}</div>`}).join('')}`}
 
 /* ---------- COURSES ---------- */
-function courses(){const A=activeCourses(),el=COURSES.filter(c=>c.elective&&!A.includes(c));
-  app.innerHTML=`<h1>Your courses</h1><p class="sub">${A.length} courses in your plan. Courses marked <span class="pill o">outline</span> show the topic list now; full lessons are being added.</p>
-  <div class="grid">${A.map(c=>{const pg=courseProgress(c);return`<div class="card" style="border-left:6px solid ${c.color};cursor:pointer;--c:${c.color}" onclick="go('course-${c.id}')"><div class="kbd">${c.code}${c.elective?' · elective':''}${ST.examsDone[c.id]?' · ✅ done':''}</div><h3 style="margin:2px 0">${c.title}</h3><div class="kbd">Exam ${pretty(c.examDay)} · ${c.topics.length} topics ${c.status==='outline'?'<span class="pill o">outline</span>':''}</div><div class="bar" style="margin-top:8px"><i style="width:${pg}%"></i></div><div class="kbd">${pg}% mastered</div></div>`}).join('')}</div>
-  ${el.length?`<h2>Electives not in your plan</h2>${el.map(c=>`<div class="card row"><div style="flex:1"><b>${c.code}</b> ${c.title}<div class="kbd">${pretty(c.examDay)}</div></div><button class="btn small ghost" onclick="addElective('${c.id}')">Add to my plan</button></div>`).join('')}`:''}`}
+function courses(){const A=activeCourses();
+  app.innerHTML=`<h1>All courses</h1><p class="sub">${COURSES.length} courses on the site · ${A.length} included in your study plan. Open any course to study; electives can be added to your plan from your settings.</p>
+  <div class="grid">${COURSES.map(c=>{const pg=courseProgress(c),inPlan=A.includes(c);return`<div class="card" style="border-left:6px solid ${c.color};cursor:pointer;--c:${c.color}" onclick="go('course-${c.id}')"><div class="kbd">${c.code}${c.elective?' · elective':''}${inPlan?' · in plan':' · not in plan'}${ST.examsDone[c.id]?' · ✅ done':''}</div><h3 style="margin:2px 0">${c.title}</h3><div class="kbd">Exam ${pretty(c.examDay)} · ${c.topics.length} topics ${c.status==='outline'?'<span class="pill o">outline</span>':''}</div><div class="bar" style="margin-top:8px"><i style="width:${pg}%"></i></div><div class="kbd">${pg}% mastered</div></div>`}).join('')}</div>`}
 function addElective(id){ST.profile.electives.push(id);delete ST.planCache[TODAY()];save();toast('Added to your plan');courses()}
 function course(id){const c=CBY[id];if(!c)return go('courses');app.style.setProperty('--c',c.color);
   const nxt=c.topics.find(t=>topicState(id,t.id)!=='mastered');
   app.innerHTML=`<div class="kbd">${c.code}${c.elective?' · elective':''}</div><h1>${c.title}</h1>
   <p class="sub">Exam ${pretty(c.examDay)}, ${new Date(c.exam).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})} · ${countdown(c.exam)} left</p>
   <div class="card"><b>Exam format:</b> ${esc(c.format)}<div class="kbd" style="margin-top:4px">Target: 50+/65 (or the same share of the marks).</div></div>
+  ${studyResources(id)}
   ${c.status==='outline'?`<div class="warnbox">📥 Full lessons for this course are being added. For now, use the topic list as your reading checklist from the study guide, and tick topics as you finish them.</div>`:''}
   <div class="row">${nxt&&!nxt.outline?`<button class="btn green" onclick="go('lesson-${id}-${nxt.id}-0')">▶ Continue: ${esc(nxt.title)}</button>`:''}
-   ${c.data?`<button class="btn ghost" onclick="go('flash-${id}')">🃏 Flashcards</button><button class="btn ghost" onclick="go('mock-${id}')">📝 Mock exam</button><button class="btn ghost" onclick="go('cheat-${id}')">📄 Cheat sheet</button>`:''}
-   ${c.data&&c.data.calc?`<button class="btn ghost" onclick="go('calc-${id}')">🧮 Calculations</button>`:''}${c.data&&c.data.past?`<button class="btn orange" onclick="go('past-${id}')">📜 Past paper</button>`:''}</div>
+   ${c.data?`<button class="btn ghost" onclick="go('flash-${id}')">🃏 Flashcards</button><button class="btn ghost" onclick="go('mock-${id}')">📝 Mock exam</button><button class="btn ghost" onclick="go('cheat-${id}')">📄 Cheat sheet</button><button class="btn ghost" onclick="go('essay-${id}')">✍️ Essay trainer</button><button class="btn ghost" onclick="go('eve-${id}')">🌙 Exam-eve sheet</button><button class="btn ghost" onclick="go('guide-${id}')">📖 Full guide</button>`:''}
+   ${c.data&&c.data.calc?`<button class="btn ghost" onclick="go('calc-${id}')">🧮 Calculations</button>`:''}${c.data&&c.data.past?`<button class="btn orange" onclick="go('past-${id}')">📜 Past paper</button><button class="btn purple" onclick="go('sit-${id}')">🎓 Sit it timed${ST.sitDraft&&ST.sitDraft[id]?' (resume)':''}</button>`:''}</div>
+  ${(()=>{const n=confCounts(id);return`<div class="kbd" style="margin-top:8px">Confidence: 🔴 ${n.r} · 🟠 ${n.a} · 🟢 ${n.g}${n['']?` · ⚪ ${n['']} not rated`:''}. Rate each topic with the dots; the exam-eve sheet puts shaky topics first.</div>`})()}
   <h2>Topics</h2>
-  ${c.topics.map(t=>{const st=topicState(id,t.id),[cl,lbl]=STATE_LBL[st];return`<div class="card" style="border-left:5px solid ${c.color}"><div class="row"><div style="flex:1"><div class="kbd">${t.n}</div><b>${esc(t.title)}</b> <span class="pill ${cl}">${lbl}</span></div>
+  ${c.topics.map(t=>{const st=topicState(id,t.id),[cl,lbl]=STATE_LBL[st];return`<div class="card" style="border-left:5px solid ${c.color}"><div class="row"><div style="flex:1"><div class="kbd">${t.n}</div><b>${esc(t.title)}</b> <span class="pill ${cl}">${lbl}</span>${t.noExam?' <span class="pill o">not in exam</span>':''}</div>${confButtons(id,t.id)}
    ${t.outline?`<button class="btn small ${st==='mastered'?'ghost':'green'}" onclick="markOutline('${id}','${t.id}')">${st==='mastered'?'✓ Done':'Mark studied'}</button>`:`<button class="btn small" onclick="go('lesson-${id}-${t.id}-0')">Learn</button><button class="btn small ghost" onclick="go('recall-${id}-${t.id}')">Recall</button>${t.quiz&&t.quiz.length?`<button class="btn small ghost" onclick="go('quiz-${id}-${t.id}')">Quiz</button>`:''}${t.theory&&t.theory.length?`<button class="btn small ghost" onclick="go('theory-${id}-${t.id}')">Theory</button>`:''}`}</div>
    ${(()=>{const p=ST.topics[tkey(id,t.id)];return p&&(p.recallBest!=null||p.theoryBest!=null)?`<div class="kbd">Best recall ${p.recallBest??'—'}% · best theory ${p.theoryBest??'—'}%</div>`:''})()}</div>`}).join('')}`}
 function markOutline(c,t){const p=TP(c,t);if(topicState(c,t)==='mastered'){p.recallBest=null;p.recallLast=null;p.cards=[]}else{p.started=p.started||TODAY();p.recallBest=100;p.recallLast=100;p.recallLastDay=TODAY();addXP(30,'topic studied');confetti()}save();course(c)}
@@ -463,13 +557,13 @@ function lesson(cid,tid,i){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);if(!t
   app.innerHTML=`<div class="kbd"><a href="#course-${cid}">${c.code}</a> · ${t.n}</div>${i===0?`<h1>${esc(t.title)}</h1><p class="sub">${esc(t.why||'')}</p>${warmup(cid,tid)}`:`<h3 style="margin:4px 0">${esc(t.title)}</h3>`}
    <div class="prog">${t.cards.map((_,k)=>`<i class="${p.cards.includes(k)||k<i?'d':''}"></i>`).join('')}</div>
    <div class="card"><div class="kbd">Card ${i+1} of ${t.cards.length}</div><h2 style="margin-top:4px">${card.h}</h2>${card.b}</div>
-   <div class="card" style="background:#fbfaf7"><b>🗣 Say it out loud:</b> close your eyes and explain this card in one sentence. Can't? Read it once more.</div>
+   <div class="card" style="background:var(--card2)"><b>🗣 Say it out loud:</b> close your eyes and explain this card in one sentence. Can't? Read it once more.</div>
    <button class="btn ghost" ${i===0?'disabled':''} onclick="go('lesson-${cid}-${tid}-${i-1}')">← Back</button>
    <button class="btn green big" onclick="cardDone('${cid}','${tid}',${i})">${i===t.cards.length-1?'Done → Explain it':'Got it → Next'}</button>`}
 function cardDone(cid,tid,i){const p=TP(cid,tid);if(!p.cards.includes(i)){p.cards.push(i);day().cards++;addXP(5)}questTick();checkBadges();save();go('lesson-'+cid+'-'+tid+'-'+(i+1))}
 function warmup(cid,tid){const pool=[];Object.entries(ST.srs).forEach(([k,v])=>{const[c,t,i]=k.split('|');if(c===cid&&t===tid)return;const co=CBY[c];if(!co||ST.examsDone[c])return;const to=co.topics.find(x=>x.id===t);if(to&&to.recall&&to.recall[i])pool.push([co.code,to.recall[i][0],to.recall[i][1]])});
   if(!pool.length)return'';const pick=pool.sort(()=>Math.random()-.5).slice(0,3);
-  return`<div class="card" style="background:#fffdf5"><b>🔁 Warm-up from earlier topics</b>. Answer in your head, then tap.${pick.map(p=>`<div style="margin-top:10px"><div><span class="pill">${p[0]}</span>${esc(p[1])}</div><button class="btn small ghost" onclick="this.nextElementSibling.classList.toggle('show')">Show</button><div class="reveal ok" style="font-weight:500">${esc(p[2])}</div></div>`).join('')}</div>`}
+  return`<div class="card" style="background:var(--warm)"><b>🔁 Warm-up from earlier topics</b>. Answer in your head, then tap.${pick.map(p=>`<div style="margin-top:10px"><div><span class="pill">${p[0]}</span>${esc(p[1])}</div><button class="btn small ghost" onclick="this.nextElementSibling.classList.toggle('show')">Show</button><div class="reveal ok" style="font-weight:500">${esc(p[2])}</div></div>`).join('')}</div>`}
 
 /* ---------- FEYNMAN ---------- */
 function feyn(cid,tid){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);app.style.setProperty('--c',c.color);const prev=ST.feyn[tkey(cid,tid)]||'';
@@ -494,7 +588,7 @@ function recall(cid,tid){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);if(!t||
        ${t.quiz&&t.quiz.length?`<button class="btn green big" onclick="go('quiz-${cid}-${tid}')">Next: objective quiz →</button>`:t.theory&&t.theory.length?`<button class="btn green big" onclick="go('theory-${cid}-${tid}')">Next: theory practice →</button>`:''}
        <button class="btn ghost" onclick="go('recall-${cid}-${tid}')">Retry</button><button class="btn ghost" onclick="go('course-${cid}')">Back to course</button>`;return}
     const Q=qs[k];app.innerHTML=`<div class="kbd">${c.code} · ${t.n} · Active recall</div><h1>From memory only</h1>
-     <div class="prog">${qs.map((_,j)=>`<i class="${j<k?'d':''}"></i>`).join('')}</div>${combo>=3?`<div class="pill" style="background:#fff1e6;color:var(--fire)">🔥 Combo ×${combo}</div>`:''}
+     <div class="prog">${qs.map((_,j)=>`<i class="${j<k?'d':''}"></i>`).join('')}</div>${combo>=3?`<div class="pill" style="background:var(--fire-soft);color:var(--fire)">🔥 Combo ×${combo}</div>`:''}
      <div class="card"><div class="kbd">Question ${k+1} of ${qs.length}</div><h2 style="margin-top:4px">${esc(Q.q)}</h2>
      <textarea id="ra" placeholder="Type or say your answer, then reveal."></textarea>
      <button class="btn" style="margin-top:8px" onclick="document.getElementById('rv').classList.add('show');this.style.display='none'">Reveal answer</button>
@@ -522,22 +616,23 @@ function quiz(cid,tid){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);if(!t||!t
      <div class="prog">${items.map((_,j)=>`<i class="${j<k?'d':''}"></i>`).join('')}</div>
      <div class="card"><div class="kbd">Question ${k+1} of ${items.length}</div><h2 style="margin-top:4px">${esc(it.q)}</h2><div id="qa">${objHTML(it,'qx')}</div>
      <button class="btn" id="qchk" style="margin-top:8px">Check</button><div id="qfb"></div></div>`;
-    document.getElementById('qchk').onclick=()=>{const ok=objCheck(it,'qx');day().recall++;if(ok){got++;day().correct++;chime(1)}questTick();
+    document.getElementById('qchk').onclick=()=>{const ok=objCheck(it,'qx');day().recall++;if(ok){got++;day().correct++;rememberCorrect(cid,tid,it);chime(1)}else rememberMiss(cid,tid,it);questTick();
       document.getElementById('qfb').innerHTML=`<p class="${ok?'ok':'no'}">${ok?'Correct!':'Answer: '+esc(objAnswer(it))}</p>${it.w?`<p class="kbd">${esc(it.w)}</p>`:''}<button class="btn green" onclick="window._qn()">Next →</button>`;document.getElementById('qchk').style.display='none'};
     window._qn=()=>{k++;show()}}
   show()}
 
 /* ---------- PAST PAPER ---------- */
 function past(cid){const c=CBY[cid],P=c.data&&c.data.past;if(!P)return course(cid);app.style.setProperty('--c',c.color);
-  app.innerHTML=`<div class="kbd">${c.code}</div><h1>📜 ${esc(P.title)}</h1><p class="sub">${P.note||''}</p>
+  app.innerHTML=`<div class="kbd">${c.code}</div><h1>📜 ${esc(P.title)}</h1><p class="sub">${P.note||''}</p><div class="row no-print"><button class="btn small purple" onclick="go('sit-${cid}')">🎓 Sit it under exam time</button><button class="btn small" onclick="window.print()">🖨 Print / Save PDF</button></div>${P.rule?`<div class="card"><b>Rule:</b> ${esc(P.rule)}</div>`:''}
   ${P.qs.map((q,i)=>`<div class="card"><h3 style="margin-top:0">${esc(q.h||('Q'+(i+1)))}${q.marks?` <span class="pill">${q.marks} marks</span>`:''}</h3><p>${q.q}</p><textarea placeholder="Write your answer…"></textarea>
    <button class="btn small" style="margin-top:8px" onclick="document.getElementById('pp${i}').classList.add('show');day().theory++;questTick();save()">Mark my answer</button>
+   <button class="btn small ghost no-print" style="margin-top:8px" onclick="go('essay-${cid}-past-${i}')">✍️ 5-part frame</button>
    <div class="reveal" id="pp${i}"><div class="pts">${q.pts.map(p=>`<label><input type="checkbox">${esc(p)}</label>`).join('')}</div><details><summary><b>Model answer</b></summary>${q.model}</details></div></div>`).join('')}`}
 
 /* ---------- THEORY ---------- */
 function theory(cid,tid){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);app.style.setProperty('--c',c.color);
   app.innerHTML=`<div class="kbd">${c.code} · ${t.n}</div><h1>Exam-style theory</h1><p class="sub">Pick ONE question. Write a full answer (8–10 min): define → explain in numbered points → example → conclude. Then mark yourself honestly.</p>
-  ${t.theory.map((q,i)=>`<div class="card"><h3 style="margin-top:0">Q${i+1}. ${esc(q.q)}</h3><textarea placeholder="Write your answer…"></textarea>
+  ${t.theory.map((q,i)=>`<div class="card"><h3 style="margin-top:0">Q${i+1}. ${esc(q.q)}</h3><textarea placeholder="Write your answer…"></textarea><button class="btn small ghost" style="margin-top:8px" onclick="go('essay-${cid}-${tid}-${i}')">✍️ Write it in the 5-part frame</button>
    <button class="btn small" style="margin-top:8px" onclick="document.getElementById('tr${i}').classList.add('show')">Mark my answer</button>
    <div class="reveal" id="tr${i}"><h3>Tick each point you included</h3><div class="pts">${q.pts.map(p=>`<label><input type="checkbox" class="p${i}" onchange="tscore('${cid}','${tid}',${i},${q.pts.length})">${esc(p)}</label>`).join('')}</div>
    <p id="sc${i}" class="kbd"></p><button class="btn small purple" onclick="tsubmit('${cid}','${tid}',${i},${q.pts.length})">Save score</button>
@@ -549,7 +644,7 @@ function tsubmit(cid,tid,i,n){const s=document.querySelectorAll('.p'+i+':checked
 
 /* ---------- REVIEW (spaced) ---------- */
 function review(){const items=dueItems().sort(()=>Math.random()-.5).slice(0,25);
-  if(!items.length){app.innerHTML=`<h1>🔁 Spaced review</h1><div class="card"><p><b>Nothing due right now.</b> Cards you answer in recall quizzes come back here after 1, 2, 4, 7 and 14 days. Miss one and it returns tomorrow.</p><button class="btn" onclick="go('home')">Back to today</button></div>`;return}
+  if(!items.length){app.innerHTML=`<h1>🔁 Spaced review</h1><div class="card"><p><b>Nothing due right now.</b> Cards you answer in recall quizzes come back here after 1, 2, 4, 7 and 14 days. Miss one and it returns tomorrow.</p><button class="btn purple" onclick="go('weak')">🎯 Drill weak spots</button><button class="btn" onclick="go('home')">Back to today</button></div>`;return}
   let k=0,got=0;function show(){if(k>=items.length){addXP(got*2,'review');confetti();app.innerHTML=`<div class="card" style="text-align:center"><div class="bigemoji">🔁</div><h1>Review cleared</h1><p>${got}/${items.length} remembered.</p><button class="btn green big" onclick="go('home')">Back to today</button></div>`;return}
     const it=items[k];app.style.setProperty('--c',it.co.color);
     app.innerHTML=`<h1>🔁 Spaced review</h1><div class="kbd">${k+1}/${items.length} due · ${it.co.code} · ${esc(it.to.title)}</div>
@@ -578,9 +673,9 @@ function chk(cid,i){const q=CBY[cid].data.calc[i];const v=parseFloat(document.ge
 /* ---------- MOCK ---------- */
 let mockT=null;
 function mock(cid){const c=CBY[cid];if(!c||!c.data)return go('course-'+cid);app.style.setProperty('--c',c.color);
-  const all=[];c.topics.forEach(t=>(t.theory||[]).forEach(q=>all.push(Object.assign({topic:t.title},q))));
+  const all=[];c.topics.filter(t=>!t.noExam).forEach(t=>(t.theory||[]).forEach(q=>all.push(Object.assign({topic:t.title},q))));
   const seed=hash(TODAY()+cid);const qs=all.map(q=>[hash(q.q+seed),q]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]).slice(0,c.mockTheory||4);window._mq=qs;
-  const ob=[];c.topics.forEach(t=>(t.quiz||[]).forEach(q=>ob.push(q)));const os=ob.map(q=>[hash(q.q+seed),q]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]).slice(0,10);window._mo=os;
+  const ob=[];c.topics.filter(t=>!t.noExam).forEach(t=>(t.quiz||[]).forEach(q=>ob.push(q)));const os=ob.map(q=>[hash(q.q+seed),q]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]).slice(0,10);window._mo=os;
   const last=ST.mocks[cid];
   app.innerHTML=`<div class="kbd">${c.code}</div><h1>📝 Timed mock</h1><p class="sub">Objective + theory, <b>45 minutes</b>, closed notes. ${esc(c.format)}</p>
   ${last?`<div class="card ok">Last mock: ${last.score}% on ${pretty(last.date)}</div>`:''}
@@ -596,7 +691,7 @@ function saveMock(cid){ST.mocks[cid]={score:window._mp||0,date:TODAY()};addXP(50
 
 /* ---------- CHEAT SHEET (auto from definitions) ---------- */
 function cheat(cid){const c=CBY[cid];app.style.setProperty('--c',c.color);ST.flags['cheat_'+cid]=TODAY();save();
-  app.innerHTML=`<div class="kbd">${c.code}</div><h1>📄 Cheat sheet</h1><p class="sub">Every recall answer, topic by topic. Read slowly the morning of the exam.</p>
+  app.innerHTML=`<div class="kbd">${c.code}</div><h1>📄 Cheat sheet</h1><p class="sub">Every recall answer, topic by topic. Read slowly the morning of the exam.</p><button class="btn small no-print" onclick="window.print()">🖨 Print / Save PDF</button>
   ${c.topics.map(t=>`<div class="card" style="border-left:5px solid ${c.color}"><h3 style="margin-top:0">${t.n}: ${esc(t.title)}</h3>${t.recall?`<ul>${t.recall.map(r=>`<li><b>${esc(r[0])}</b> ${esc(r[1])}</li>`).join('')}</ul>`:'<p class="kbd">Outline topic: revise from your study guide.</p>'}</div>`).join('')}`}
 
 /* ---------- EXAMS ---------- */
@@ -617,16 +712,16 @@ let lastPush='';function pushBoard(){if(!DB||!UID||!ST.profile)return;const body
 function shareText(){const L=levelOf(ST.xp),d=day();return`🔥 ${ST.profile.name} · Study Streak (PAU 400L SEN)\n🔥 Streak: ${streakAlive()?ST.streak.count:0} days\n⏱ Today: ${d.min}/${goalFor(TODAY())} min\n⚡ ${ST.xp} XP · Level ${L.lvl} ${L.name}\n⭐ Topics mastered: ${masteredCount()}\nNo carry-over this semester. Who's beating me today?`}
 function board(){const rows=boardRows||[];
   app.innerHTML=`<h1>🏆 Leaderboard</h1>
-  <div class="card"><h3 style="margin-top:0">Share card (works for everyone)</h3><pre class="mono" style="white-space:pre-wrap;background:#faf9f6;padding:12px;border-radius:10px">${esc(shareText())}</pre>
+  <div class="card"><h3 style="margin-top:0">Share card (works for everyone)</h3><pre class="mono" style="white-space:pre-wrap;background:var(--soft);padding:12px;border-radius:10px">${esc(shareText())}</pre>
    <button class="btn green" onclick="copyShare()">📋 Copy for WhatsApp</button><div class="kbd">Paste it in the class group every night. Lowest streak buys suya. 😄</div></div>
-  <div class="card"><h3 style="margin-top:0">Live board</h3>${rows.length?rows.map((r,i)=>`<div class="lb ${r.id===UID?'me':''}"><div class="rk">${i+1}</div><div style="flex:1"><b>${esc(r.name||'?')}</b><div class="kbd">🔥 ${r.streak||0} · ⭐ ${r.mastered||0} mastered</div></div><div style="font-weight:900;color:var(--xp)">⚡ ${r.xp||0}</div></div>`).join(''):`<p class="kbd">${esc(boardMsg||'No entries yet.')}</p>`}</div>`}
+  ${DB?`<div class="card"><h3 style="margin-top:0">Live board</h3>${rows.length?rows.map((r,i)=>`<div class="lb ${r.id===UID?'me':''}"><div class="rk">${i+1}</div><div style="flex:1"><b>${esc(r.name||'?')}</b><div class="kbd">🔥 ${r.streak||0} · ⭐ ${r.mastered||0} mastered</div></div><div style="font-weight:900;color:var(--xp)">⚡ ${r.xp||0}</div></div>`).join(''):`<p class="kbd">${esc(boardMsg||'No entries yet.')}</p>`}</div>`:''}`}
 function copyShare(){const t=shareText();try{navigator.clipboard.writeText(t).then(()=>toast('Copied!'),()=>fallbackCopy(t))}catch(e){fallbackCopy(t)}}
 function fallbackCopy(t){modal(`<h3>Copy this</h3><textarea style="min-height:160px">${esc(t)}</textarea><button class="btn" onclick="closeModal()">Done</button>`)}
 
 /* ---------- ME / settings ---------- */
 function me(){const L=levelOf(ST.xp);const last14=[...Array(14)].map((_,i)=>addDays(TODAY(),i-13));const mx=Math.max(60,...last14.map(k=>(ST.days[k]||{}).min||0));
   app.innerHTML=`<h1>👤 ${esc(ST.profile.name)}</h1><p class="sub">Level ${L.lvl} · ${L.name} · ${ST.xp} XP · best streak ${ST.streak.best} days · 🧊 ${ST.freezes} freeze${ST.freezes===1?'':'s'}</p>
-  <div class="card"><h3 style="margin-top:0">Last 14 days (minutes)</h3><div style="display:flex;gap:4px;align-items:flex-end;height:120px">${last14.map(k=>{const m=(ST.days[k]||{}).min||0,met=(ST.days[k]||{}).met;return`<div title="${pretty(k)}: ${m} min" style="flex:1;background:${met?'var(--good)':'#c9c5ba'};height:${Math.max(3,100*m/mx)}%;border-radius:4px 4px 0 0"></div>`}).join('')}</div><div class="kbd">Green = goal met</div></div>
+  <div class="card"><h3 style="margin-top:0">Last 14 days (minutes)</h3><div style="display:flex;gap:4px;align-items:flex-end;height:120px">${last14.map(k=>{const m=(ST.days[k]||{}).min||0,met=(ST.days[k]||{}).met;return`<div title="${pretty(k)}: ${m} min" style="flex:1;background:${met?'var(--good)':'var(--bar-off)'};height:${Math.max(3,100*m/mx)}%;border-radius:4px 4px 0 0"></div>`}).join('')}</div><div class="kbd">Green = goal met</div></div>
   <h2>Badges</h2><div class="badges">${BADGES.map(b=>`<div class="badge ${ST.badges[b.id]?'':'lock'}"><div class="e">${b.e}</div><b style="font-size:13.5px">${b.n}</b><div class="kbd" style="font-size:11.5px">${b.d}</div></div>`).join('')}</div>
   <h2>Settings</h2>
   <div class="card"><b>Name</b><input type="text" id="nm2" value="${esc(ST.profile.name)}" maxlength="24"><button class="btn small" style="margin-top:6px" onclick="ST.profile.name=document.getElementById('nm2').value.trim()||ST.profile.name;save();toast('Saved');renderStats()">Save</button></div>
@@ -640,6 +735,123 @@ function importCode(){modal(`<h3>Paste your backup code</h3><textarea id="imp" s
 function doImport(){try{const s=JSON.parse(decodeURIComponent(escape(atob(document.getElementById('imp').value.trim()))));if(!s.v)throw 0;ST=Object.assign(blank(),s);saveNow();closeModal();toast('Progress restored');go('home')}catch(e){toast('That code didn\'t work')}}
 function prompt2(){return true}
 function resetAll(){modal(`<h3>Reset everything?</h3><p>This deletes your streak, XP and progress on this device.</p><button class="btn red" onclick="ST=blank();saveNow();closeModal();render()">Yes, reset</button><button class="btn ghost" onclick="closeModal()">Cancel</button>`)}
+
+/* ---------- THEME (auto / light / dark) ---------- */
+const THEME_KEY='pau400sen_theme';
+function curTheme(){try{return localStorage.getItem(THEME_KEY)||'auto'}catch(e){return'auto'}}
+function applyTheme(){const t=curTheme(),r=document.documentElement;if(t==='auto')delete r.dataset.theme;else r.dataset.theme=t;const b=document.getElementById('themeBtn');if(b){b.textContent=t==='dark'?'🌙':t==='light'?'☀️':'🌓';b.title='Theme: '+(t==='auto'?'match device':t)+' (tap to change)'}}
+function cycleTheme(){const n={auto:'light',light:'dark',dark:'auto'}[curTheme()]||'auto';try{localStorage.setItem(THEME_KEY,n)}catch(e){}applyTheme();toast('Theme: '+(n==='auto'?'match device':n))}
+applyTheme();
+function syncTopH(){const t=document.getElementById('top');if(t)document.documentElement.style.setProperty('--toph',t.offsetHeight+'px')}
+window.addEventListener('resize',syncTopH);window.addEventListener('hashchange',()=>setTimeout(syncTopH,0));setTimeout(syncTopH,0);
+
+/* ---------- STUDY GUIDES (downloads + printable full guide) ---------- */
+function guides(){
+  app.innerHTML=`<h1>📥 Study guides</h1><p class="sub">Download the full study guide for every course, or open the complete guide built from every lesson in this app and save it as a PDF.</p>
+  ${COURSES.map(c=>{const res=COURSE_GUIDES[c.id]||[],base='assets/course-guides/'+c.id+'/';return`<div class="card" style="border-left:6px solid ${c.color}"><div class="kbd">${c.code}${c.elective?' · elective':''} · exam ${pretty(c.examDay)}</div><h3 style="margin:2px 0 8px">${esc(c.title)}</h3>
+   <div class="block"><div class="what"><b>Complete app guide</b> <span class="pill o">PRINT / PDF</span><div class="kbd">All ${c.topics.length} topics: every lesson card, recall answer and model answer.</div></div><button class="btn small purple" onclick="go('guide-${c.id}')">📖 Open</button></div>
+   ${res.map(r=>`<div class="block"><div class="what"><b>${esc(r.name)}</b> <span class="pill o">${r.type.toUpperCase()}</span>${r.note?`<div class="kbd">${esc(r.note)}</div>`:''}</div><a class="btn small green" href="${base+r.file}" download>⬇ Download</a><a class="btn small ghost" href="${base+r.file}" target="_blank" rel="noopener">Open</a></div>`).join('')}</div>`}).join('')}`}
+function fullGuide(cid){const c=CBY[cid];if(!c)return go('guides');app.style.setProperty('--c',c.color);
+  app.innerHTML=`<div class="kbd no-print"><a href="#guides">Study guides</a> · <a href="#course-${cid}">${c.code}</a></div><h1>${c.code} · ${esc(c.title)}</h1>
+  <p class="sub">Complete study guide built from every lesson card, recall question and model answer in this app. Exam ${pretty(c.examDay)}.</p>
+  <div class="row no-print"><button class="btn small" onclick="document.querySelectorAll('#app details').forEach(d=>d.open=true);window.print()">🖨 Print / Save PDF</button><button class="btn small ghost" onclick="document.querySelectorAll('#app details').forEach(d=>d.open=!d.open)">Show / hide answers</button></div>
+  <div class="card"><b>Exam format:</b> ${esc(c.format)}<h3>Contents</h3><ol>${c.topics.map(t=>`<li><a href="javascript:void 0" onclick="document.getElementById('g-${t.id}').scrollIntoView({behavior:'smooth'})">${esc(t.title)}</a></li>`).join('')}</ol></div>
+  ${c.topics.map(t=>`<section id="g-${t.id}"><h2>${t.n}: ${esc(t.title)}</h2>${t.why?`<p class="kbd">${esc(t.why)}</p>`:''}
+   ${t.outline?'<p class="kbd">Outline topic: revise it from the downloadable guide.</p>':''}
+   ${(t.cards||[]).map(k=>`<div class="card"><h3 style="margin-top:0">${k.h}</h3>${k.b}</div>`).join('')}
+   ${t.recall&&t.recall.length?`<div class="card"><h3 style="margin-top:0">Recall check</h3><ul>${t.recall.map(r=>`<li><b>${esc(r[0])}</b> ${esc(r[1])}</li>`).join('')}</ul></div>`:''}
+   ${t.theory&&t.theory.length?`<div class="card"><h3 style="margin-top:0">Theory questions</h3>${t.theory.map((q,i)=>`<p><b>Q${i+1}. ${esc(q.q)}</b></p><details><summary>Model answer</summary>${q.model}</details>`).join('')}</div>`:''}</section>`).join('')}`}
+
+/* ---------- CONFIDENCE (red / amber / green per topic) ---------- */
+const CONF_LBL={r:'Shaky',a:'Getting there',g:'Confident'};
+function confOf(cid,tid){return(ST.conf||{})[tkey(cid,tid)]||''}
+function setConf(cid,tid,v,ev){if(ev)ev.stopPropagation();ST.conf=ST.conf||{};const k=tkey(cid,tid);if(ST.conf[k]===v)delete ST.conf[k];else ST.conf[k]=v;save();course(cid)}
+function confButtons(cid,tid){const v=confOf(cid,tid);return`<span class="conf" title="How confident are you? Tap again to clear.">${['r','a','g'].map(x=>`<button class="${x} ${v===x?'on':''}" aria-label="${CONF_LBL[x]}" title="${CONF_LBL[x]}" onclick="setConf('${cid}','${tid}','${x}',event)"></button>`).join('')}</span>`}
+function confCounts(cid){const n={r:0,a:0,g:0,'':0};CBY[cid].topics.forEach(t=>n[confOf(cid,t.id)]++);return n}
+
+/* ---------- EXAM-EVE SHEET ---------- */
+function boxesIn(html,cls){const d=document.createElement('div');d.innerHTML=html||'';return[...d.querySelectorAll('.'+cls)].map(e=>e.innerHTML)}
+function eve(cid){const c=CBY[cid];if(!c)return go('courses');app.style.setProperty('--c',c.color);
+  const rank={r:0,a:1,'':2,g:3},col={r:'var(--red)',a:'var(--amber)',g:'var(--green)','':'var(--line)'},dot={r:'🔴',a:'🟠',g:'🟢','':'⚪'};
+  const ts=c.topics.map((t,i)=>({t,i,v:confOf(cid,t.id)})).sort((x,y)=>rank[x.v]-rank[y.v]||x.i-y.i);const n=confCounts(cid);const P=c.data&&c.data.past;
+  app.innerHTML=`<div class="kbd no-print"><a href="#course-${cid}">${c.code}</a></div><h1>🌙 Exam-eve sheet</h1>
+  <p class="sub">${c.code} · exam ${pretty(c.examDay)}, ${new Date(c.exam).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}. Shakiest topics first, with every exam trap and memory hook. Read it slowly the night before, then sleep.</p>
+  <div class="row no-print"><button class="btn small" onclick="window.print()">🖨 Print / Save PDF</button><span class="pill" style="background:var(--bad-soft);color:var(--bad)">🔴 ${n.r}</span><span class="pill r">🟠 ${n.a}</span><span class="pill m">🟢 ${n.g}</span>${n['']?`<span class="pill o">⚪ ${n['']} not rated</span>`:''}</div>
+  ${n['']===c.topics.length?`<div class="warnbox no-print">Rate your topics on the course page (🔴 🟠 🟢) and this sheet puts your weakest topics first.</div>`:''}
+  <div class="card"><b>Exam format:</b> ${esc(c.format)}${P&&P.rule?`<div style="margin-top:4px"><b>Past-paper rule:</b> ${esc(P.rule)}</div>`:''}</div>
+  ${ts.map(({t,v})=>{const traps=[].concat(...(t.cards||[]).map(k=>boxesIn(k.b,'trap'))),hooks=[].concat(...(t.cards||[]).map(k=>boxesIn(k.b,'hook')));const rec=v==='g'?[]:(t.recall||[]).slice(0,v==='r'?999:10);
+   return`<div class="card" style="border-left:6px solid ${col[v]}"><h3 style="margin-top:0">${dot[v]} ${esc(t.title)}</h3>
+    ${traps.map(x=>`<div class="eve-trap">⚠️ ${x}</div>`).join('')}${hooks.map(x=>`<div class="eve-hook">🧠 ${x}</div>`).join('')}
+    ${rec.length?`<ul>${rec.map(r=>`<li><b>${esc(r[0])}</b> ${esc(r[1])}</li>`).join('')}</ul>`:''}
+    ${!traps.length&&!hooks.length&&!rec.length?'<p class="kbd">Confident. Skim the cheat sheet only.</p>':''}</div>`}).join('')}
+  <button class="btn green no-print" onclick="go('course-${cid}')">Back to course</button>`;
+  ST.flags['cheat_'+cid]=TODAY();save()}
+
+/* ---------- ESSAY TRAINER (5-part frame) ---------- */
+const FRAME=[['Background','Define the key terms and set the context in 2–3 sentences.'],['Answer and solution','Your main points, numbered. One point per line, each with a short explanation.'],['Scenario','A concrete example: a Nigerian business, PAU, or a case from the notes.'],['How they combine','Link your points to the scenario: show how each one plays out there.'],['Conclusion','One or two sentences: your verdict or recommendation.']];
+function essayQs(cid){const c=CBY[cid],out=[];c.topics.forEach(t=>(t.theory||[]).forEach((q,i)=>out.push({src:t.id,i,q:q.q,pts:q.pts||[],model:q.model,label:t.title,marks:null,html:false})));
+  const P=c.data&&c.data.past;if(P)P.qs.forEach((q,i)=>out.push({src:'past',i,q:q.q,pts:q.pts||[],model:q.model,label:'Past paper · '+(q.h||'Q'+(i+1)),marks:q.marks,html:true}));return out}
+function essayRandom(cid){const Q=essayQs(cid);if(!Q.length)return;const x=Q[Math.floor(Math.random()*Q.length)];go('essay-'+cid+'-'+x.src+'-'+x.i)}
+function essayPick(cid){const c=CBY[cid];if(!c)return go('courses');app.style.setProperty('--c',c.color);const Q=essayQs(cid);ST.essays=ST.essays||{};
+  app.innerHTML=`<div class="kbd"><a href="#course-${cid}">${c.code}</a></div><h1>✍️ Essay trainer</h1><p class="sub">Write any theory answer in the five-part frame: Background → Answer and solution → Scenario → How they combine → Conclusion. Then tick the marking points you hit. Drafts save as you type.</p>
+  ${Q.length?`<div class="row"><button class="btn green" onclick="essayRandom('${cid}')">🎲 Random question</button></div>`:'<div class="card">No theory questions in this course yet.</div>'}
+  <div class="card">${Q.map(x=>{const d=ST.essays[cid+'|'+x.src+'|'+x.i],txt=plainHTML(x.q);return`<div class="block"><div class="what"><div class="kbd">${esc(x.label)}${x.marks?' · '+x.marks+' marks':''}</div>${esc(txt.slice(0,170))}${txt.length>170?'…':''}</div>${d&&d.best!=null?`<span class="pill m">${d.best}%</span>`:d?'<span class="pill l">draft</span>':''}<button class="btn small" onclick="go('essay-${cid}-${x.src}-${x.i}')">Write</button></div>`}).join('')}</div>`}
+function essay(cid,src,i){const c=CBY[cid];if(!c)return go('courses');if(src==null||i==null||isNaN(i))return essayPick(cid);app.style.setProperty('--c',c.color);
+  const x=essayQs(cid).find(q=>q.src===src&&q.i===i);if(!x)return essayPick(cid);ST.essays=ST.essays||{};const key=cid+'|'+src+'|'+i;
+  const d=ST.essays[key]||{parts:['','','','',''],best:null};const mins=x.marks?Math.max(5,Math.round(x.marks*1.6)):10;window._ek=key;
+  app.innerHTML=`<div class="kbd"><a href="#course-${cid}">${c.code}</a> · <a href="#essay-${cid}">Essay trainer</a> · ${esc(x.label)}</div><h1>✍️ Five-part answer</h1>
+  <div class="card"><div class="row">${x.marks?`<span class="pill">${x.marks} marks</span>`:''}<span class="pill o">~${mins} min</span>${d.best!=null?`<span class="pill m">best ${d.best}%</span>`:''}</div><div style="font-size:17px;margin-top:6px">${x.html?x.q:'<b>'+esc(x.q)+'</b>'}</div><div class="kbd" style="margin-top:6px">Tip: start the focus timer, then write for about ${mins} minutes without notes.</div></div>
+  <div class="card"><div class="bar"><i id="efbar"></i></div><div class="kbd" id="efstat"></div>
+  ${FRAME.map(([h,tip],j)=>`<div class="frame"><h3>${j+1}. ${h}</h3><div class="kbd">${tip}</div><textarea id="ef${j}" oninput="essayType(${j},this.value)" placeholder="${h}…">${esc(d.parts[j]||'')}</textarea><div class="kbd" id="efw${j}"></div></div>`).join('')}
+  <button class="btn purple big" onclick="document.getElementById('emark').classList.add('show');this.style.display='none';document.getElementById('emark').scrollIntoView({behavior:'smooth'})">Mark my answer</button>
+  <div class="reveal" id="emark"><h3>Tick each marking point your answer states clearly</h3><div class="pts">${x.pts.map(p=>`<label><input type="checkbox" class="ep" onchange="essayScore()">${esc(p)}</label>`).join('')}</div>
+   <p id="escore" class="kbd"></p><button class="btn green" onclick="essaySave('${cid}','${src}',${i})">Save score</button>
+   <details><summary><b>Model answer</b></summary>${x.model}</details></div></div>
+  <button class="btn ghost" onclick="essayRandom('${cid}')">🎲 Another question</button>`;essayStat()}
+function essayType(j,v){const k=window._ek;ST.essays[k]=ST.essays[k]||{parts:['','','','',''],best:null};ST.essays[k].parts[j]=v;save();essayStat()}
+function essayStat(){let filled=0,words=0;FRAME.forEach((_,j)=>{const el=document.getElementById('ef'+j);if(!el)return;const n=el.value.trim().split(/\s+/).filter(Boolean).length;words+=n;if(n>=8)filled++;const w=document.getElementById('efw'+j);if(w)w.textContent=n+' words'+(n>=8?' ✓':'')});
+  const b=document.getElementById('efbar');if(b)b.style.width=(20*filled)+'%';const s=document.getElementById('efstat');if(s)s.textContent=`${filled}/5 sections written · ${words} words`}
+function essayScore(){const all=document.querySelectorAll('.ep').length,n=document.querySelectorAll('.ep:checked').length,p=all?Math.round(100*n/all):0;document.getElementById('escore').innerHTML=`<b>${n}/${all} points · ${p}%</b> — ${p>=75?'exam-ready':p>=50?'pass level; add the missing points':'re-read the model answer, then rewrite from memory'}`;return p}
+function essaySave(cid,src,i){const p=essayScore(),k=cid+'|'+src+'|'+i;ST.essays[k]=ST.essays[k]||{parts:['','','','',''],best:null};ST.essays[k].best=Math.max(ST.essays[k].best??0,p);
+  if(src!=='past'){const tp=TP(cid,src);tp.theoryBest=Math.max(tp.theoryBest??0,p)}day().theory++;addXP(12+Math.round(p/10),'essay');questTick();checkBadges();save();toast('Saved: '+p+'%');if(p>=75){confetti();chime(4)}}
+
+/* ---------- SIT THE REAL PAST PAPER (timed, choose questions, self-mark) ---------- */
+function grpOf(h){const m=String(h||'').match(/^(Section [A-Z]|Exam Q\d+|CA\d+|Q\d+)/i);return m?m[1]:String(h||'Q')}
+function pastGroups(P){const g=[];P.qs.forEach((q,i)=>{const k=grpOf(q.h);let x=g.find(y=>y.k===k);if(!x){x={k,idx:[],marks:0};g.push(x)}x.idx.push(i);x.marks+=(+q.marks||0)});return g}
+function examMins(c){const P=c.data.past;return P.mins||Math.round((new Date(c.examEnd)-new Date(c.exam))/6e4)||120}
+function fmtLeft(s){return(s>=3600?Math.floor(s/3600)+':':'')+String(Math.floor(s%3600/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function sit(cid){const c=CBY[cid],P=c&&c.data&&c.data.past;if(!P)return go('course-'+cid);app.style.setProperty('--c',c.color);ST.sitDraft=ST.sitDraft||{};const D=ST.sitDraft[cid];
+  if(D&&D.phase==='writing')return sitWrite(cid);if(D&&D.phase==='marking')return sitMark(cid);
+  const G=pastGroups(P),hist=((ST.sits||{})[cid]||[]).slice(-5).reverse(),comp=P.compulsory||[];
+  app.innerHTML=`<div class="kbd"><a href="#course-${cid}">${c.code}</a></div><h1>🎓 Sit the real paper</h1><p class="sub">${esc(P.title)}</p>
+  <div class="card"><b>Rule:</b> ${esc(P.rule||'Answer the questions you choose below.')}<div class="kbd" style="margin-top:4px">Time: <b>${examMins(c)} minutes</b>, closed notes. Your answers save as you type, so a refresh will not lose them.</div></div>
+  <h2>Choose your questions</h2>${G.map(g=>`<label class="qgrp ${comp.includes(g.k)?'on':''}"><input type="checkbox" class="sg" value="${esc(g.k)}" ${comp.includes(g.k)?'checked':''} onchange="this.closest('.qgrp').classList.toggle('on',this.checked)"><div><b>${esc(g.k)}</b>${comp.includes(g.k)?' <span class="pill r">compulsory</span>':''} <span class="pill">${g.marks} marks</span><div class="kbd">${g.idx.map(i=>esc(P.qs[i].h||'')).join(' · ')}</div></div></label>`).join('')}
+  <button class="btn green big" onclick="sitStart('${cid}')">Start the clock ⏱</button>
+  ${hist.length?`<h2>Your attempts</h2><div class="card">${hist.map(h=>`<div class="block"><div class="what"><b>${pretty(h.date)}</b> · ${esc(h.groups.join(', '))}<div class="kbd">${h.mins} min used</div></div><b>${h.got}/${h.max} · ${h.pct}%</b></div>`).join('')}</div>`:''}`}
+function sitStart(cid){const sel=[...document.querySelectorAll('.sg:checked')].map(x=>x.value);if(!sel.length){toast('Pick at least one question');return}const c=CBY[cid],now=Date.now();ST.sitDraft[cid]={phase:'writing',groups:sel,start:now,end:now+examMins(c)*6e4,ans:{},ticks:{}};saveNow();chime(2);sitWrite(cid)}
+function sitWrite(cid){const c=CBY[cid],P=c.data.past,D=ST.sitDraft[cid];const G=pastGroups(P).filter(g=>D.groups.includes(g.k));app.style.setProperty('--c',c.color);
+  app.innerHTML=`<div class="card sticky row" style="justify-content:space-between;padding:10px 14px"><div><div class="kbd">${c.code} · real paper · ${esc(D.groups.join(', '))}</div><b id="sclock" style="font-size:22px;font-variant-numeric:tabular-nums">--:--</b></div><button class="btn purple small" onclick="sitFinish('${cid}')">Pens down → mark</button></div>
+  ${G.map(g=>`<h2>${esc(g.k)} <span class="pill">${g.marks} marks</span></h2>`+g.idx.map(i=>{const q=P.qs[i];return`<div class="card"><h3 style="margin-top:0">${esc(q.h||'')} ${q.marks?`<span class="pill">${q.marks} marks</span>`:''}</h3><div>${q.q}</div><textarea style="min-height:160px" oninput="sitType('${cid}',${i},this.value)" placeholder="Your answer… (Background → Answer and solution → Scenario → How they combine → Conclusion)">${esc(D.ans[i]||'')}</textarea></div>`}).join('')).join('')}
+  <button class="btn purple big" onclick="sitFinish('${cid}')">Pens down → mark my paper</button><button class="btn ghost" onclick="if(confirm('Abandon this attempt? Your answers will be deleted.'))sitAbandon('${cid}')">Abandon attempt</button>`;
+  clearInterval(window._sitT);const tick=()=>{const el=document.getElementById('sclock'),d=ST.sitDraft[cid];if(!el||!d||d.phase!=='writing'){clearInterval(window._sitT);return}const s=Math.round((d.end-Date.now())/1000);
+    if(s<=0){el.textContent='⏰ Time up';el.style.color='var(--bad)';if(!d.warned){d.warned=1;save();chime(3);modal('<div class="bigemoji">⏰</div><h2>Pens down</h2><p>Time is up. Finish your sentence, then mark your paper.</p><button class="btn green" onclick="closeModal()">OK</button>')}return}
+    el.textContent=fmtLeft(s)+' left';el.style.color=s<600?'var(--bad)':''};tick();window._sitT=setInterval(tick,1000)}
+function sitType(cid,i,v){const D=ST.sitDraft[cid];if(!D)return;D.ans[i]=v;save()}
+function sitAbandon(cid){clearInterval(window._sitT);delete ST.sitDraft[cid];saveNow();sit(cid)}
+function sitFinish(cid){const D=ST.sitDraft[cid];if(!D)return sit(cid);D.phase='marking';D.used=Math.max(1,Math.round((Math.min(Date.now(),D.end)-D.start)/6e4));D.ticks=D.ticks||{};clearInterval(window._sitT);saveNow();window.scrollTo(0,0);sitMark(cid)}
+function sitIdx(P,D){return[].concat(...pastGroups(P).filter(g=>D.groups.includes(g.k)).map(g=>g.idx))}
+function sitBack(cid){ST.sitDraft[cid].phase='writing';save();sitWrite(cid)}
+function sitMark(cid){const c=CBY[cid],P=c.data.past,D=ST.sitDraft[cid];app.style.setProperty('--c',c.color);
+  app.innerHTML=`<div class="kbd">${c.code} · ${D.used} min used</div><h1>✅ Mark your paper</h1><p class="sub">Be strict: tick a point only if your answer states it clearly. Each part earns its marks × the share of points you ticked.</p>
+  <div class="card sticky" id="stot"></div>
+  ${sitIdx(P,D).map(i=>{const q=P.qs[i];return`<div class="card"><h3 style="margin-top:0">${esc(q.h||'')} ${q.marks?`<span class="pill">${q.marks} marks</span>`:''}</h3><details open><summary>Your answer</summary><div style="white-space:pre-wrap;background:var(--soft);padding:10px;border-radius:8px">${esc(D.ans[i]||'(blank)')}</div></details>
+   <div class="pts">${(q.pts||[]).map((p,j)=>`<label><input type="checkbox" data-k="${i}.${j}" ${D.ticks[i+'.'+j]?'checked':''} onchange="sitTick('${cid}',this)">${esc(p)}</label>`).join('')}</div><details><summary><b>Model answer</b></summary>${q.model}</details></div>`}).join('')}
+  <button class="btn green big" onclick="sitSaveScore('${cid}')">Save score</button><button class="btn ghost" onclick="sitBack('${cid}')">← Back to writing</button>`;sitTotal(cid)}
+function sitTick(cid,el){const D=ST.sitDraft[cid];D.ticks[el.dataset.k]=el.checked;save();sitTotal(cid)}
+function sitCompute(cid){const P=CBY[cid].data.past,D=ST.sitDraft[cid];let got=0,max=0;sitIdx(P,D).forEach(i=>{const q=P.qs[i],m=+q.marks||0,n=(q.pts||[]).length;max+=m;if(n){let t=0;for(let j=0;j<n;j++)if(D.ticks[i+'.'+j])t++;got+=m*t/n}});got=Math.round(got*10)/10;return{got,max,pct:max?Math.round(100*got/max):0}}
+function sitTotal(cid){const r=sitCompute(cid),el=document.getElementById('stot');if(el)el.innerHTML=`<h2 style="margin:0">${r.got}/${r.max} marks · ${r.pct}%</h2><div class="kbd">${r.pct>=77?'On track for 50+/65.':r.pct>=55?'Pass territory. Re-learn the points you missed.':'Study the model answers, then sit it again in a few days.'} 50/65 ≈ 77%.</div>`}
+function sitSaveScore(cid){const D=ST.sitDraft[cid],r=sitCompute(cid);ST.sits=ST.sits||{};(ST.sits[cid]=ST.sits[cid]||[]).push({date:TODAY(),got:r.got,max:r.max,pct:r.pct,mins:D.used,groups:D.groups});
+  day().theory+=sitIdx(CBY[cid].data.past,D).length;delete ST.sitDraft[cid];addXP(80,'real paper');confetti();chime(5);questTick();checkBadges();saveNow();sit(cid)}
 
 /* ---------- FOCUS TIMER (minutes count toward goal) ---------- */
 let tLeft=25*60,tLen=25,tMode='focus',timerRun=false,tInt=null,secAcc=0;
@@ -656,6 +868,7 @@ function toggleTimer(){timerRun=!timerRun;document.getElementById('tgo').textCon
 window.addEventListener('beforeunload',saveNow);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveNow()});
 setInterval(()=>{renderStats();pushBoard()},60000);
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
 /* ---------- boot ---------- */
 render();

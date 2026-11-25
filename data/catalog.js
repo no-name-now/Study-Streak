@@ -23,21 +23,21 @@ window.CATALOG = {
       topics:[] /* filled from data/ins401.js */ },
     { id:"sen412", code:"SEN 412", title:"Survey of Programming Languages", short:"Survey of PL",
       exam:"2026-12-10T15:00:00+01:00", examEnd:"2026-12-10T18:00:00+01:00", elective:false, color:"#8a5a14", status:"full",
-      format:"Past paper (2.5 hrs): answer Q1 and any three. Expect binding and typing with code, storage allocation, ambiguous grammars and parse trees, scoping and closures, and operational/denotational semantics.",
+      format:"Feb 2026 paper (2.5 hrs): answer Q1 (17 marks) and any three others (16 each). Expect binding and typing with code, storage allocation, ambiguous grammars and parse trees, scoping and closures, and operational/denotational semantics.",
       topics:["Preliminaries: the language schematics","Evolution of programming languages and trends","Describing syntax A: vocabulary and BNF",
-        "Describing syntax B: derivations, parse trees, ambiguity, EBNF","Variables and bindings","Data types","Scope, storage bindings and semantics"] },
+        "Describing syntax B: derivations, parse trees, ambiguity, EBNF","Variables and bindings","Data types","Scope, storage bindings and semantics","Project defense prep (not examined)"] },
     { id:"sen401", code:"SEN 401", title:"Software Configuration & Maintenance", short:"Config & Maint.",
       exam:"2026-12-11T12:00:00+01:00", examEnd:"2026-12-11T14:00:00+01:00", elective:false, color:"#9b2f3a", status:"full",
       format:"New course, no past paper. Expect objective and theory questions; write any essay-style answer in the ethics structure: background, answer and solution, scenario, how they combine, conclusion.",
-      topics:["Organisational context, roles and governance in SCM","Planning for SCM: the SCMP","SCM plan development and surveillance",
+      topics:["Week 1: Why SCM matters, and SCM in DevOps","Organisational context, roles and governance in SCM","Planning for SCM: the SCMP","SCM plan development and surveillance",
         "Configuration identification and the software library","Configuration control I: change requests and the CCB",
         "Configuration control II: branches, pull requests, merge conflicts","Configuration status accounting","Configuration auditing",
-        "Software maintenance: categories, cost and estimation"] },
+        "Software maintenance: categories, cost and estimation","Week 12: Maintenance process and program comprehension","Week 13: Re-engineering, reverse engineering, migration and retirement"] },
     { id:"sen419", code:"SEN 419", title:"Advances in Web, Mobile & Blockchain Development", short:"Web/Mobile/Chain",
       exam:"2026-12-12T15:00:00+01:00", examEnd:"2026-12-12T18:00:00+01:00", elective:true, color:"#5b4a8c", status:"full",
-      format:"Past paper (2 hrs, Q1 compulsory + any other): expect Convex schema & mutation code reviews, React/Zustand & Expo practicals, Vercel/Convex deployment strategy, plus AI prompt engineering, RAG architecture and ethics case studies. Blockchain notes were not in the shared materials.",
+      format:"Past paper (2 hrs, Q1 compulsory + any other): expect Convex schema & mutation code reviews, React/Zustand & Expo practicals, Vercel/Convex deployment strategy, plus AI prompt engineering, RAG architecture and ethics case studies. No blockchain slides were shared; a blockchain topic is included as additional context.",
       topics:["UI/UX and front-end development","Front-end practical","Backend development","Backend practical",
-        "Mobile development","Deployment","Deployment practical"] },
+        "Mobile development","Deployment","Deployment practical","Blockchain and smart contracts (additional context)"] },
     { id:"sen408", code:"SEN 408", title:"Ethical & Legal Issues in Computer Science", short:"Ethics",
       exam:"2026-12-14T12:00:00+01:00", examEnd:"2026-12-14T14:00:00+01:00", elective:false, color:"#0f6e7a", status:"full",
       format:"Expect a scenario with follow-up questions. Essay structure: Background → Answer and solution → Scenario → How they combine → Conclusion. Sample paper (2 hrs): A — 10 True/False with 3-line justification (15). B — one-page version of your research paper + VSD essay with 3 fundamental principles (25). C — one of: 5 learning points, or 4 concerns of Big Data/Recommendation Engines (10).",
@@ -53,7 +53,7 @@ window.CATALOG = {
       exam:"2026-12-16T12:00:00+01:00", examEnd:"2026-12-16T14:00:00+01:00", elective:true, color:"#a0451f", status:"full",
       format:"New course, no past paper. Expect objective and theory questions, plus scenario questions (edge vs cloud, protocol and board choice).",
       topics:["Introduction to IoT and edge computing","Domain-specific IoT","Evolution and architecture: protocols, models, M2M",
-        "Embedded systems fundamentals","Cloud provisioning and deployment on Azure","Choosing the right board"] }
+        "Embedded systems fundamentals","Cloud provisioning and deployment on Azure","Choosing the right board","Lectures 5–7 gap fill: edge/fog tiers, IoT data and security"] }
   ]
 };
 window.COURSE_DATA = window.COURSE_DATA || {};
