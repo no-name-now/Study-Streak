@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study Streak · PAU 400L SEN Exam Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f4ef; --card:#fff; --ink:#1b1a17; --muted:#6c6962; --line:#e5e2d9;
+  --accent:#2f5d50; --accent-soft:#e3eee9; --warn:#b4541a; --warn-soft:#fbeee3;
+  --good:#2e7d4f; --good-soft:#e5f3ea; --bad:#b3261e; --bad-soft:#fbe9e7;
+  --fire:#ff7a1a; --xp:#6a4bd6; --gold:#d9a400; --c:var(--accent);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:16.5px;line-height:1.55;padding-bottom:96px}
+button{font:inherit}
+a{color:var(--accent)}
+/* top bar */
+#top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+#top .w{max-width:920px;margin:0 auto;padding:8px 14px;display:flex;align-items:center;gap:10px}
+.brand{font-weight:900;font-size:15px;letter-spacing:.2px;cursor:pointer}
+.stats{margin-left:auto;display:flex;gap:6px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap}
+.chip.fire{color:var(--fire)} .chip.xp{color:var(--xp)} .chip.goal{color:var(--good)}
+.chip.dim{color:var(--muted);filter:grayscale(1)}
+nav{max-width:920px;margin:0 auto;padding:0 10px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;color:var(--ink)}
+nav button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+main{max-width:920px;margin:0 auto;padding:16px 14px}
+h1{font-size:25px;line-height:1.2;margin:4px 0 6px;letter-spacing:-.2px}
+h2{font-size:20px;margin:22px 0 8px}
+h3{font-size:17px;margin:14px 0 6px}
+p{margin:8px 0}
+.sub{color:var(--muted);margin-top:0}
+.kbd{font-size:13px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.grid .card{margin:0}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;background:var(--ink);color:#fff;font-weight:700;padding:11px 16px;border-radius:12px;cursor:pointer;margin:4px 6px 4px 0;box-shadow:0 3px 0 rgba(0,0,0,.25);transition:transform .05s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.btn.green{background:var(--good)} .btn.red{background:var(--bad)} .btn.purple{background:var(--xp)} .btn.orange{background:var(--fire)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.small{padding:6px 11px;font-size:14px;border-radius:10px}
+.btn.big{padding:14px 22px;font-size:17px}
+.btn:disabled{opacity:.4;cursor:default}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);width:0;border-radius:99px;transition:width .4s}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--line);color:var(--ink);margin:2px 4px 2px 0}
+.pill.m{background:var(--good-soft);color:var(--good)} .pill.l{background:#eef1f8;color:#3b5b92} .pill.r{background:var(--warn-soft);color:var(--warn)} .pill.o{background:#f1efe9;color:var(--muted)}
+.hook{background:var(--accent-soft);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:15px}
+.hook:before{content:"🧠 Memory hook: ";font-weight:700}
+.trap{background:var(--warn-soft);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:15px}
+.trap:before{content:"⚠️ Exam trap: ";font-weight:700}
+.trig{background:#eef1f8;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:15px}
+.trig:before{content:"🎯 If you see: ";font-weight:700}
+.def{border-left:4px solid var(--c);padding:6px 12px;margin:10px 0;background:#faf9f6;border-radius:0 8px 8px 0}
+.def b:first-child{display:block;font-size:12.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#f1efe9}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.flow span{background:var(--c);color:#fff;border-radius:8px;padding:5px 10px;font-size:14px;font-weight:600}
+.flow em{color:var(--muted);font-style:normal}
+.prog{display:flex;gap:4px;margin:10px 0 14px}
+.prog i{flex:1;height:7px;border-radius:99px;background:var(--line)}
+.prog i.d{background:var(--c)}
+textarea,input[type=text],input[type=number]{width:100%;font:inherit;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}
+textarea{min-height:100px}
+.reveal{display:none}.reveal.show{display:block}
+.pts label{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.pts input{margin-top:5px;transform:scale(1.2)}
+.ok{background:var(--good-soft);color:var(--good);padding:8px 12px;border-radius:8px;font-weight:600}
+.no{background:var(--bad-soft);color:var(--bad);padding:8px 12px;border-radius:8px;font-weight:600}
+.fc{min-height:210px;display:flex;flex-direction:column;justify-content:center;text-align:center;cursor:pointer;font-size:18.5px}
+.fc .side{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+/* hero */
+.hero{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.ring{width:108px;height:108px;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .lbl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:20px;line-height:1.1}
+.ring .lbl small{font-size:11px;font-weight:600;color:var(--muted)}
+.block{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.block:last-child{border:none}
+.block .dot{width:12px;height:12px;border-radius:99px;flex:0 0 12px;background:var(--c)}
+.block .what{flex:1}
+.block .min{font-size:13px;color:var(--muted);font-weight:700;white-space:nowrap}
+.block.done .what{text-decoration:line-through;color:var(--muted)}
+.quest{display:flex;gap:10px;align-items:center;padding:8px 0}
+.quest .ic{font-size:24px;width:34px;text-align:center}
+.quest .q{flex:1}
+.quest.done .q{color:var(--muted)}
+.day{border-left:4px solid var(--line);padding:6px 0 6px 12px;margin:6px 0}
+.day.today{border-color:var(--fire)}
+.day.exam{border-color:var(--bad)}
+.badge{text-align:center;padding:12px 8px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.badge .e{font-size:30px}
+.badge.lock{opacity:.35;filter:grayscale(1)}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.lb{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.lb .rk{width:28px;font-weight:900;color:var(--muted)}
+.lb.me{background:#fff8e6}
+/* timer */
+#timer{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;z-index:30}
+#timer .w{max-width:920px;margin:0 auto;padding:9px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#timer .clock{font-size:23px;font-weight:900;font-variant-numeric:tabular-nums;min-width:72px}
+#timer button{background:#ffffff22;color:#fff;border:none;border-radius:8px;padding:7px 10px;font-size:13.5px;cursor:pointer}
+#timer button.go{background:var(--good);font-weight:800}
+#timer .lbl{font-size:12.5px;opacity:.85;flex:1;min-width:120px}
+/* modal + toast */
+#modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+#modal .card{max-width:430px;width:100%;text-align:center;animation:pop .25s ease}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+#toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none}
+#toast div{background:var(--ink);color:#fff;padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;animation:pop .2s ease;box-shadow:0 4px 14px #0003}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:55}
+.bigemoji{font-size:58px;line-height:1}
+.xpgain{font-size:34px;font-weight:900;color:var(--xp)}
+ul{padding-left:22px;margin:6px 0} li{margin:3px 0}
+@media(max-width:560px){#timer .lbl{display:none}#timer .clock{font-size:21px;min-width:64px}#timer .w{flex-wrap:nowrap}body{padding-bottom:70px}}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:14px}
+.onb{max-width:560px;margin:20px auto}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:12px;border:2px solid var(--line);border-radius:14px;margin:8px 0;cursor:pointer;background:#fff}
+.opt.on{border-color:var(--good);background:var(--good-soft)}
+.opt input{transform:scale(1.4);margin-top:5px}
+.warnbox{background:var(--warn-soft);border:1px solid #f0d3bd;border-radius:12px;padding:10px 12px;font-size:14.5px}
+</style>
+</head>
+<body>
+<div id="top"><div class="w">
+  <div class="brand" onclick="go('home')">🔥 Study Streak</div>
+  <div class="stats" id="stats"></div>
+</div><nav id="nav"></nav></div>
+<main id="app"><div class="card">Loading…</div></main>
+
+<div id="timer"><div class="w">
+  <div class="clock" id="clock">25:00</div>
+  <div class="lbl" id="tlabel">Focus block · minutes count toward your daily goal</div>
+  <button onclick="setTimer(25,'focus')">25</button>
+  <button onclick="setTimer(15,'focus')">15</button>
+  <button onclick="setTimer(5,'break')">☕ 5</button>
+  <button class="go" id="tgo" onclick="toggleTimer()">▶ Start</button>
+</div></div>
+<div id="modal"><div class="card" id="mbody"></div></div>
+<div id="toast"></div>
+<canvas id="confetti"></canvas>
+
+<script src="data/catalog.js"></script>
+<script src="data/cos409.js"></script>
+<script src="data/ins401.js"></script>
+<script src="data/ins401_past.js"></script>
+<script src="data/sen412.js"></script>
+<script src="data/sen401.js"></script>
+<script src="data/sen419.js"></script>
+<script src="data/sen408.js"></script>
+<script src="data/csc420.js"></script>
+<script src="data/sen418.js"></script>
+<script>
+/* =====================================================================
+   STUDY STREAK — engine. All progress lives in this browser (localStorage).
+   ===================================================================== */
+const KEY='pau400sen_v1';
+const APP_VERSION=1;
+let ST=load();
+function blank(){return{v:APP_VERSION,profile:null,xp:0,days:{},streak:{count:0,last:null,best:0},freezes:0,
+  badges:{},topics:{},srs:{},examsDone:{},mocks:{},planCache:{},quests:{},feyn:{},flags:{},lastSeen:null}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v)return Object.assign(blank(),s)}catch(e){}return blank()}
+let saveT=null;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}},150)}
+function saveNow(){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}}
+
+/* ---------- dates ---------- */
+function dk(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function parseDk(k){const[a,b,c]=k.split('-').map(Number);return new Date(a,b-1,c)}
+function addDays(k,n){const d=parseDk(k);d.setDate(d.getDate()+n);return dk(d)}
+function diffDays(a,b){return Math.round((parseDk(b)-parseDk(a))/864e5)}
+const TODAY=()=>dk();
+const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function pretty(k){const d=parseDk(k);return WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+/* ---------- catalog ---------- */
+const COURSES=CATALOG.courses.map(c=>{
+  const data=(window.COURSE_DATA||{})[c.id];
+  const topics=data&&data.topics?data.topics.map(t=>Object.assign({outline:false},t)):c.topics.map((t,i)=>({id:'t'+(i+1),n:'Topic '+(i+1),title:t,outline:true}));
+  topics.forEach((t,i)=>{if(!t.n)t.n='Topic '+(i+1)});
+  return Object.assign({},c,{topics,data:data||null,examDay:c.exam.slice(0,10)});
+});
+const CBY=Object.fromEntries(COURSES.map(c=>[c.id,c]));
+function activeCourses(){const el=(ST.profile&&ST.profile.electives)||[];return COURSES.filter(c=>(!c.elective||el.includes(c.id)))}
+function pendingCourses(){return activeCourses().filter(c=>!ST.examsDone[c.id])}
+
+/* ---------- daily goal ---------- */
+function goalFor(k){
+  if(CATALOG.classDays[k])return 120;
+  if(k<'2026-11-27')return 120;
+  if(k>='2026-12-08'){const ex=pendingCourses().concat(activeCourses()).find(c=>c.examDay===k);return ex?60:240}
+  return 210;
+}
+function day(k){k=k||TODAY();if(!ST.days[k])ST.days[k]={min:0,xp:0,met:false,cards:0,recall:0,correct:0,theory:0,feyn:0,flash:0,review:0,focus:0};return ST.days[k]}
+
+/* ---------- XP & levels ---------- */
+const LEVELS=['Fresher','Reader','Note-taker','Focused','Recaller','Explainer','Scholar','Exam-ready','Distinction','First Class'];
+function levelOf(xp){let l=0,need=100,acc=0;while(xp>=acc+need){acc+=need;l++;need=Math.round(need*1.35)}return{lvl:l+1,into:xp-acc,need,name:LEVELS[Math.min(l,LEVELS.length-1)]}}
+function addXP(n,why){if(n<=0)return;const before=levelOf(ST.xp).lvl;ST.xp+=n;day().xp+=n;toast('+'+n+' XP'+(why?' · '+why:''));
+  const after=levelOf(ST.xp);if(after.lvl>before){setTimeout(()=>{confetti();modal(`<div class="bigemoji">🎓</div><h2>Level ${after.lvl}!</h2><p>You are now <b>${after.name}</b>. Keep stacking blocks.</p><button class="btn green big" onclick="closeModal()">Continue</button>`);chime(3)},400)}
+  checkBadges();save();renderStats()}
+
+/* ---------- streak ---------- */
+function settleStreak(){
+  const t=TODAY(),s=ST.streak;
+  if(!s.last){return}
+  let gap=diffDays(s.last,t)-1; // full missed days between last met day and today
+  if(gap<=0)return;
+  while(gap>0&&ST.freezes>0){ST.freezes--;gap--;s.last=addDays(s.last,1);ST.flags.frozeOn=(ST.flags.frozeOn||[]).concat([s.last]);toast('🧊 Streak freeze used')}
+  if(gap>0){if(s.count>0)ST.flags.lostStreak=s.count;s.count=0;s.last=null}
+  save();
+}
+function addMinutes(m){const d=day();d.min+=m;
+  if(!d.met&&d.min>=goalFor(TODAY())){d.met=true;const s=ST.streak,t=TODAY();
+    if(s.last!==t){s.count=(s.last===addDays(t,-1))?s.count+1:1;s.last=t;s.best=Math.max(s.best,s.count)}
+    if(s.count>0&&s.count%7===0&&ST.freezes<2){ST.freezes++;}
+    addXP(40,'daily goal');confetti();chime(4);
+    modal(`<div class="bigemoji">🔥</div><h2>${s.count}-day streak!</h2><p>You hit today's ${goalFor(TODAY())}-minute goal. That's real reading, not scrolling.</p>${s.count%7===0?'<p>🧊 You earned a <b>streak freeze</b>.</p>':''}<button class="btn green big" onclick="closeModal()">Keep going</button>`);}
+  questTick();save();renderStats()}
+function streakAlive(){const s=ST.streak,t=TODAY();return s.last===t||s.last===addDays(t,-1)}
+
+/* ---------- quests ---------- */
+const QPOOL=[
+ {id:'focus50',ic:'⏱',t:'Focus for 50 minutes',k:'focus',n:50},
+ {id:'focus75',ic:'⏱',t:'Focus for 75 minutes',k:'focus',n:75},
+ {id:'cards8',ic:'📖',t:'Finish 8 lesson cards',k:'cards',n:8},
+ {id:'cards12',ic:'📖',t:'Finish 12 lesson cards',k:'cards',n:12},
+ {id:'correct10',ic:'🎯',t:'Get 10 recall answers right',k:'correct',n:10},
+ {id:'correct15',ic:'🎯',t:'Get 15 recall answers right',k:'correct',n:15},
+ {id:'theory1',ic:'✍️',t:'Write and mark 1 theory answer',k:'theory',n:1},
+ {id:'theory2',ic:'✍️',t:'Write and mark 2 theory answers',k:'theory',n:2},
+ {id:'feyn1',ic:'🗣',t:'Explain a topic in your own words',k:'feyn',n:1},
+ {id:'flash20',ic:'🃏',t:'Flip 20 flashcards',k:'flash',n:20},
+ {id:'review10',ic:'🔁',t:'Clear 10 spaced-review cards',k:'review',n:10}
+];
+function hash(s){let h=2166136261;for(const c of s)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0}
+function todaysQuests(){const t=TODAY();if(!ST.quests[t]){const r=hash(t+(ST.profile?ST.profile.name:''));
+  const kinds={},pick=[];const order=QPOOL.map((q,i)=>[hash(t+q.id+r),q]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+  for(const q of order){if(kinds[q.k])continue;if(pick.length===0&&q.k!=='focus')continue;kinds[q.k]=1;pick.push(q.id);if(pick.length===3)break}
+  ST.quests[t]={ids:pick,done:[],chest:false}}return ST.quests[t]}
+function qVal(q){const d=day();return Math.min(q.n,d[q.k]||0)}
+function questTick(){const Q=todaysQuests();let changed=false;
+  Q.ids.forEach(id=>{const q=QPOOL.find(x=>x.id===id);if(!Q.done.includes(id)&&qVal(q)>=q.n){Q.done.push(id);changed=true;toast('✅ Quest done: '+q.t);ST.xp+=20;day().xp+=20;chime(2)}});
+  if(changed&&Q.done.length===3&&!Q.chest){Q.chest=true;setTimeout(()=>{confetti();chime(5);const bonus=50;const fr=(hash(TODAY()+'chest')%3===0)&&ST.freezes<2;if(fr)ST.freezes++;ST.xp+=bonus;day().xp+=bonus;
+    modal(`<div class="bigemoji">🎁</div><h2>All 3 daily quests done!</h2><div class="xpgain">+${bonus} XP</div>${fr?'<p>🧊 Bonus: a streak freeze!</p>':''}<p>Come back tomorrow for new quests.</p><button class="btn green big" onclick="closeModal()">Claim</button>`);checkBadges();save();renderStats()},600)}
+  if(changed){checkBadges();save()}}
+
+/* ---------- badges ---------- */
+const BADGES=[
+ {id:'first',e:'🌱',n:'First step',d:'Finish your first lesson card',f:()=>totalCards()>=1},
+ {id:'goal1',e:'🎯',n:'Goal getter',d:'Hit a daily goal',f:()=>Object.values(ST.days).some(d=>d.met)},
+ {id:'s3',e:'🔥',n:'On fire',d:'3-day streak',f:()=>ST.streak.best>=3},
+ {id:'s7',e:'💪',n:'Week warrior',d:'7-day streak',f:()=>ST.streak.best>=7},
+ {id:'s14',e:'🏆',n:'Unstoppable',d:'14-day streak',f:()=>ST.streak.best>=14},
+ {id:'h3',e:'⏳',n:'Three-hour club',d:'Study 180+ minutes in one day',f:()=>Object.values(ST.days).some(d=>d.min>=180)},
+ {id:'r100',e:'🧠',n:'Recall machine',d:'100 correct recall answers',f:()=>sumDays('correct')>=100},
+ {id:'feyn5',e:'🗣',n:'Feynman fan',d:'Explain 5 topics in your own words',f:()=>Object.keys(ST.feyn).length>=5},
+ {id:'master1',e:'⭐',n:'Topic master',d:'Master your first topic',f:()=>masteredCount()>=1},
+ {id:'master10',e:'🌟',n:'Ten down',d:'Master 10 topics',f:()=>masteredCount()>=10},
+ {id:'mock1',e:'📝',n:'Mock survivor',d:'Finish a timed mock exam',f:()=>Object.keys(ST.mocks).length>=1},
+ {id:'chest',e:'🎁',n:'Quest clearer',d:'Complete all daily quests',f:()=>Object.values(ST.quests).some(q=>q.chest)},
+ {id:'exam1',e:'🎉',n:'One down',d:'Mark your first exam done',f:()=>Object.keys(ST.examsDone).length>=1},
+ {id:'allex',e:'🏁',n:'Semester finished',d:'Mark every exam done',f:()=>activeCourses().every(c=>ST.examsDone[c.id])}
+];
+function sumDays(k){return Object.values(ST.days).reduce((a,d)=>a+(d[k]||0),0)}
+function totalCards(){return Object.values(ST.topics).reduce((a,t)=>a+(t.cards?t.cards.length:0),0)}
+function checkBadges(){BADGES.forEach(b=>{if(!ST.badges[b.id]&&b.f()){ST.badges[b.id]=TODAY();setTimeout(()=>{chime(3);toast('🏅 Badge unlocked: '+b.n)},300)}})}
+
+/* ---------- topic progress & mastery ---------- */
+function tkey(c,t){return c+'|'+t}
+function TP(c,t){const k=tkey(c,t);if(!ST.topics[k])ST.topics[k]={cards:[],recallBest:null,recallLast:null,theoryBest:null,started:null};return ST.topics[k]}
+function topicState(c,t){const co=CBY[c],tp=co.topics.find(x=>x.id===t),p=ST.topics[tkey(c,t)];
+  if(!p||(!p.cards.length&&p.recallBest==null&&p.theoryBest==null))return'new';
+  const cardsAll=tp.outline||!tp.cards||p.cards.length>=tp.cards.length;
+  const thOk=!tp.theory||!tp.theory.length||(p.theoryBest!=null&&p.theoryBest>=60);
+  if(cardsAll&&p.recallBest!=null&&p.recallBest>=80&&thOk)return'mastered';
+  if(p.recallLast!=null&&p.recallLast<60)return'revise';
+  return'learning'}
+const STATE_LBL={new:['o','Not started'],learning:['l','Learning'],revise:['r','Revise'],mastered:['m','Mastered']};
+function masteredCount(){let n=0;COURSES.forEach(c=>c.topics.forEach(t=>{if(topicState(c.id,t.id)==='mastered')n++}));return n}
+function courseProgress(c){const ts=c.topics;if(!ts.length)return 0;let s=0;ts.forEach(t=>{const st=topicState(c.id,t.id);s+=st==='mastered'?1:st==='new'?0:.4});return Math.round(100*s/ts.length)}
+
+/* ---------- spaced repetition (Leitner) ---------- */
+const BOX_DAYS=[0,1,2,4,7,14];
+function srsKey(c,t,i){return c+'|'+t+'|'+i}
+function srsAnswer(c,t,i,ok){const k=srsKey(c,t,i);const it=ST.srs[k]||{box:0};it.box=ok?Math.min(5,it.box+1):1;it.due=addDays(TODAY(),BOX_DAYS[it.box]);ST.srs[k]=it}
+function dueItems(courseId){const t=TODAY(),out=[];Object.entries(ST.srs).forEach(([k,v])=>{if(v.due<=t){const[c,tp,i]=k.split('|');if(courseId&&c!==courseId)return;if(ST.examsDone[c])return;const co=CBY[c];if(!co)return;const to=co.topics.find(x=>x.id===tp);if(to&&to.recall&&to.recall[i])out.push({c,t:tp,i:+i,q:to.recall[i][0],a:to.recall[i][1],co,to})}});return out}
+
+/* ---------- ROADMAP (rebalancing plan) ---------- */
+function buildPlan(){
+  const t=TODAY(),courses=pendingCourses();if(!courses.length)return{days:[],atRisk:[]};
+  const lastExam=courses.map(c=>c.examDay).sort().pop();
+  const days=[];for(let k=t;k<=lastExam;k=addDays(k,1))days.push({k,cap:goalFor(k),blocks:[],used:0,exam:courses.filter(c=>c.examDay===k)});
+  const D=Object.fromEntries(days.map(d=>[d.k,d]));
+  const put=(d,b)=>{d.blocks.push(b);d.used+=b.min};
+  // 1) spaced review slot every day (15 min) once anything has been studied
+  const anyStarted=Object.keys(ST.srs).length>0;
+  // 2) mock day before + final review on exam day
+  courses.forEach(c=>{const pre=addDays(c.examDay,-1);const d=D[pre]||D[t];if(d)put(d,{c:c.id,type:'mock',min:60,label:'Timed mock + fix weak spots'});
+    const e=D[c.examDay];if(e)put(e,{c:c.id,type:'cheat',min:30,label:'Cheat-sheet + flashcards before the exam'})});
+  // 3) topic units
+  const queue={};courses.forEach(c=>{queue[c.id]=c.topics.filter(tp=>topicState(c.id,tp.id)!=='mastered').map(tp=>{const p=ST.topics[tkey(c.id,tp.id)];const read=tp.outline?false:(p&&tp.cards&&p.cards.length>=tp.cards.length);const lm=tp.outline?45:Math.min(70,Math.max(35,tp.cards.length*6+20));return{c:c.id,t:tp.id,type:read?'practice':'learn',min:read?20:lm,label:(tp.outline?'Study from guide: ':read?'Recall + theory: ':'Learn + recall: ')+tp.title}})});
+  const deadline=c=>addDays(c.examDay,-1);
+  let last=null;
+  days.forEach(d=>{
+    if(anyStarted&&d.cap>=90)put(d,{c:null,type:'review',min:15,label:'Spaced review (due cards)'});
+    let guard=0;
+    while(d.used<d.cap-10&&guard++<20){
+      let best=null,bs=-1;
+      courses.forEach(c=>{const q=queue[c.id];if(!q.length)return;if(d.k>deadline(c))return;
+        const left=Math.max(1,diffDays(d.k,deadline(c))+1);const rem=q.reduce((a,u)=>a+u.min,0);let s=rem/left;if(c.id===last)s*=.75;if(s>bs){bs=s;best=c}});
+      if(!best)break;const u=queue[best.id][0];if(d.used+u.min>d.cap+10)break;
+      queue[best.id].shift();put(d,u);last=best.id}
+  });
+  const atRisk=courses.map(c=>({c,min:queue[c.id].reduce((a,u)=>a+u.min,0),n:queue[c.id].length})).filter(x=>x.n>0);
+  return{days,atRisk};
+}
+function todayPlan(){const t=TODAY();if(!ST.planCache[t]){const p=buildPlan();ST.planCache[t]=(p.days[0]?p.days[0].blocks:[]);
+  Object.keys(ST.planCache).forEach(k=>{if(k<addDays(t,-7))delete ST.planCache[k]});save()}return ST.planCache[t]}
+function blockDone(b){if(b.type==='review')return day().review>=10;if(b.type==='mock')return!!ST.mocks[b.c]&&ST.mocks[b.c].date===TODAY();if(b.type==='cheat')return!!(ST.flags['cheat_'+b.c]===TODAY());
+  const st=topicState(b.c,b.t);if(b.type==='learn'){const p=ST.topics[tkey(b.c,b.t)],tp=CBY[b.c].topics.find(x=>x.id===b.t);return st==='mastered'||(p&&p.recallLast!=null&&p.started)}
+  return st==='mastered'||(ST.topics[tkey(b.c,b.t)]||{}).recallLastDay===TODAY()}
+function blockGo(b){if(b.type==='review')return'review';if(b.type==='mock')return'mock-'+b.c;if(b.type==='cheat')return'cheat-'+b.c;
+  const tp=CBY[b.c].topics.find(x=>x.id===b.t);if(tp.outline)return'course-'+b.c;return b.type==='learn'?('lesson-'+b.c+'-'+b.t+'-0'):('recall-'+b.c+'-'+b.t)}
+
+/* ---------- UI helpers ---------- */
+const app=document.getElementById('app');
+function go(h){if(location.hash==='#'+h)render();else location.hash=h}
+window.addEventListener('hashchange',render);
+function toast(m){const el=document.createElement('div');el.textContent=m;document.getElementById('toast').appendChild(el);setTimeout(()=>el.remove(),2200)}
+function modal(html){document.getElementById('mbody').innerHTML=html;document.getElementById('modal').style.display='flex'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+let actx=null;function chime(n){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const notes=[523,659,784,1047,1319];for(let i=0;i<Math.min(n,5);i++){const o=actx.createOscillator(),g=actx.createGain();o.type='triangle';o.frequency.value=notes[i];o.connect(g);g.connect(actx.destination);const st=actx.currentTime+i*.09;g.gain.setValueAtTime(.12,st);g.gain.exponentialRampToValueAtTime(.001,st+.25);o.start(st);o.stop(st+.26)}}catch(e){}}
+function confetti(){const cv=document.getElementById('confetti'),x=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;const cols=['#ff7a1a','#6a4bd6','#2e7d4f','#d9a400','#3b5b92','#e0457b'];
+  const P=Array.from({length:140},()=>({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight/3,vx:(Math.random()-.5)*14,vy:-Math.random()*12-4,r:Math.random()*6+3,c:cols[Math.random()*cols.length|0],a:Math.random()*6}));
+  let f=0;(function tick(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore()});if(++f<110)requestAnimationFrame(tick);else x.clearRect(0,0,cv.width,cv.height)})()}
+function ring(val,max,color,label,sub){const r=46,C=2*Math.PI*r,p=Math.min(1,max?val/max:0);
+  return`<div class="ring"><svg width="108" height="108"><circle cx="54" cy="54" r="${r}" stroke="#e5e2d9" stroke-width="10" fill="none"/><circle cx="54" cy="54" r="${r}" stroke="${color}" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}"/></svg><div class="lbl">${label}<small>${sub}</small></div></div>`}
+function countdown(iso){const ms=new Date(iso)-new Date();if(ms<=0)return'now';const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return d>0?`${d}d ${h}h`:`${h}h ${Math.floor(ms%36e5/6e4)}m`}
+
+function renderStats(){if(!ST.profile){document.getElementById('stats').innerHTML='';return}
+  const d=day(),g=goalFor(TODAY()),L=levelOf(ST.xp),alive=streakAlive();
+  document.getElementById('stats').innerHTML=`<span class="chip fire ${alive?'':'dim'}" onclick="go('me')" title="Streak">🔥 ${alive?ST.streak.count:0}</span><span class="chip goal" onclick="go('home')" title="Today">🎯 ${d.min}/${g}</span><span class="chip xp" onclick="go('me')" title="XP">⚡ ${ST.xp}</span>`}
+function navBar(){if(!ST.profile){document.getElementById('nav').innerHTML='';return}const cur=(location.hash.slice(1)||'home').split('-')[0];
+  const items=[['home','🏠 Today'],['plan','🗺 Roadmap'],['courses','📚 Courses'],['review','🔁 Review'],['exams','📅 Exams'],['board','🏆 Board'],['me','👤 Me']];
+  document.getElementById('nav').innerHTML=items.map(([k,l])=>`<button class="${cur===k||(k==='courses'&&['course','lesson','recall','theory','mock','flash','calc','cheat','quiz','past','feyn'].includes(cur))?'on':''}" onclick="go('${k}')">${l}${k==='review'&&dueItems().length?' · '+dueItems().length:''}</button>`).join('')}
+
+/* ---------- router ---------- */
+function render(){
+  settleStreak();todaysQuests();renderStats();navBar();window.scrollTo(0,0);
+  if(!ST.profile)return onboarding(0);
+  const h=location.hash.slice(1)||'home';const parts=h.split('-');const v=parts[0];
+  app.style.setProperty('--c','var(--accent)');
+  try{
+  if(v==='home')return home();
+  if(v==='plan')return plan();
+  if(v==='courses')return courses();
+  if(v==='course')return course(parts[1]);
+  if(v==='lesson')return lesson(parts[1],parts[2],+parts[3]||0);
+  if(v==='recall')return recall(parts[1],parts[2]);
+  if(v==='theory')return theory(parts[1],parts[2]);
+  if(v==='feyn')return feyn(parts[1],parts[2]);
+  if(v==='quiz')return quiz(parts[1],parts[2]);
+  if(v==='past')return past(parts[1]);
+  if(v==='review')return review();
+  if(v==='flash')return flash(parts[1]);
+  if(v==='calc')return calc(parts[1]);
+  if(v==='mock')return mock(parts[1]);
+  if(v==='cheat')return cheat(parts[1]);
+  if(v==='exams')return exams();
+  if(v==='board')return board();
+  if(v==='me')return me();
+  }catch(e){app.innerHTML=`<div class="card no">Something went wrong: ${esc(e.message)}</div><button class="btn" onclick="go('home')">Home</button>`;console.error(e);return}
+  home();
+}
+
+/* ---------- onboarding ---------- */
+let OB={name:'',electives:[]};
+function onboarding(step){
+  if(step===0){app.innerHTML=`<div class="onb"><div class="bigemoji">🔥</div><h1>Pass every exam. No carry-over.</h1>
+   <p class="sub">${CATALOG.semesterLabel}. Short lessons, active recall, spaced review and a streak that keeps you reading 3+ hours a day.</p>
+   <div class="card"><h3 style="margin-top:0">What should we call you?</h3><input type="text" id="nm" placeholder="Your first name" maxlength="24" value="${esc(OB.name)}">
+   <button class="btn green big" style="margin-top:12px" onclick="OB.name=document.getElementById('nm').value.trim();if(!OB.name){toast('Type your name');return}onboarding(1)">Continue →</button></div></div>`;return}
+  if(step===1){const el=COURSES.filter(c=>c.elective),cp=COURSES.filter(c=>!c.elective);
+   app.innerHTML=`<div class="onb"><h1>Which electives are you writing?</h1><p class="sub">Compulsory courses are already in your plan. Tick only the electives you registered for.</p>
+   ${el.map(c=>`<label class="opt ${OB.electives.includes(c.id)?'on':''}"><input type="checkbox" ${OB.electives.includes(c.id)?'checked':''} onchange="tg('${c.id}',this)"><div><b>${c.code}</b> · ${c.title}<div class="kbd">Exam ${pretty(c.examDay)} · ${new Date(c.exam).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</div></div></label>`).join('')}
+   <h3>Compulsory (always included)</h3>${cp.map(c=>`<div class="kbd">✅ <b>${c.code}</b> ${c.title} · ${pretty(c.examDay)}</div>`).join('')}
+   <button class="btn green big" style="margin-top:16px" onclick="onboarding(2)">Continue →</button></div>`;return}
+  if(step===2){app.innerHTML=`<div class="onb"><h1>How this works</h1>
+   <div class="card"><div class="quest"><div class="ic">🎯</div><div class="q"><b>Daily goal</b> — 2 hours on class days, 3½ hours on free days, 4 hours in exam week. Only <b>focus-timer minutes</b> count, so press ▶ Start when you study.</div></div>
+   <div class="quest"><div class="ic">🔥</div><div class="q"><b>Streak</b> — hit your goal every day. Every 7 days earns a 🧊 freeze that saves your streak once.</div></div>
+   <div class="quest"><div class="ic">🗺</div><div class="q"><b>Roadmap</b> — a day-by-day plan to your last exam. It rebalances itself when you finish topics or mark exams done.</div></div>
+   <div class="quest"><div class="ic">🧠</div><div class="q"><b>Method</b> — learn one card at a time, explain it in your own words (Feynman), recall it from memory, and review it again on spaced days.</div></div></div>
+   <button class="btn green big" onclick="finishOnb()">Build my plan 🚀</button></div>`}
+}
+function tg(id,el){if(el.checked){if(!OB.electives.includes(id))OB.electives.push(id)}else OB.electives=OB.electives.filter(x=>x!==id);el.closest('.opt').classList.toggle('on',el.checked)}
+function finishOnb(){ST.profile={name:OB.name,electives:OB.electives.slice(),created:TODAY()};delete ST.planCache[TODAY()];addXP(10,'welcome');confetti();chime(4);saveNow();go('home')}
+
+/* ---------- HOME ---------- */
+function home(){
+  const d=day(),g=goalFor(TODAY()),L=levelOf(ST.xp),blocks=todayPlan(),Q=todaysQuests();
+  const next=pendingCourses().filter(c=>new Date(c.examEnd)>new Date()).sort((a,b)=>a.exam<b.exam?-1:1)[0];
+  const due=dueItems().length;const cls=CATALOG.classDays[TODAY()];
+  const lost=ST.flags.lostStreak;if(lost){delete ST.flags.lostStreak;save();setTimeout(()=>modal(`<div class="bigemoji">💔</div><h2>Your ${lost}-day streak ended</h2><p>One missed day. That's all. Start a new one today: one 25-minute block.</p><button class="btn green big" onclick="closeModal()">Start again</button>`),300)}
+  app.innerHTML=`
+  <h1>Hi ${esc(ST.profile.name)} 👋</h1><p class="sub">${pretty(TODAY())}${cls?' · 🏫 '+cls:''}</p>
+  <div class="card hero">${ring(d.min,g,'#2e7d4f',d.min+'<span style="font-size:12px;color:#999">/'+g+'</span>','minutes today')}
+   <div><div class="row"><span class="pill" style="background:#fff1e6;color:var(--fire)">🔥 ${streakAlive()?ST.streak.count:0}-day streak</span><span class="pill" style="background:#efeafe;color:var(--xp)">Lv ${L.lvl} · ${L.name}</span>${ST.freezes?`<span class="pill">🧊 ×${ST.freezes}</span>`:''}</div>
+   <div class="bar" style="margin:8px 0;--c:var(--xp)"><i style="width:${Math.round(100*L.into/L.need)}%"></i></div><div class="kbd">${L.need-L.into} XP to level ${L.lvl+1}</div>
+   ${d.met?'<p class="ok" style="margin-top:8px">Goal met today. Anything more is bonus.</p>':`<p style="margin:8px 0 0"><b>${g-d.min} minutes</b> to keep your streak.</p>`}</div></div>
+  ${!timerRun?`<div class="card" style="border-left:6px solid var(--fire)"><b>Start here:</b> press <b>▶ Start</b> on the timer, then open the first block below. One card at a time.</div>`:''}
+  <h2>Today's plan</h2>
+  <div class="card">${blocks.length?blocks.map(b=>{const c=b.c?CBY[b.c]:null,done=blockDone(b);return`<div class="block ${done?'done':''}" style="--c:${c?c.color:'#888'}"><div class="dot"></div><div class="what"><b>${c?c.code:'🔁'}</b> ${esc(b.label)}</div><div class="min">${b.min}m</div><button class="btn small ${done?'ghost':''}" onclick="go('${blockGo(b)}')">${done?'Again':'Go'}</button></div>`}).join(''):'<p>No blocks left. Every pending exam is covered, or all exams are done. 🎉</p>'}
+   <div class="kbd" style="margin-top:6px">Your plan for today stays fixed. Tomorrow's plan rebalances around what you finish. <a href="#plan">See full roadmap →</a></div></div>
+  <h2>Daily quests</h2>
+  <div class="card">${Q.ids.map(id=>{const q=QPOOL.find(x=>x.id===id),v=qVal(q),dn=Q.done.includes(id);return`<div class="quest ${dn?'done':''}"><div class="ic">${dn?'✅':q.ic}</div><div class="q"><b>${q.t}</b><div class="bar" style="--c:var(--gold);margin-top:5px"><i style="width:${100*v/q.n}%"></i></div></div><div class="kbd">${v}/${q.n}</div></div>`}).join('')}
+   <div class="kbd">Finish all three to open today's 🎁 chest.</div></div>
+  <div class="grid">
+   ${next?`<div class="card" style="border-left:6px solid ${next.color}"><div class="kbd">Next exam</div><h3 style="margin:2px 0">${next.code} · ${next.short}</h3><div style="font-size:26px;font-weight:900">${countdown(next.exam)}</div><div class="kbd">${pretty(next.examDay)}</div><button class="btn small" onclick="go('course-${next.id}')">Open course</button></div>`:''}
+   <div class="card"><div class="kbd">Spaced review</div><h3 style="margin:2px 0">${due} card${due===1?'':'s'} due</h3><p class="kbd">Reviewing on the right day locks topics into long-term memory.</p><button class="btn small ${due?'purple':'ghost'}" onclick="go('review')">${due?'Review now':'Nothing due'}</button></div>
+  </div>`;
+}
+
+/* ---------- ROADMAP ---------- */
+function plan(){const P=buildPlan();const t=TODAY();
+  app.innerHTML=`<h1>Your roadmap</h1><p class="sub">Day-by-day to your last exam. The plan puts more time on whichever course is most behind for its exam date, mixes courses so you interleave, and keeps the day before each exam for a timed mock.</p>
+  ${P.atRisk.length?`<div class="warnbox">⚠️ <b>Not enough time at your current daily goal for:</b> ${P.atRisk.map(x=>`${x.c.code} (${x.n} topic${x.n>1?'s':''}, ~${Math.round(x.min/60*10)/10}h)`).join(', ')}. Add extra blocks on free days, or start these topics earlier.</div>`:''}
+  ${P.days.map(d=>{const tot=d.blocks.reduce((a,b)=>a+b.min,0);const cls=CATALOG.classDays[d.k];return`<div class="day ${d.k===t?'today':''} ${d.exam.length?'exam':''}"><div class="row"><b>${d.k===t?'Today · ':''}${pretty(d.k)}</b><span class="kbd">${tot} min planned · goal ${d.cap}</span>${cls?`<span class="pill">🏫 ${cls}</span>`:''}${d.exam.map(c=>`<span class="pill" style="background:var(--bad-soft);color:var(--bad)">📝 ${c.code} exam ${new Date(c.exam).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</span>`).join('')}</div>
+   ${(d.k===t?todayPlan():d.blocks).map(b=>{const c=b.c?CBY[b.c]:null;return`<div class="kbd" style="padding:2px 0">• <b style="color:${c?c.color:'#666'}">${c?c.code:'Review'}</b> ${esc(b.label)} <span>(${b.min}m)</span></div>`}).join('')||'<div class="kbd">Rest / buffer</div>'}</div>`}).join('')}`}
+
+/* ---------- COURSES ---------- */
+function courses(){const A=activeCourses(),el=COURSES.filter(c=>c.elective&&!A.includes(c));
+  app.innerHTML=`<h1>Your courses</h1><p class="sub">${A.length} courses in your plan. Courses marked <span class="pill o">outline</span> show the topic list now; full lessons are being added.</p>
+  <div class="grid">${A.map(c=>{const pg=courseProgress(c);return`<div class="card" style="border-left:6px solid ${c.color};cursor:pointer;--c:${c.color}" onclick="go('course-${c.id}')"><div class="kbd">${c.code}${c.elective?' · elective':''}${ST.examsDone[c.id]?' · ✅ done':''}</div><h3 style="margin:2px 0">${c.title}</h3><div class="kbd">Exam ${pretty(c.examDay)} · ${c.topics.length} topics ${c.status==='outline'?'<span class="pill o">outline</span>':''}</div><div class="bar" style="margin-top:8px"><i style="width:${pg}%"></i></div><div class="kbd">${pg}% mastered</div></div>`}).join('')}</div>
+  ${el.length?`<h2>Electives not in your plan</h2>${el.map(c=>`<div class="card row"><div style="flex:1"><b>${c.code}</b> ${c.title}<div class="kbd">${pretty(c.examDay)}</div></div><button class="btn small ghost" onclick="addElective('${c.id}')">Add to my plan</button></div>`).join('')}`:''}`}
+function addElective(id){ST.profile.electives.push(id);delete ST.planCache[TODAY()];save();toast('Added to your plan');courses()}
+function course(id){const c=CBY[id];if(!c)return go('courses');app.style.setProperty('--c',c.color);
+  const nxt=c.topics.find(t=>topicState(id,t.id)!=='mastered');
+  app.innerHTML=`<div class="kbd">${c.code}${c.elective?' · elective':''}</div><h1>${c.title}</h1>
+  <p class="sub">Exam ${pretty(c.examDay)}, ${new Date(c.exam).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})} · ${countdown(c.exam)} left</p>
+  <div class="card"><b>Exam format:</b> ${esc(c.format)}<div class="kbd" style="margin-top:4px">Target: 50+/65 (or the same share of the marks).</div></div>
+  ${c.status==='outline'?`<div class="warnbox">📥 Full lessons for this course are being added. For now, use the topic list as your reading checklist from the study guide, and tick topics as you finish them.</div>`:''}
+  <div class="row">${nxt&&!nxt.outline?`<button class="btn green" onclick="go('lesson-${id}-${nxt.id}-0')">▶ Continue: ${esc(nxt.title)}</button>`:''}
+   ${c.data?`<button class="btn ghost" onclick="go('flash-${id}')">🃏 Flashcards</button><button class="btn ghost" onclick="go('mock-${id}')">📝 Mock exam</button><button class="btn ghost" onclick="go('cheat-${id}')">📄 Cheat sheet</button>`:''}
+   ${c.data&&c.data.calc?`<button class="btn ghost" onclick="go('calc-${id}')">🧮 Calculations</button>`:''}${c.data&&c.data.past?`<button class="btn orange" onclick="go('past-${id}')">📜 Past paper</button>`:''}</div>
+  <h2>Topics</h2>
+  ${c.topics.map(t=>{const st=topicState(id,t.id),[cl,lbl]=STATE_LBL[st];return`<div class="card" style="border-left:5px solid ${c.color}"><div class="row"><div style="flex:1"><div class="kbd">${t.n}</div><b>${esc(t.title)}</b> <span class="pill ${cl}">${lbl}</span></div>
+   ${t.outline?`<button class="btn small ${st==='mastered'?'ghost':'green'}" onclick="markOutline('${id}','${t.id}')">${st==='mastered'?'✓ Done':'Mark studied'}</button>`:`<button class="btn small" onclick="go('lesson-${id}-${t.id}-0')">Learn</button><button class="btn small ghost" onclick="go('recall-${id}-${t.id}')">Recall</button>${t.quiz&&t.quiz.length?`<button class="btn small ghost" onclick="go('quiz-${id}-${t.id}')">Quiz</button>`:''}${t.theory&&t.theory.length?`<button class="btn small ghost" onclick="go('theory-${id}-${t.id}')">Theory</button>`:''}`}</div>
+   ${(()=>{const p=ST.topics[tkey(id,t.id)];return p&&(p.recallBest!=null||p.theoryBest!=null)?`<div class="kbd">Best recall ${p.recallBest??'—'}% · best theory ${p.theoryBest??'—'}%</div>`:''})()}</div>`}).join('')}`}
+function markOutline(c,t){const p=TP(c,t);if(topicState(c,t)==='mastered'){p.recallBest=null;p.recallLast=null;p.cards=[]}else{p.started=p.started||TODAY();p.recallBest=100;p.recallLast=100;p.recallLastDay=TODAY();addXP(30,'topic studied');confetti()}save();course(c)}
+
+/* ---------- LESSON ---------- */
+function lesson(cid,tid,i){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);if(!t||t.outline)return course(cid);app.style.setProperty('--c',c.color);
+  const card=t.cards[i];if(!card)return go('feyn-'+cid+'-'+tid);const p=TP(cid,tid);p.started=p.started||TODAY();
+  app.innerHTML=`<div class="kbd"><a href="#course-${cid}">${c.code}</a> · ${t.n}</div>${i===0?`<h1>${esc(t.title)}</h1><p class="sub">${esc(t.why||'')}</p>${warmup(cid,tid)}`:`<h3 style="margin:4px 0">${esc(t.title)}</h3>`}
+   <div class="prog">${t.cards.map((_,k)=>`<i class="${p.cards.includes(k)||k<i?'d':''}"></i>`).join('')}</div>
+   <div class="card"><div class="kbd">Card ${i+1} of ${t.cards.length}</div><h2 style="margin-top:4px">${card.h}</h2>${card.b}</div>
+   <div class="card" style="background:#fbfaf7"><b>🗣 Say it out loud:</b> close your eyes and explain this card in one sentence. Can't? Read it once more.</div>
+   <button class="btn ghost" ${i===0?'disabled':''} onclick="go('lesson-${cid}-${tid}-${i-1}')">← Back</button>
+   <button class="btn green big" onclick="cardDone('${cid}','${tid}',${i})">${i===t.cards.length-1?'Done → Explain it':'Got it → Next'}</button>`}
+function cardDone(cid,tid,i){const p=TP(cid,tid);if(!p.cards.includes(i)){p.cards.push(i);day().cards++;addXP(5)}questTick();checkBadges();save();go('lesson-'+cid+'-'+tid+'-'+(i+1))}
+function warmup(cid,tid){const pool=[];Object.entries(ST.srs).forEach(([k,v])=>{const[c,t,i]=k.split('|');if(c===cid&&t===tid)return;const co=CBY[c];if(!co||ST.examsDone[c])return;const to=co.topics.find(x=>x.id===t);if(to&&to.recall&&to.recall[i])pool.push([co.code,to.recall[i][0],to.recall[i][1]])});
+  if(!pool.length)return'';const pick=pool.sort(()=>Math.random()-.5).slice(0,3);
+  return`<div class="card" style="background:#fffdf5"><b>🔁 Warm-up from earlier topics</b>. Answer in your head, then tap.${pick.map(p=>`<div style="margin-top:10px"><div><span class="pill">${p[0]}</span>${esc(p[1])}</div><button class="btn small ghost" onclick="this.nextElementSibling.classList.toggle('show')">Show</button><div class="reveal ok" style="font-weight:500">${esc(p[2])}</div></div>`).join('')}</div>`}
+
+/* ---------- FEYNMAN ---------- */
+function feyn(cid,tid){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);app.style.setProperty('--c',c.color);const prev=ST.feyn[tkey(cid,tid)]||'';
+  app.innerHTML=`<div class="kbd">${c.code} · ${t.n}</div><h1>🗣 Explain it like a teacher</h1>
+  <p class="sub">Feynman technique: explain <b>${esc(t.title)}</b> in plain words to a JSS1 student. No notes. Gaps you hit here are what you need to revise.</p>
+  <div class="card"><textarea id="fy" style="min-height:170px" placeholder="Start with: This topic is about…">${esc(prev)}</textarea><div class="kbd" id="wc">0 words · aim for 40+</div>
+  <button class="btn green big" onclick="saveFeyn('${cid}','${tid}')">Save explanation → Recall quiz</button> <button class="btn ghost" onclick="go('recall-${cid}-${tid}')">Skip</button></div>`;
+  const ta=document.getElementById('fy'),wc=document.getElementById('wc');const upd=()=>{const n=ta.value.trim().split(/\s+/).filter(Boolean).length;wc.textContent=n+' words · aim for 40+'};ta.oninput=upd;upd()}
+function saveFeyn(cid,tid){const v=document.getElementById('fy').value.trim();const n=v.split(/\s+/).filter(Boolean).length;
+  if(n<25){toast('Write at least 25 words');return}const k=tkey(cid,tid);const first=!ST.feyn[k];ST.feyn[k]=v;if(first){day().feyn++;addXP(15,'explained it')}questTick();save();go('recall-'+cid+'-'+tid)}
+
+/* ---------- RECALL ---------- */
+function recall(cid,tid){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);if(!t||!t.recall)return course(cid);app.style.setProperty('--c',c.color);
+  let k=0,got=0,combo=0,missed=[];const qs=t.recall.map((r,i)=>({q:r[0],a:r[1],i})).sort(()=>Math.random()-.5);
+  function show(){if(k>=qs.length){const pct=Math.round(100*got/qs.length),p=TP(cid,tid);p.recallLast=pct;p.recallLastDay=TODAY();p.recallBest=Math.max(p.recallBest??0,pct);
+      const xp=got*3+(pct===100?15:0);addXP(xp,'recall');if(pct>=80){confetti();chime(4)}checkBadges();save();
+      const st=topicState(cid,tid);
+      app.innerHTML=`<div class="card" style="text-align:center"><div class="bigemoji">${pct>=80?'🏆':pct>=50?'💪':'🌱'}</div><h1>${got}/${qs.length} · ${pct}%</h1><div class="xpgain">+${xp} XP</div>
+       <p>${pct>=80?'Strong. This topic is close to mastered.':pct>=50?'Getting there. Re-read the cards you missed, then retry.':'Normal for a first pass. Go through the cards once more.'}</p>
+       ${st==='mastered'?'<p class="ok">⭐ Topic mastered!</p>':''}</div>
+       ${missed.length?`<div class="card"><h3 style="margin-top:0">Revise these (they come back in spaced review):</h3><ul>${missed.map(m=>`<li><b>${esc(m.q)}</b><br><span class="kbd">${esc(m.a)}</span></li>`).join('')}</ul></div>`:''}
+       ${t.quiz&&t.quiz.length?`<button class="btn green big" onclick="go('quiz-${cid}-${tid}')">Next: objective quiz →</button>`:t.theory&&t.theory.length?`<button class="btn green big" onclick="go('theory-${cid}-${tid}')">Next: theory practice →</button>`:''}
+       <button class="btn ghost" onclick="go('recall-${cid}-${tid}')">Retry</button><button class="btn ghost" onclick="go('course-${cid}')">Back to course</button>`;return}
+    const Q=qs[k];app.innerHTML=`<div class="kbd">${c.code} · ${t.n} · Active recall</div><h1>From memory only</h1>
+     <div class="prog">${qs.map((_,j)=>`<i class="${j<k?'d':''}"></i>`).join('')}</div>${combo>=3?`<div class="pill" style="background:#fff1e6;color:var(--fire)">🔥 Combo ×${combo}</div>`:''}
+     <div class="card"><div class="kbd">Question ${k+1} of ${qs.length}</div><h2 style="margin-top:4px">${esc(Q.q)}</h2>
+     <textarea id="ra" placeholder="Type or say your answer, then reveal."></textarea>
+     <button class="btn" style="margin-top:8px" onclick="document.getElementById('rv').classList.add('show');this.style.display='none'">Reveal answer</button>
+     <div class="reveal" id="rv"><div class="def"><b>Answer</b>${esc(Q.a)}</div><p><b>Did you get the key idea?</b></p>
+     <button class="btn green" id="yes">✓ Yes</button><button class="btn red" id="no">✗ Not really</button></div></div>`;
+    document.getElementById('yes').onclick=()=>{got++;combo++;day().recall++;day().correct++;srsAnswer(cid,tid,Q.i,true);if(combo>=3)chime(1);questTick();k++;show()};
+    document.getElementById('no').onclick=()=>{combo=0;day().recall++;missed.push(Q);srsAnswer(cid,tid,Q.i,false);k++;show()}}
+  show()}
+
+/* ---------- QUIZ (MCQ + fill-in-the-gap) ---------- */
+function normA(x){return String(x).toLowerCase().replace(/[^a-z0-9.%+\-]/g,' ').replace(/\s+/g,' ').trim()}
+function gapOk(it,v){const ans=[it.a].concat(it.alt||[]);return ans.some(a=>normA(a)===normA(v))}
+function objHTML(it,name){if(it.k==='mcq')return it.o.map((o,j)=>`<label class="opt" style="margin:6px 0;padding:9px"><input type="radio" name="${name}" value="${j}"><div>${esc(o)}</div></label>`).join('');
+  if(it.k==='tf')return['True','False'].map((o,j)=>`<label class="opt" style="margin:6px 0;padding:9px"><input type="radio" name="${name}" value="${j}"><div>${o}</div></label>`).join('');
+  return`<input type="text" name="${name}" placeholder="Type the missing word(s)">`}
+function objCheck(it,name,root){root=root||document;if(it.k==='gap'){const el=root.querySelector(`[name="${name}"]`);return el&&gapOk(it,el.value)}
+  const r=root.querySelector(`[name="${name}"]:checked`);if(!r)return false;const want=it.k==='tf'?(it.a?0:1):it.a;return+r.value===want}
+function objAnswer(it){return it.k==='mcq'?it.o[it.a]:it.k==='tf'?(it.a?'True':'False'):it.a}
+function quiz(cid,tid){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);if(!t||!t.quiz)return course(cid);app.style.setProperty('--c',c.color);
+  const items=t.quiz.slice().sort(()=>Math.random()-.5);let k=0,got=0;
+  function show(){if(k>=items.length){const pct=Math.round(100*got/items.length),p=TP(cid,tid);p.quizBest=Math.max(p.quizBest??0,pct);addXP(got*3+(pct===100?10:0),'quiz');if(pct>=80){confetti();chime(4)}save();
+      app.innerHTML=`<div class="card" style="text-align:center"><div class="bigemoji">${pct>=80?'🏆':'💪'}</div><h1>${got}/${items.length} · ${pct}%</h1><p>${pct>=80?'Sharp.':'Review the explanations, then retry.'}</p></div>
+      ${t.theory&&t.theory.length?`<button class="btn green big" onclick="go('theory-${cid}-${tid}')">Next: theory practice →</button>`:''}<button class="btn ghost" onclick="go('quiz-${cid}-${tid}')">Retry</button><button class="btn ghost" onclick="go('course-${cid}')">Back to course</button>`;return}
+    const it=items[k];app.innerHTML=`<div class="kbd">${c.code} · ${t.n} · Objective quiz</div><h1>${it.k==='gap'?'Fill in the gap':it.k==='tf'?'True or false?':'Pick one'}</h1>
+     <div class="prog">${items.map((_,j)=>`<i class="${j<k?'d':''}"></i>`).join('')}</div>
+     <div class="card"><div class="kbd">Question ${k+1} of ${items.length}</div><h2 style="margin-top:4px">${esc(it.q)}</h2><div id="qa">${objHTML(it,'qx')}</div>
+     <button class="btn" id="qchk" style="margin-top:8px">Check</button><div id="qfb"></div></div>`;
+    document.getElementById('qchk').onclick=()=>{const ok=objCheck(it,'qx');day().recall++;if(ok){got++;day().correct++;chime(1)}questTick();
+      document.getElementById('qfb').innerHTML=`<p class="${ok?'ok':'no'}">${ok?'Correct!':'Answer: '+esc(objAnswer(it))}</p>${it.w?`<p class="kbd">${esc(it.w)}</p>`:''}<button class="btn green" onclick="window._qn()">Next →</button>`;document.getElementById('qchk').style.display='none'};
+    window._qn=()=>{k++;show()}}
+  show()}
+
+/* ---------- PAST PAPER ---------- */
+function past(cid){const c=CBY[cid],P=c.data&&c.data.past;if(!P)return course(cid);app.style.setProperty('--c',c.color);
+  app.innerHTML=`<div class="kbd">${c.code}</div><h1>📜 ${esc(P.title)}</h1><p class="sub">${P.note||''}</p>
+  ${P.qs.map((q,i)=>`<div class="card"><h3 style="margin-top:0">${esc(q.h||('Q'+(i+1)))}${q.marks?` <span class="pill">${q.marks} marks</span>`:''}</h3><p>${q.q}</p><textarea placeholder="Write your answer…"></textarea>
+   <button class="btn small" style="margin-top:8px" onclick="document.getElementById('pp${i}').classList.add('show');day().theory++;questTick();save()">Mark my answer</button>
+   <div class="reveal" id="pp${i}"><div class="pts">${q.pts.map(p=>`<label><input type="checkbox">${esc(p)}</label>`).join('')}</div><details><summary><b>Model answer</b></summary>${q.model}</details></div></div>`).join('')}`}
+
+/* ---------- THEORY ---------- */
+function theory(cid,tid){const c=CBY[cid],t=c.topics.find(x=>x.id===tid);app.style.setProperty('--c',c.color);
+  app.innerHTML=`<div class="kbd">${c.code} · ${t.n}</div><h1>Exam-style theory</h1><p class="sub">Pick ONE question. Write a full answer (8–10 min): define → explain in numbered points → example → conclude. Then mark yourself honestly.</p>
+  ${t.theory.map((q,i)=>`<div class="card"><h3 style="margin-top:0">Q${i+1}. ${esc(q.q)}</h3><textarea placeholder="Write your answer…"></textarea>
+   <button class="btn small" style="margin-top:8px" onclick="document.getElementById('tr${i}').classList.add('show')">Mark my answer</button>
+   <div class="reveal" id="tr${i}"><h3>Tick each point you included</h3><div class="pts">${q.pts.map(p=>`<label><input type="checkbox" class="p${i}" onchange="tscore('${cid}','${tid}',${i},${q.pts.length})">${esc(p)}</label>`).join('')}</div>
+   <p id="sc${i}" class="kbd"></p><button class="btn small purple" onclick="tsubmit('${cid}','${tid}',${i},${q.pts.length})">Save score</button>
+   <details><summary><b>Model answer</b></summary>${q.model}</details></div></div>`).join('')}
+  <button class="btn ghost" onclick="go('course-${cid}')">Back to course</button>`}
+function tscore(cid,tid,i,n){const s=document.querySelectorAll('.p'+i+':checked').length;document.getElementById('sc'+i).innerHTML=`<b>${s}/${n}</b> — ${s/n>=.75?'exam-ready':s/n>=.5?'pass level; add the missing points':'re-read the model answer, then rewrite from memory'}`}
+function tsubmit(cid,tid,i,n){const s=document.querySelectorAll('.p'+i+':checked').length,pct=Math.round(100*s/n),p=TP(cid,tid);p.theoryBest=Math.max(p.theoryBest??0,pct);day().theory++;addXP(10+Math.round(pct/10),'theory');questTick();checkBadges();save();
+  if(topicState(cid,tid)==='mastered'){confetti();chime(5);modal(`<div class="bigemoji">⭐</div><h2>Topic mastered!</h2><p>${esc(CBY[cid].topics.find(x=>x.id===tid).title)}</p><button class="btn green big" onclick="closeModal();go('course-${cid}')">Next topic</button>`)}else toast('Saved: '+pct+'%')}
+
+/* ---------- REVIEW (spaced) ---------- */
+function review(){const items=dueItems().sort(()=>Math.random()-.5).slice(0,25);
+  if(!items.length){app.innerHTML=`<h1>🔁 Spaced review</h1><div class="card"><p><b>Nothing due right now.</b> Cards you answer in recall quizzes come back here after 1, 2, 4, 7 and 14 days. Miss one and it returns tomorrow.</p><button class="btn" onclick="go('home')">Back to today</button></div>`;return}
+  let k=0,got=0;function show(){if(k>=items.length){addXP(got*2,'review');confetti();app.innerHTML=`<div class="card" style="text-align:center"><div class="bigemoji">🔁</div><h1>Review cleared</h1><p>${got}/${items.length} remembered.</p><button class="btn green big" onclick="go('home')">Back to today</button></div>`;return}
+    const it=items[k];app.style.setProperty('--c',it.co.color);
+    app.innerHTML=`<h1>🔁 Spaced review</h1><div class="kbd">${k+1}/${items.length} due · ${it.co.code} · ${esc(it.to.title)}</div>
+     <div class="card fc" id="fc"><div class="side">Question</div><div><b>${esc(it.q)}</b></div></div><div id="ctl"><button class="btn big" onclick="flipR()">Show answer</button></div>`;
+    window.flipR=()=>{document.getElementById('fc').innerHTML=`<div class="side">Answer</div><div>${esc(it.a)}</div>`;document.getElementById('ctl').innerHTML=`<button class="btn green big" id="y">✓ Knew it</button><button class="btn red big" id="n">✗ Forgot</button>`;
+      document.getElementById('y').onclick=()=>{got++;srsAnswer(it.c,it.t,it.i,true);day().review++;day().correct++;questTick();save();k++;show()};
+      document.getElementById('n').onclick=()=>{srsAnswer(it.c,it.t,it.i,false);day().review++;questTick();save();k++;show()}}}
+  show()}
+
+/* ---------- FLASHCARDS ---------- */
+function flash(cid){const c=CBY[cid];if(!c||!c.data)return go('courses');app.style.setProperty('--c',c.color);
+  let pool=[];c.topics.forEach(t=>(t.recall||[]).forEach(r=>pool.push({t:t.title,q:r[0],a:r[1]})));pool.sort(()=>Math.random()-.5);let k=0,fl=false,again=[];
+  function show(){if(k>=pool.length){if(again.length){pool=again.sort(()=>Math.random()-.5);again=[];k=0}else{addXP(10,'deck cleared');confetti();app.innerHTML=`<div class="card" style="text-align:center"><div class="bigemoji">🃏</div><h1>Deck cleared</h1><button class="btn green big" onclick="go('course-${cid}')">Back to course</button></div>`;return}}
+    const x=pool[k];app.innerHTML=`<div class="kbd">${c.code} · flashcards · ${k+1}/${pool.length} · ${again.length} to repeat</div>
+     <div class="card fc" onclick="fFlip()"><div class="side">${fl?'Answer':esc(x.t)}</div><div>${fl?esc(x.a):'<b>'+esc(x.q)+'</b>'}</div></div>
+     ${fl?`<button class="btn green big" onclick="fNext(1)">✓ Knew it</button><button class="btn red big" onclick="fNext(0)">✗ Again</button>`:`<button class="btn big" onclick="fFlip()">Flip</button>`}`}
+  window.fFlip=()=>{fl=!fl;show()};window.fNext=ok=>{if(!ok)again.push(pool[k]);day().flash++;questTick();save();k++;fl=false;show()};show()}
+
+/* ---------- CALC ---------- */
+function calc(cid){const c=CBY[cid];const C=(c.data&&c.data.calc)||[];app.style.setProperty('--c',c.color);
+  app.innerHTML=`<div class="kbd">${c.code}</div><h1>🧮 Calculation drills</h1><p class="sub">Work on paper, then type the number.</p>
+  ${C.map((q,i)=>`<div class="card"><span class="pill">${q.t}</span><p>${q.q}</p><input type="number" step="any" id="c${i}" placeholder="Your answer"><button class="btn small" style="margin-top:8px" onclick="chk('${cid}',${i})">Check</button><div id="cr${i}"></div></div>`).join('')}`}
+function chk(cid,i){const q=CBY[cid].data.calc[i];const v=parseFloat(document.getElementById('c'+i).value);const el=document.getElementById('cr'+i);if(isNaN(v)){el.innerHTML='<p class="kbd">Enter a number.</p>';return}
+  const ok=q.abs?Math.abs(Math.abs(v)-Math.abs(q.ans))<=q.tol:Math.abs(v-q.ans)<=q.tol;el.innerHTML=`<p class="${ok?'ok':'no'}">${ok?'Correct!':'Not quite.'}</p><p>${q.sol}</p>`;if(ok){day().correct++;addXP(5);questTick()}}
+
+/* ---------- MOCK ---------- */
+let mockT=null;
+function mock(cid){const c=CBY[cid];if(!c||!c.data)return go('course-'+cid);app.style.setProperty('--c',c.color);
+  const all=[];c.topics.forEach(t=>(t.theory||[]).forEach(q=>all.push(Object.assign({topic:t.title},q))));
+  const seed=hash(TODAY()+cid);const qs=all.map(q=>[hash(q.q+seed),q]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]).slice(0,c.mockTheory||4);window._mq=qs;
+  const ob=[];c.topics.forEach(t=>(t.quiz||[]).forEach(q=>ob.push(q)));const os=ob.map(q=>[hash(q.q+seed),q]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]).slice(0,10);window._mo=os;
+  const last=ST.mocks[cid];
+  app.innerHTML=`<div class="kbd">${c.code}</div><h1>📝 Timed mock</h1><p class="sub">Objective + theory, <b>45 minutes</b>, closed notes. ${esc(c.format)}</p>
+  ${last?`<div class="card ok">Last mock: ${last.score}% on ${pretty(last.date)}</div>`:''}
+  <div class="card" style="text-align:center"><div style="font-size:38px;font-weight:900" id="mclock">45:00</div><button class="btn green" id="mst" onclick="startMock()">Start the clock</button></div>
+  ${os.length?`<h2>Section A · Objective (${os.length})</h2>`+os.map((q,i)=>`<div class="card"><b>A${i+1}.</b> ${esc(q.q)}<div>${objHTML(q,'mo'+i)}</div></div>`).join('')+'<h2>Section B · Theory</h2>':''}
+  ${qs.map((q,i)=>`<div class="card"><span class="pill">${esc(q.topic)}</span><h3>Q${i+1}. ${esc(q.q)}</h3><textarea placeholder="Your answer…"></textarea></div>`).join('')}
+  <button class="btn purple big" onclick="markMock('${cid}')">Finish & mark</button><div id="mmark"></div>`}
+function startMock(){let s=2700;clearInterval(mockT);document.getElementById('mst').disabled=true;mockT=setInterval(()=>{s--;const el=document.getElementById('mclock');if(!el){clearInterval(mockT);return}el.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');if(s<=0){clearInterval(mockT);chime(3);modal('<div class="bigemoji">⏰</div><h2>Pens down</h2><p>Mark your answers now.</p><button class="btn green" onclick="closeModal()">OK</button>')}},1000)}
+function markMock(cid){clearInterval(mockT);const qs=window._mq,os=window._mo||[];let og=0;const ores=os.map((q,i)=>{const ok=objCheck(q,'mo'+i);if(ok)og++;return`<div class="kbd">${ok?'✅':'❌'} A${i+1}: ${esc(objAnswer(q))}</div>`}).join('');window._obj=[og,os.length];
+  document.getElementById('mmark').innerHTML=(os.length?`<div class="card"><h3 style="margin-top:0">Section A: ${og}/${os.length}</h3>${ores}</div>`:'')+`<h2>Mark Section B strictly</h2>`+qs.map((q,i)=>`<div class="card"><h3>Q${i+1}</h3><div class="pts">${q.pts.map(p=>`<label><input type="checkbox" class="mk" onchange="mockScore()">${esc(p)}</label>`).join('')}</div><details><summary><b>Model answer</b></summary>${q.model}</details></div>`).join('')+`<div class="card" id="mtot"></div><button class="btn green big" onclick="saveMock('${cid}')">Save mock score</button>`;mockScore();document.getElementById('mmark').scrollIntoView({behavior:'smooth'})}
+function mockScore(){const o=window._obj||[0,0];const a=document.querySelectorAll('.mk').length+o[1],c=document.querySelectorAll('.mk:checked').length+o[0],p=Math.round(100*c/Math.max(1,a));document.getElementById('mtot').innerHTML=`<h2>${c}/${a} points · ${p}%</h2><p>${p>=77?'On track for 50+/65.':p>=55?'Pass territory. Drill the questions where you lost most points.':'Redo the weakest topics\' recall quizzes, then try again.'}</p><div class="kbd">50/65 ≈ 77%.</div>`;window._mp=p}
+function saveMock(cid){ST.mocks[cid]={score:window._mp||0,date:TODAY()};addXP(50,'mock');confetti();chime(4);checkBadges();save();go('course-'+cid)}
+
+/* ---------- CHEAT SHEET (auto from definitions) ---------- */
+function cheat(cid){const c=CBY[cid];app.style.setProperty('--c',c.color);ST.flags['cheat_'+cid]=TODAY();save();
+  app.innerHTML=`<div class="kbd">${c.code}</div><h1>📄 Cheat sheet</h1><p class="sub">Every recall answer, topic by topic. Read slowly the morning of the exam.</p>
+  ${c.topics.map(t=>`<div class="card" style="border-left:5px solid ${c.color}"><h3 style="margin-top:0">${t.n}: ${esc(t.title)}</h3>${t.recall?`<ul>${t.recall.map(r=>`<li><b>${esc(r[0])}</b> ${esc(r[1])}</li>`).join('')}</ul>`:'<p class="kbd">Outline topic: revise from your study guide.</p>'}</div>`).join('')}`}
+
+/* ---------- EXAMS ---------- */
+function exams(){const A=activeCourses().slice().sort((a,b)=>a.exam<b.exam?-1:1);const now=new Date();
+  app.innerHTML=`<h1>📅 Exam timetable</h1><p class="sub">After each paper, mark it done. It leaves your roadmap and the plan rebalances for the rest.</p>
+  ${A.map(c=>{const started=now>=new Date(c.exam),done=ST.examsDone[c.id];return`<div class="card row" style="border-left:6px solid ${c.color}"><div style="flex:1"><b>${c.code}</b> ${c.title}${c.elective?' <span class="pill">elective</span>':''}<div class="kbd">${pretty(c.examDay)} · ${new Date(c.exam).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}–${new Date(c.examEnd).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</div></div>
+   ${done?'<span class="pill m">✅ Done</span>':started?`<button class="btn green small" onclick="examDone('${c.id}')">Mark done 🎉</button>`:`<div style="font-weight:900">${countdown(c.exam)}</div>`}</div>`}).join('')}`}
+function examDone(id){ST.examsDone[id]=TODAY();delete ST.planCache[TODAY()];addXP(100,'exam done');confetti();chime(5);checkBadges();save();const left=pendingCourses().length;
+  modal(`<div class="bigemoji">🎉</div><h2>${CBY[id].code} done!</h2><p>${left?`${left} to go. Rest tonight, then back to the roadmap tomorrow.`:'That was the last one. Semester finished!'}</p><button class="btn green big" onclick="closeModal();go('home')">Continue</button>`);exams()}
+
+/* ---------- LEADERBOARD ---------- */
+let DB=null,UID=null,boardRows=null,boardMsg='Checking for the live board…';
+(async()=>{try{if(window.claude&&window.claude.use){const db=await window.claude.use('db');const u=await window.claude.use('user');if(db&&u){const id=await u.id();if(id){DB=db;UID=id;boardMsg='';pushBoard();
+  DB.collection('board').orderBy('xp','desc').limit(50).onSnapshot(s=>{boardRows=s.docs.map(d=>Object.assign({id:d.id},d.data()));if(location.hash==='#board')board()},()=>{boardMsg='The live board is unavailable right now.';})}}}}catch(e){}
+  if(!DB)boardMsg='The live board only works inside claude.ai for people added to this app. Use the share card instead.';if(location.hash==='#board')board()})();
+let lastPush='';function pushBoard(){if(!DB||!UID||!ST.profile)return;const body={name:ST.profile.name.slice(0,24),xp:ST.xp,streak:streakAlive()?ST.streak.count:0,mastered:masteredCount(),updated:TODAY()};const sig=JSON.stringify(body);if(sig===lastPush)return;lastPush=sig;
+  DB.doc('board/'+UID).set(body).catch(e=>{if(e&&e.code==='invalid_argument')boardMsg='You can see the board but can\'t post to it from this account. Use the share card.'})}
+function shareText(){const L=levelOf(ST.xp),d=day();return`🔥 ${ST.profile.name} · Study Streak (PAU 400L SEN)\n🔥 Streak: ${streakAlive()?ST.streak.count:0} days\n⏱ Today: ${d.min}/${goalFor(TODAY())} min\n⚡ ${ST.xp} XP · Level ${L.lvl} ${L.name}\n⭐ Topics mastered: ${masteredCount()}\nNo carry-over this semester. Who's beating me today?`}
+function board(){const rows=boardRows||[];
+  app.innerHTML=`<h1>🏆 Leaderboard</h1>
+  <div class="card"><h3 style="margin-top:0">Share card (works for everyone)</h3><pre class="mono" style="white-space:pre-wrap;background:#faf9f6;padding:12px;border-radius:10px">${esc(shareText())}</pre>
+   <button class="btn green" onclick="copyShare()">📋 Copy for WhatsApp</button><div class="kbd">Paste it in the class group every night. Lowest streak buys suya. 😄</div></div>
+  <div class="card"><h3 style="margin-top:0">Live board</h3>${rows.length?rows.map((r,i)=>`<div class="lb ${r.id===UID?'me':''}"><div class="rk">${i+1}</div><div style="flex:1"><b>${esc(r.name||'?')}</b><div class="kbd">🔥 ${r.streak||0} · ⭐ ${r.mastered||0} mastered</div></div><div style="font-weight:900;color:var(--xp)">⚡ ${r.xp||0}</div></div>`).join(''):`<p class="kbd">${esc(boardMsg||'No entries yet.')}</p>`}</div>`}
+function copyShare(){const t=shareText();try{navigator.clipboard.writeText(t).then(()=>toast('Copied!'),()=>fallbackCopy(t))}catch(e){fallbackCopy(t)}}
+function fallbackCopy(t){modal(`<h3>Copy this</h3><textarea style="min-height:160px">${esc(t)}</textarea><button class="btn" onclick="closeModal()">Done</button>`)}
+
+/* ---------- ME / settings ---------- */
+function me(){const L=levelOf(ST.xp);const last14=[...Array(14)].map((_,i)=>addDays(TODAY(),i-13));const mx=Math.max(60,...last14.map(k=>(ST.days[k]||{}).min||0));
+  app.innerHTML=`<h1>👤 ${esc(ST.profile.name)}</h1><p class="sub">Level ${L.lvl} · ${L.name} · ${ST.xp} XP · best streak ${ST.streak.best} days · 🧊 ${ST.freezes} freeze${ST.freezes===1?'':'s'}</p>
+  <div class="card"><h3 style="margin-top:0">Last 14 days (minutes)</h3><div style="display:flex;gap:4px;align-items:flex-end;height:120px">${last14.map(k=>{const m=(ST.days[k]||{}).min||0,met=(ST.days[k]||{}).met;return`<div title="${pretty(k)}: ${m} min" style="flex:1;background:${met?'var(--good)':'#c9c5ba'};height:${Math.max(3,100*m/mx)}%;border-radius:4px 4px 0 0"></div>`}).join('')}</div><div class="kbd">Green = goal met</div></div>
+  <h2>Badges</h2><div class="badges">${BADGES.map(b=>`<div class="badge ${ST.badges[b.id]?'':'lock'}"><div class="e">${b.e}</div><b style="font-size:13.5px">${b.n}</b><div class="kbd" style="font-size:11.5px">${b.d}</div></div>`).join('')}</div>
+  <h2>Settings</h2>
+  <div class="card"><b>Name</b><input type="text" id="nm2" value="${esc(ST.profile.name)}" maxlength="24"><button class="btn small" style="margin-top:6px" onclick="ST.profile.name=document.getElementById('nm2').value.trim()||ST.profile.name;save();toast('Saved');renderStats()">Save</button></div>
+  <div class="card"><b>Electives</b>${COURSES.filter(c=>c.elective).map(c=>`<label class="opt ${ST.profile.electives.includes(c.id)?'on':''}"><input type="checkbox" ${ST.profile.electives.includes(c.id)?'checked':''} onchange="setEl('${c.id}',this.checked)"><div><b>${c.code}</b> ${c.title}</div></label>`).join('')}</div>
+  <div class="card"><b>Move to another phone or laptop</b><p class="kbd">Your progress lives in this browser only. Copy your backup code, then paste it into the app on the other device.</p>
+   <button class="btn small" onclick="exportCode()">📋 Copy backup code</button><button class="btn small ghost" onclick="importCode()">📥 Restore from code</button></div>
+  <div class="card"><button class="btn small red" onclick="if(prompt2())resetAll()">Reset all progress</button></div>`}
+function setEl(id,on){const e=ST.profile.electives;if(on&&!e.includes(id))e.push(id);if(!on)ST.profile.electives=e.filter(x=>x!==id);delete ST.planCache[TODAY()];save();me()}
+function exportCode(){const code=btoa(unescape(encodeURIComponent(JSON.stringify(ST))));try{navigator.clipboard.writeText(code).then(()=>toast('Backup code copied'),()=>fallbackCopy(code))}catch(e){fallbackCopy(code)}}
+function importCode(){modal(`<h3>Paste your backup code</h3><textarea id="imp" style="min-height:140px"></textarea><button class="btn green" onclick="doImport()">Restore</button><button class="btn ghost" onclick="closeModal()">Cancel</button>`)}
+function doImport(){try{const s=JSON.parse(decodeURIComponent(escape(atob(document.getElementById('imp').value.trim()))));if(!s.v)throw 0;ST=Object.assign(blank(),s);saveNow();closeModal();toast('Progress restored');go('home')}catch(e){toast('That code didn\'t work')}}
+function prompt2(){return true}
+function resetAll(){modal(`<h3>Reset everything?</h3><p>This deletes your streak, XP and progress on this device.</p><button class="btn red" onclick="ST=blank();saveNow();closeModal();render()">Yes, reset</button><button class="btn ghost" onclick="closeModal()">Cancel</button>`)}
+
+/* ---------- FOCUS TIMER (minutes count toward goal) ---------- */
+let tLeft=25*60,tLen=25,tMode='focus',timerRun=false,tInt=null,secAcc=0;
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function setTimer(m,mode){if(timerRun)toggleTimer();tLen=m;tMode=mode;tLeft=m*60;document.getElementById('clock').textContent=fmt(tLeft);
+  document.getElementById('tlabel').textContent=mode==='focus'?'Focus block · minutes count toward your daily goal':'Break · stand up, water, no phone'}
+function toggleTimer(){timerRun=!timerRun;document.getElementById('tgo').textContent=timerRun?'⏸ Pause':'▶ Start';
+  if(timerRun){chime(1);tInt=setInterval(()=>{tLeft--;document.getElementById('clock').textContent=fmt(Math.max(0,tLeft));
+    if(tMode==='focus'){secAcc++;if(secAcc>=60){secAcc=0;day().focus++;addMinutes(1)}}
+    if(tLeft<=0){clearInterval(tInt);timerRun=false;document.getElementById('tgo').textContent='▶ Start';chime(4);
+      if(tMode==='focus'){addXP(20,'focus block');confetti();modal(`<div class="bigemoji">✅</div><h2>Block done!</h2><p>+${tLen} minutes. Take 5: stand up, drink water, no phone.</p><button class="btn green big" onclick="closeModal();setTimer(5,'break');toggleTimer()">Start 5-min break</button><button class="btn ghost" onclick="closeModal();setTimer(25,'focus')">Skip break</button>`)}
+      else{modal(`<div class="bigemoji">💪</div><h2>Break over</h2><p>Next block. Open your next item on Today's plan.</p><button class="btn green big" onclick="closeModal();setTimer(25,'focus');toggleTimer();go('home')">Start next block</button>`)}}},1000)}
+  else clearInterval(tInt);renderStats()}
+window.addEventListener('beforeunload',saveNow);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)saveNow()});
+setInterval(()=>{renderStats();pushBoard()},60000);
+
+/* ---------- boot ---------- */
+render();
+</script>
+</body>
+</html>
