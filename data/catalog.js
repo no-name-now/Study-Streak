@@ -23,7 +23,7 @@ window.CATALOG = {
       topics:[] /* filled from data/ins401.js */ },
     { id:"sen412", code:"SEN 412", title:"Survey of Programming Languages", short:"Survey of PL",
       exam:"2026-12-10T15:00:00+01:00", examEnd:"2026-12-10T18:00:00+01:00", elective:false, color:"#8a5a14", status:"full",
-      format:"Feb 2026 paper (2.5 hrs): answer Q1 (17 marks) and any three others (16 each). Expect binding and typing with code, storage allocation, ambiguous grammars and parse trees, scoping and closures, and operational/denotational semantics.",
+      format:"Said in class (25 Nov):6 questions, answer 4. Q1 is compulsory and scenario-based: apply what was taught to a given case. Of the other 5 answer any 3: mostly theory (what is, define), plus one or two short scenario questions. Command words matter: 'define' wants a short answer; 'what is' and 'describe' want a long one. For comparison questions, cover every attribute asked (data types, binding, lifetime, scope), then end with a reflection and a conclusion that answers the question. Feb 2026 paper (2.5 hrs) matched this: Q1 (17 marks) and any three others (16 each). Expect binding and typing with code, storage allocation, ambiguous grammars and parse trees, scoping and closures, and operational/denotational semantics.",
       topics:["Preliminaries: the language schematics","Evolution of programming languages and trends","Describing syntax A: vocabulary and BNF",
         "Describing syntax B: derivations, parse trees, ambiguity, EBNF","Variables and bindings","Data types","Scope, storage bindings and semantics","Project defense prep (not examined)"] },
     { id:"sen401", code:"SEN 401", title:"Software Configuration & Maintenance", short:"Config & Maint.",
