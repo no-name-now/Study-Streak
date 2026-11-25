@@ -4,15 +4,40 @@
 // Local dev: SYNC_DEV_MEMORY=1 uses an in-memory store (see build/devserver.js).
 const crypto = require('crypto');
 
-const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const USE_MEM = !(URL_ && TOKEN) && process.env.SYNC_DEV_MEMORY === '1';
+// Find the REST credentials whatever prefix Vercel gave them (e.g. STORAGE_KV_REST_API_URL).
+const ENV = process.env;
+function findEnv(suffixes) {
+  for (const s of suffixes) if (ENV[s]) return [s, ENV[s]];
+  for (const k of Object.keys(ENV)) for (const s of suffixes) if (k.endsWith('_' + s) && ENV[k]) return [k, ENV[k]];
+  return [null, null];
+}
+const [URL_NAME, URL_] = findEnv(['KV_REST_API_URL', 'UPSTASH_REDIS_REST_URL']);
+const [TOKEN_NAME, TOKEN] = (() => {
+  // Prefer the token that shares the URL's prefix; never use the read-only token.
+  const pre = URL_NAME ? URL_NAME.replace(/(KV_REST_API_URL|UPSTASH_REDIS_REST_URL)$/, '') : '';
+  for (const s of ['KV_REST_API_TOKEN', 'UPSTASH_REDIS_REST_TOKEN']) if (ENV[pre + s]) return [pre + s, ENV[pre + s]];
+  return findEnv(['KV_REST_API_TOKEN', 'UPSTASH_REDIS_REST_TOKEN']);
+})();
+// Plain Redis connection string (Vercel "Redis" by Redis Cloud, or Upstash's REDIS_URL / KV_URL).
+const [REDIS_NAME, REDIS_URL] = findEnv(['REDIS_URL', 'KV_URL']);
+const USE_REST = !!(URL_ && TOKEN);
+const USE_TCP = !USE_REST && !!REDIS_URL;
+const USE_MEM = !USE_REST && !USE_TCP && ENV.SYNC_DEV_MEMORY === '1';
 
 const MAX_STATE_BYTES = 900 * 1024;          // one student's progress
 const USER_TTL = 60 * 60 * 24 * 400;         // keep synced progress ~13 months after last write
 const BOARD_TTL = 60 * 60 * 24 * 45;         // drop leaderboard rows idle for 45 days
 
-function configured() { return !!(URL_ && TOKEN) || USE_MEM; }
+function configured() { return USE_REST || USE_TCP || USE_MEM; }
+function backendInfo() {
+  return {
+    backend: USE_REST ? 'upstash-rest' : USE_TCP ? 'redis-url' : USE_MEM ? 'memory (dev)' : null,
+    using: USE_REST ? [URL_NAME, TOKEN_NAME] : USE_TCP ? [REDIS_NAME] : [],
+    // Names only, never values: helps spot a mis-named variable.
+    storageVarsSeen: Object.keys(ENV).filter(k => /KV_|REDIS|UPSTASH/.test(k)).sort()
+  };
+}
+const { redisCmd } = require('./resp');
 
 /* ---------- in-memory Redis subset for local testing ---------- */
 const mem = global.__ssMem || (global.__ssMem = { kv: new Map(), z: new Map() });
@@ -32,6 +57,7 @@ function memCmd([c, ...a]) {
 
 async function cmd(...args) {
   if (USE_MEM) return memCmd(args.map(String));
+  if (USE_TCP) return redisCmd(REDIS_URL, args.map(String));
   const r = await fetch(URL_, { method: 'POST', headers: { Authorization: 'Bearer ' + TOKEN }, body: JSON.stringify(args) });
   const j = await r.json();
   if (j.error) throw new Error(j.error);
@@ -77,4 +103,4 @@ async function putBoard(h, entry) {
 }
 async function dropBoard(h) { await cmd('ZREM', 'ss:board', h); await cmd('DEL', boardKey(h)); }
 
-module.exports = { cmd, configured, newCode, normCode, hashCode, userKey, boardKey, rateLimit, body, putBoard, dropBoard, MAX_STATE_BYTES, USER_TTL };
+module.exports = { cmd, configured, backendInfo, newCode, normCode, hashCode, userKey, boardKey, rateLimit, body, putBoard, dropBoard, MAX_STATE_BYTES, USER_TTL };
