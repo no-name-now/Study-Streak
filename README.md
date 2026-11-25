@@ -11,3 +11,12 @@ The app includes a web app manifest and service worker. After its first visit on
 All eight courses are listed under **Courses**, including electives that are not part of the current study plan. Each course page links to its study guide or available study materials. Word guides can be downloaded and opened in Word or a compatible app; PDFs can be opened in the browser or downloaded. SEN 419 currently has topic PDFs rather than a single complete study guide.
 
 New: **📥 Guides** collects every downloadable study guide plus a printable full guide per course. Each course page adds **🎓 Sit it timed** (the real past paper under exam time, then self-marking), **✍️ Essay trainer** (Background → Answer and solution → Scenario → How they combine → Conclusion), confidence dots for each topic and a **🌙 Exam-eve sheet** that puts shaky topics first. Tap 🌓 for dark mode.
+
+## Sync across browsers (Vercel setup, once)
+Students can turn on sync under **Me** and continue on any browser with their sync code; opted-in students appear on the live leaderboard. This needs a free database:
+
+1. Vercel → your project → **Storage** → **Create Database** (or **Marketplace**) → **Upstash** → **Upstash for Redis** → free plan → create.
+2. **Connect** it to this project (all environments). Vercel adds the `KV_REST_API_URL` and `KV_REST_API_TOKEN` variables automatically.
+3. **Deployments** → latest → **Redeploy**.
+
+Until this is done the app works normally and the sync card says sync is not set up yet. Local testing: `node build/devserver.js 5180` (in-memory database).

@@ -1,6 +1,6 @@
 // Network-first for the app shell and course data (so content updates reach phones),
 // with the cache as the offline fallback. Bump CACHE when the file list changes.
-const CACHE = 'study-streak-v2';
+const CACHE = 'study-streak-v3';
 const CORE = [
   './', './index.html', './manifest.json', './icon.svg',
   './data/catalog.js', './data/cos409.js', './data/ins401.js', './data/ins401_past.js',
@@ -19,6 +19,7 @@ self.addEventListener('activate', event => event.waitUntil(
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  if (new URL(req.url).pathname.startsWith('/api/')) return; // sync + leaderboard: always live, never cached
   const isAsset = new URL(req.url).pathname.includes('/assets/');
   if (isAsset) {
     // Large study-guide files: cache-first once downloaded.

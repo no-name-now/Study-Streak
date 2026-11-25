@@ -220,8 +220,8 @@ let ST=load();
 function blank(){return{v:APP_VERSION,profile:null,xp:0,days:{},streak:{count:0,last:null,best:0},freezes:0,
   badges:{},topics:{},srs:{},examsDone:{},mocks:{},planCache:{},quests:{},feyn:{},flags:{},weak:{},conf:{},essays:{},sits:{},sitDraft:{},lastSeen:null}}
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v)return Object.assign(blank(),s)}catch(e){}return blank()}
-let saveT=null;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}},150)}
-function saveNow(){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}}
+let saveT=null;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}},150);syncSchedule()}
+function saveNow(noSync){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}if(noSync!==true&&!(noSync&&noSync.type))syncSchedule()}
 
 /* ---------- dates ---------- */
 function dk(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
@@ -481,7 +481,8 @@ function onboarding(step){
   if(step===0){app.innerHTML=`<div class="onb"><div class="bigemoji">🔥</div><h1>Pass every exam. No carry-over.</h1>
    <p class="sub">${CATALOG.semesterLabel}. Short lessons, active recall, spaced review and a streak that keeps you reading 3+ hours a day.</p>
    <div class="card"><h3 style="margin-top:0">What should we call you?</h3><input type="text" id="nm" placeholder="Your first name" maxlength="24" value="${esc(OB.name)}">
-   <button class="btn green big" style="margin-top:12px" onclick="OB.name=document.getElementById('nm').value.trim();if(!OB.name){toast('Type your name');return}onboarding(1)">Continue →</button></div></div>`;return}
+   <button class="btn green big" style="margin-top:12px" onclick="OB.name=document.getElementById('nm').value.trim();if(!OB.name){toast('Type your name');return}onboarding(1)">Continue →</button></div>
+   <div class="card"><b>☁️ Already using Study Streak on another phone or laptop?</b><p class="kbd">Type your sync code to continue where you stopped.</p><button class="btn small" onclick="syncLinkPrompt()">Continue with my sync code</button></div></div>`;return}
   if(step===1){const el=COURSES.filter(c=>c.elective),cp=COURSES.filter(c=>!c.elective);
    app.innerHTML=`<div class="onb"><h1>Which electives are you writing?</h1><p class="sub">Compulsory courses are already in your plan. Tick only the electives you registered for.</p>
    ${el.map(c=>`<label class="opt ${OB.electives.includes(c.id)?'on':''}"><input type="checkbox" ${OB.electives.includes(c.id)?'checked':''} onchange="tg('${c.id}',this)"><div><b>${c.code}</b> · ${c.title}<div class="kbd">Exam ${pretty(c.examDay)} · ${new Date(c.exam).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</div></div></label>`).join('')}
@@ -710,10 +711,11 @@ let DB=null,UID=null,boardRows=null,boardMsg='Checking for the live board…';
 let lastPush='';function pushBoard(){if(!DB||!UID||!ST.profile)return;const body={name:ST.profile.name.slice(0,24),xp:ST.xp,streak:streakAlive()?ST.streak.count:0,mastered:masteredCount(),updated:TODAY()};const sig=JSON.stringify(body);if(sig===lastPush)return;lastPush=sig;
   DB.doc('board/'+UID).set(body).catch(e=>{if(e&&e.code==='invalid_argument')boardMsg='You can see the board but can\'t post to it from this account. Use the share card.'})}
 function shareText(){const L=levelOf(ST.xp),d=day();return`🔥 ${ST.profile.name} · Study Streak (PAU 400L SEN)\n🔥 Streak: ${streakAlive()?ST.streak.count:0} days\n⏱ Today: ${d.min}/${goalFor(TODAY())} min\n⚡ ${ST.xp} XP · Level ${L.lvl} ${L.name}\n⭐ Topics mastered: ${masteredCount()}\nNo carry-over this semester. Who's beating me today?`}
-function board(){const rows=boardRows||[];
+function board(){const rows=boardRows||[];if(SYNC_OK&&!window._cbLoading){window._cbLoading=1;loadCloudBoard().finally(()=>setTimeout(()=>{window._cbLoading=0},15000))}
   app.innerHTML=`<h1>🏆 Leaderboard</h1>
   <div class="card"><h3 style="margin-top:0">Share card (works for everyone)</h3><pre class="mono" style="white-space:pre-wrap;background:var(--soft);padding:12px;border-radius:10px">${esc(shareText())}</pre>
    <button class="btn green" onclick="copyShare()">📋 Copy for WhatsApp</button><div class="kbd">Paste it in the class group every night. Lowest streak buys suya. 😄</div></div>
+  ${cloudBoardHTML()}
   ${DB?`<div class="card"><h3 style="margin-top:0">Live board</h3>${rows.length?rows.map((r,i)=>`<div class="lb ${r.id===UID?'me':''}"><div class="rk">${i+1}</div><div style="flex:1"><b>${esc(r.name||'?')}</b><div class="kbd">🔥 ${r.streak||0} · ⭐ ${r.mastered||0} mastered</div></div><div style="font-weight:900;color:var(--xp)">⚡ ${r.xp||0}</div></div>`).join(''):`<p class="kbd">${esc(boardMsg||'No entries yet.')}</p>`}</div>`:''}`}
 function copyShare(){const t=shareText();try{navigator.clipboard.writeText(t).then(()=>toast('Copied!'),()=>fallbackCopy(t))}catch(e){fallbackCopy(t)}}
 function fallbackCopy(t){modal(`<h3>Copy this</h3><textarea style="min-height:160px">${esc(t)}</textarea><button class="btn" onclick="closeModal()">Done</button>`)}
@@ -726,7 +728,8 @@ function me(){const L=levelOf(ST.xp);const last14=[...Array(14)].map((_,i)=>addD
   <h2>Settings</h2>
   <div class="card"><b>Name</b><input type="text" id="nm2" value="${esc(ST.profile.name)}" maxlength="24"><button class="btn small" style="margin-top:6px" onclick="ST.profile.name=document.getElementById('nm2').value.trim()||ST.profile.name;save();toast('Saved');renderStats()">Save</button></div>
   <div class="card"><b>Electives</b>${COURSES.filter(c=>c.elective).map(c=>`<label class="opt ${ST.profile.electives.includes(c.id)?'on':''}"><input type="checkbox" ${ST.profile.electives.includes(c.id)?'checked':''} onchange="setEl('${c.id}',this.checked)"><div><b>${c.code}</b> ${c.title}</div></label>`).join('')}</div>
-  <div class="card"><b>Move to another phone or laptop</b><p class="kbd">Your progress lives in this browser only. Copy your backup code, then paste it into the app on the other device.</p>
+  ${syncCard()}
+  <div class="card"><b>Manual backup code</b><p class="kbd">A one-off snapshot of your progress. Copy it, then paste it into the app on another device. Sync above does this automatically.</p>
    <button class="btn small" onclick="exportCode()">📋 Copy backup code</button><button class="btn small ghost" onclick="importCode()">📥 Restore from code</button></div>
   <div class="card"><button class="btn small red" onclick="if(prompt2())resetAll()">Reset all progress</button></div>`}
 function setEl(id,on){const e=ST.profile.electives;if(on&&!e.includes(id))e.push(id);if(!on)ST.profile.electives=e.filter(x=>x!==id);delete ST.planCache[TODAY()];save();me()}
@@ -734,7 +737,7 @@ function exportCode(){const code=btoa(unescape(encodeURIComponent(JSON.stringify
 function importCode(){modal(`<h3>Paste your backup code</h3><textarea id="imp" style="min-height:140px"></textarea><button class="btn green" onclick="doImport()">Restore</button><button class="btn ghost" onclick="closeModal()">Cancel</button>`)}
 function doImport(){try{const s=JSON.parse(decodeURIComponent(escape(atob(document.getElementById('imp').value.trim()))));if(!s.v)throw 0;ST=Object.assign(blank(),s);saveNow();closeModal();toast('Progress restored');go('home')}catch(e){toast('That code didn\'t work')}}
 function prompt2(){return true}
-function resetAll(){modal(`<h3>Reset everything?</h3><p>This deletes your streak, XP and progress on this device.</p><button class="btn red" onclick="ST=blank();saveNow();closeModal();render()">Yes, reset</button><button class="btn ghost" onclick="closeModal()">Cancel</button>`)}
+function resetAll(){modal(`<h3>Reset everything?</h3><p>This deletes your streak, XP and progress on this device.</p><p class="kbd">${SY.code?'Sync will be turned off on this browser first, so your cloud copy is kept.':''}</p><button class="btn red" onclick="syncForget();ST=blank();saveNow(true);closeModal();render()">Yes, reset</button><button class="btn ghost" onclick="closeModal()">Cancel</button>`)}
 
 /* ---------- THEME (auto / light / dark) ---------- */
 const THEME_KEY='pau400sen_theme';
@@ -853,6 +856,91 @@ function sitTotal(cid){const r=sitCompute(cid),el=document.getElementById('stot'
 function sitSaveScore(cid){const D=ST.sitDraft[cid],r=sitCompute(cid);ST.sits=ST.sits||{};(ST.sits[cid]=ST.sits[cid]||[]).push({date:TODAY(),got:r.got,max:r.max,pct:r.pct,mins:D.used,groups:D.groups});
   day().theory+=sitIdx(CBY[cid].data.past,D).length;delete ST.sitDraft[cid];addXP(80,'real paper');confetti();chime(5);questTick();checkBadges();saveNow();sit(cid)}
 
+/* ---------- CLOUD SYNC (sync code, no login) ----------
+   Progress is uploaded to /api/sync a few seconds after each change and pulled when the
+   app opens or comes back into focus. Two browsers that both changed things are merged,
+   never overwritten. The sync code lives in its own localStorage key, not inside ST. */
+var SYNC_KEY='pau400sen_sync';
+var SY=(function(){try{return JSON.parse(localStorage.getItem(SYNC_KEY))||{}}catch(e){return{}}})();
+var SYNC_OK=location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1';
+var syTimer=null,syBusy=false,syMsg='',syLastPull=0;
+function sySave(){try{localStorage.setItem(SYNC_KEY,JSON.stringify(SY))}catch(e){}}
+async function syApi(path,opt){const r=await fetch('/api/'+path,Object.assign({headers:{'Content-Type':'application/json'}},opt||{}));let j=null;try{j=await r.json()}catch(e){}
+  if(!r.ok&&r.status!==409){const err=new Error((j&&j.error)||('Server replied '+r.status));err.status=r.status;throw err}return{status:r.status,body:j}}
+function syncSchedule(){if(!SY.code)return;SY.dirty=true;sySave();clearTimeout(syTimer);syTimer=setTimeout(()=>syncPush(),4000)}
+function boardEntry(){if(!SY.board||!ST.profile)return null;return{name:ST.profile.name,xp:ST.xp,streak:streakAlive()?ST.streak.count:0,mastered:masteredCount()}}
+const mx=(x,y)=>x==null?y:y==null?x:Math.max(x,y);
+function mergeState(a,b){/* a = this browser, b = cloud. Keeps the best of both. */
+  a=a||blank();b=b||blank();const m=Object.assign(blank(),b,a);
+  m.xp=Math.max(a.xp||0,b.xp||0);m.freezes=Math.max(a.freezes||0,b.freezes||0);m.profile=a.profile||b.profile;
+  m.days=Object.assign({},b.days);Object.entries(a.days||{}).forEach(([k,d])=>{const o=m.days[k];if(!o){m.days[k]=d;return}const out={};new Set([...Object.keys(o),...Object.keys(d)]).forEach(f=>{out[f]=(typeof d[f]==='boolean'||typeof o[f]==='boolean')?!!(d[f]||o[f]):Math.max(+d[f]||0,+o[f]||0)});m.days[k]=out});
+  const sa=a.streak||{},sb=b.streak||{};m.streak=Object.assign({},(sa.last||'')>=(sb.last||'')?sa:sb);m.streak.best=Math.max(sa.best||0,sb.best||0);
+  ['badges','examsDone','feyn','conf','quests','planCache','flags','weak','sitDraft'].forEach(k=>m[k]=Object.assign({},b[k],a[k]));
+  m.topics=Object.assign({},b.topics);Object.entries(a.topics||{}).forEach(([k,t])=>{const o=m.topics[k];if(!o){m.topics[k]=t;return}
+    m.topics[k]=Object.assign({},o,t,{cards:[...new Set([...(o.cards||[]),...(t.cards||[])])],recallBest:mx(o.recallBest,t.recallBest),theoryBest:mx(o.theoryBest,t.theoryBest),quizBest:mx(o.quizBest,t.quizBest),started:o.started&&t.started?(o.started<t.started?o.started:t.started):(o.started||t.started)})});
+  m.srs=Object.assign({},b.srs);Object.entries(a.srs||{}).forEach(([k,v])=>{const o=m.srs[k];if(!o||(v.due||'')>=(o.due||''))m.srs[k]=v});
+  m.mocks=Object.assign({},b.mocks);Object.entries(a.mocks||{}).forEach(([k,v])=>{const o=m.mocks[k];if(!o||(v.date||'')>=(o.date||''))m.mocks[k]=v});
+  m.essays=Object.assign({},b.essays);Object.entries(a.essays||{}).forEach(([k,v])=>{const o=m.essays[k];m.essays[k]=o?Object.assign({},o,v,{best:mx(o.best,v.best)}):v});
+  m.sits={};new Set([...Object.keys(a.sits||{}),...Object.keys(b.sits||{})]).forEach(k=>{const seen=new Set();m.sits[k]=[...((b.sits||{})[k]||[]),...((a.sits||{})[k]||[])].filter(x=>{const s=JSON.stringify(x);if(seen.has(s))return false;seen.add(s);return true})});
+  return m}
+function applyRemote(state,rev){ST=Object.assign(blank(),state);saveNow(true);SY.rev=rev;sySave()}
+async function syncPush(keepalive,depth){if(!SY.code||!SYNC_OK)return;if(syBusy&&!depth)return;syBusy=true;
+  try{const payload=JSON.stringify({action:'put',code:SY.code,rev:SY.rev||0,state:ST,board:boardEntry()});
+    const {status,body:j}=await syApi('sync',{method:'POST',body:payload,keepalive:!!keepalive&&payload.length<60000});
+    if(status===409){if((depth||0)>2)throw new Error('conflict');applyRemote(mergeState(ST,j.state),j.rev);SY.dirty=true;sySave();return await syncPush(false,(depth||0)+1)}
+    SY.rev=j.rev;SY.dirty=false;SY.last=Date.now();syMsg=''}
+  catch(e){syMsg=e.status===404?'This sync code no longer exists on the server. Turn sync off and on again.':e.status===503?'Sync is not set up on this site yet.':'Offline right now. Your changes are saved here and will sync when you are back online.'}
+  finally{if(!depth)syBusy=false;sySave();syncUI()}}
+async function syncPull(force){if(!SY.code||!SYNC_OK||syBusy)return;if(!force&&Date.now()-syLastPull<20000)return;syLastPull=Date.now();
+  try{const {body:j}=await syApi('sync',{method:'POST',body:JSON.stringify({action:'get',code:SY.code})});
+    if(j.rev>(SY.rev||0)){const typing=document.activeElement&&/TEXTAREA|INPUT/.test(document.activeElement.tagName);
+      if(SY.dirty){applyRemote(mergeState(ST,j.state),j.rev);SY.dirty=true;sySave();syncPush()}else applyRemote(j.state,j.rev);
+      if(!typing)render();toast('☁️ Progress updated from your other device')}
+    SY.last=Date.now();syMsg='';sySave()}
+  catch(e){syMsg=e.status===404?'This sync code no longer exists on the server.':e.status===503?'Sync is not set up on this site yet.':'Offline right now. Your changes are saved here and will sync later.'}
+  syncUI()}
+async function syncCreate(){if(!SYNC_OK){toast('Sync works on the hosted site, not from a file.');return}
+  try{SY.board=SY.board!==false;const {body:j}=await syApi('sync',{method:'POST',body:JSON.stringify({action:'create',state:ST,board:boardEntry()})});
+    SY.code=j.code;SY.rev=j.rev;SY.dirty=false;SY.last=Date.now();sySave();confetti();chime(3);me();
+    modal(`<div class="bigemoji">☁️</div><h2>Sync is on</h2><p>Your sync code:</p><div class="mono" style="font-size:20px;font-weight:900;letter-spacing:.5px;padding:10px;background:var(--soft);border-radius:10px;user-select:all">${esc(j.code)}</div><p class="kbd">Write it down or screenshot it. Type it on any phone or laptop to continue where you stopped. Anyone with this code can see and change your progress, so keep it private.</p><button class="btn green big" onclick="copyText('${esc(j.code)}');closeModal()">📋 Copy code</button>`)}
+  catch(e){toast(e.message||'Could not turn on sync')}}
+async function syncLink(code,after){code=String(code||'').trim();if(!code){toast('Type your sync code');return}if(!SYNC_OK){toast('Sync works on the hosted site, not from a file.');return}
+  try{const {body:j}=await syApi('sync',{method:'POST',body:JSON.stringify({action:'get',code})});
+    const localHas=ST.profile&&(ST.xp>0||Object.keys(ST.topics||{}).length);
+    SY={code:code.toUpperCase().replace(/\s+/g,'-'),rev:j.rev,board:SY.board!==false,last:Date.now()};
+    if(localHas){applyRemote(mergeState(ST,j.state),j.rev);SY.dirty=true;sySave();await syncPush();toast('☁️ Linked. Progress from both browsers merged.')}
+    else{applyRemote(j.state,j.rev);toast('☁️ Welcome back'+(ST.profile?', '+ST.profile.name:'')+'! Progress restored.')}
+    closeModal();confetti();chime(4);if(after)after();else go('home')}
+  catch(e){toast(e.message||'That code did not work')}}
+function syncForget(){clearTimeout(syTimer);SY={};sySave();syMsg=''}
+async function syncSetBoard(on){SY.board=on;sySave();if(!on&&SY.code){try{await syApi('sync',{method:'POST',body:JSON.stringify({action:'leave-board',code:SY.code})})}catch(e){}}else syncPush();toast(on?'You are on the class leaderboard':'Removed from the leaderboard')}
+function copyText(t){try{navigator.clipboard.writeText(t).then(()=>toast('Copied'),()=>fallbackCopy(t))}catch(e){fallbackCopy(t)}}
+function syncAgo(){if(!SY.last)return'not yet';const s=Math.round((Date.now()-SY.last)/1000);return s<60?'just now':s<3600?Math.round(s/60)+' min ago':Math.round(s/3600)+' h ago'}
+function syncLinkPrompt(after){modal(`<div class="bigemoji">☁️</div><h2>Continue your progress</h2><p>Type the sync code from your other phone or laptop.</p><input type="text" id="sycode" placeholder="e.g. TIGER-MANGO-RIVER-4821" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase"><div class="row" style="justify-content:center;margin-top:10px"><button class="btn green" id="sygo">Continue</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div>`);
+  const i=document.getElementById('sycode');i.focus();const go2=()=>syncLink(i.value,after);document.getElementById('sygo').onclick=go2;i.onkeydown=e=>{if(e.key==='Enter')go2()}}
+function syncCard(){if(!SYNC_OK)return`<div class="card"><b>☁️ Sync across browsers</b><p class="kbd">Open the app from its web address (not as a file) to turn on sync.</p></div>`;
+  if(!SY.code)return`<div class="card"><b>☁️ Sync across browsers</b><p class="kbd">Get a private sync code and continue on any phone, laptop or browser. Progress uploads automatically after each change. No account or password.</p>
+   <div class="row"><button class="btn small green" onclick="syncCreate()">Turn on sync</button><button class="btn small ghost" onclick="syncLinkPrompt(()=>go('me'))">I have a sync code</button></div></div>`;
+  return`<div class="card" id="sycard"><b>☁️ Sync is on</b><p style="margin:6px 0">Your sync code: <span class="mono" style="font-weight:900;user-select:all">${esc(SY.code)}</span> <button class="btn small ghost" onclick="copyText('${esc(SY.code)}')">📋 Copy</button></p>
+   <div class="kbd" id="systat">${syMsg?esc(syMsg):(SY.dirty?'Saving changes…':'Last synced '+syncAgo()+'.')}</div>
+   <label class="opt" style="margin-top:8px"><input type="checkbox" ${SY.board!==false?'checked':''} onchange="syncSetBoard(this.checked)"><div><b>Show me on the class leaderboard</b><div class="kbd">Shows your name, streak, XP and topics mastered.</div></div></label>
+   <div class="row"><button class="btn small" onclick="syncPull(true);syncPush()">🔄 Sync now</button><button class="btn small ghost" onclick="if(confirm('Stop syncing on this browser? Your progress stays here and in the cloud.')){syncForget();me()}">Stop syncing here</button></div>
+   <p class="kbd">Keep the code private: anyone with it can see and change your progress.</p></div>`}
+function syncUI(){const el=document.getElementById('systat');if(el)el.textContent=syMsg||(SY.dirty?'Saving changes…':'Last synced '+syncAgo()+'.')}
+/* live board on the hosted site */
+var cloudRows=null,cloudBoardMsg='';
+async function myBoardId(){if(!SY.code||!(window.crypto&&crypto.subtle))return'';const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('study-streak:'+SY.code.toUpperCase().replace(/[^A-Z0-9]/g,'')));return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,12)}
+async function loadCloudBoard(){if(!SYNC_OK)return;try{const {body:j}=await syApi('board');cloudRows=j.rows||[];cloudBoardMsg='';window._myId=await myBoardId()}catch(e){cloudRows=null;cloudBoardMsg=e.status===503?'The live board is not set up on this site yet.':'The live board is unavailable right now.'}if(location.hash==='#board')board()}
+function cloudBoardHTML(){if(!SYNC_OK)return'';const rows=cloudRows||[];
+  return`<div class="card"><h3 style="margin-top:0">Live class board</h3>${cloudRows===null&&!cloudBoardMsg?'<p class="kbd">Loading…</p>':''}${cloudBoardMsg?`<p class="kbd">${esc(cloudBoardMsg)}</p>`:''}
+   ${rows.map((r,i)=>`<div class="lb ${r.id===window._myId?'me':''}"><div class="rk">${i+1}</div><div style="flex:1"><b>${esc(r.name||'?')}</b><div class="kbd">🔥 ${r.streak||0} · ⭐ ${r.mastered||0} mastered</div></div><div style="font-weight:900;color:var(--xp)">⚡ ${r.xp||0}</div></div>`).join('')}
+   ${cloudRows&&!rows.length?'<p class="kbd">Nobody on the board yet. Be first.</p>':''}
+   ${!SY.code?`<p class="kbd" style="margin-top:8px">To appear here, turn on sync under <a href="#me">Me</a>.</p>`:SY.board===false?`<p class="kbd">You are hidden. Turn on “Show me on the class leaderboard” under <a href="#me">Me</a>.</p>`:''}</div>`}
+window.addEventListener('focus',()=>syncPull());
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(SY.dirty)syncPush(true)}else syncPull()});
+window.addEventListener('online',()=>{if(SY.dirty)syncPush();else syncPull(true)});
+if(SY.code)setTimeout(()=>{if(SY.dirty)syncPush();syncPull(true)},800);
+
 /* ---------- FOCUS TIMER (minutes count toward goal) ---------- */
 let tLeft=25*60,tLen=25,tMode='focus',timerRun=false,tInt=null,secAcc=0;
 function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
@@ -866,7 +954,7 @@ function toggleTimer(){timerRun=!timerRun;document.getElementById('tgo').textCon
       else{modal(`<div class="bigemoji">💪</div><h2>Break over</h2><p>Next block. Open your next item on Today's plan.</p><button class="btn green big" onclick="closeModal();setTimer(25,'focus');toggleTimer();go('home')">Start next block</button>`)}}},1000)}
   else clearInterval(tInt);renderStats()}
 window.addEventListener('beforeunload',saveNow);
-document.addEventListener('visibilitychange',()=>{if(document.hidden)saveNow()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)saveNow(true)});
 setInterval(()=>{renderStats();pushBoard()},60000);
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
