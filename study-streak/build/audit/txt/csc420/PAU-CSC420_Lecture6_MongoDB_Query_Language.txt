@@ -1,0 +1,634 @@
+
+--- page 1 ---
+PAU-CSC420 – Database 
+Management II
+Lecture 6: MongoDB Query Language
+--- page 2 ---
+OUTLINE
+Getting Started
+▪ Recap of Lecture 5 & fresh data
+Creating, Updating & Deleting
+▪ More update operators, many documents & upserts
+Query Criteria
+▪ Query conditionals, OR queries & $not
+Arrays & Nested Structures
+▪ Querying and updating inside documents
+Summary, Assignment & References
+Dr. Stephen A. Adubi
+2
+--- page 3 ---
+GETTING STARTED
+Recap of Lecture 5 & fresh data
+Dr. Stephen A. Adubi 3
+--- page 4 ---
+Recap: Lecture 5
+A MongoDB database holds collections of BSON 
+documents; every document has a unique _id.
+Create: insertOne, insertMany. Read: find and 
+findOne, with a filter and a projection.
+Update: updateOne with $set and $push. Delete: 
+deleteOne.
+Dot notation reaches inside embedded documents, 
+and matching an array field matches any element.
+Today: richer updates, query conditions, and working 
+inside arrays and nested documents.
+Dr. Stephen A. Adubi
+4
+--- page 5 ---
+Starting Fresh
+Lecture 5's practicals changed the data, so reset 
+it: today's results assume the original records.
+Recreate splendid_stores and its four collections 
+and import the JSON files as in Lecture 5.
+Check: 13 manufacturers, 15 products, 10 users,
+14 orders.
+Dr. Stephen A. Adubi
+5
+--- page 6 ---
+CREATING, UPDATING & DELETING
+More update operators, many documents & upserts
+Dr. Stephen A. Adubi 6
+--- page 7 ---
+Update Operators
+An update names what to change with an 
+operator, so the rest of the document is kept:
+▪ $set sets a field and $unset removes one;
+▪ $inc adds to a number and creates the field if it is 
+missing;
+▪ $push, $addToSet and $pull change arrays (later 
+today).
+updateOne changes the first match; updateMany 
+changes every match. deleteOne and deleteMany 
+work the same way.
+Dr. Stephen A. Adubi
+7
+--- page 8 ---
+Practical 1 
+—
+ 
+$inc and $unset
+Adaeze earns 150 loyalty points. She has no 
+loyalty_points field yet, so $inc creates it: the schema is 
+flexible.
+Halima has no mobile numbers, so $unset removes her 
+empty mobiles field. The value given, "", is ignored.
+db.users.updateOne({ _id: 1 },
+  { $inc: { loyalty_points: 150 } })
+db.users.updateOne({ _id: 3 },
+  { $unset: { mobiles: "" } })
+Dr. Stephen A. Adubi
+8
+--- page 9 ---
+Practical 2 
+—
+ 
+Many at Once
+updateMany: Both digital products are now delivered 
+by email (modifiedCount: 2).
+deleteMany: Tunde (User 2) asks for his order history 
+to be removed (deletedCount: 2). 
+Beware: deleteMany({}) deletes every document.
+db.products.updateMany({ product_type: "digital" },
+  { $set: { delivery: "email" } })
+db.orders.deleteMany({ user_id: 2 })
+Dr. Stephen A. Adubi
+9
+--- page 10 ---
+Practical 3 
+—
+ 
+Update with Upsert
+With upsert: true, the update inserts a new 
+document when nothing matches: upsertedCount is 
+1.
+Run it again: PZ Cussons now exists, so it matches 
+(matchedCount: 1) but changes nothing 
+(modifiedCount: 0).
+db.manufacturers.updateOne(
+  { _id: 14 },
+  { $set: { name: "PZ Cussons" } },
+  { upsert: true })
+Dr. Stephen A. Adubi
+10
+--- page 11 ---
+Summary: Updating & Deleting
+Operator / 
+method What it does Example Output
+$inc
+Adds to a number; 
+creates the field if it 
+is missing
+db.users.updateOne({_id: 1},
+  {$inc: {loyalty_points: 150}})
+Adaeze has 
+loyalty_points: 
+150
+$unset Removes a field db.users.updateOne({_id: 3},
+  {$unset: { mobiles: ""}})
+Halima's 
+document has no 
+mobiles field
+$set + 
+updateMany
+Sets a field in every 
+matching document
+db.products.updateMany(
+  { product_type: "digital" },
+  { $set: { delivery: "email" } })
+modifiedCount: 2
+deleteMany Deletes every 
+matching document db.orders.deleteMany({user_id: 2}) deletedCount: 2
+upsert: 
+true
+Updates the match, 
+or inserts a 
+document if there is 
+none
+db.manufacturers.updateOne(
+  {_id: 14},
+  {$set: {name: "PZ Cussons"}},
+  {upsert: true })
+upsertedCount: 
+1; run again: 
+matchedCount: 1, 
+modifiedCount: 0
+Dr. Stephen A. Adubi
+11
+--- page 12 ---
+QUERY CRITERIA
+Query conditionals, OR queries & $not
+Dr. Stephen A. Adubi 12
+--- page 13 ---
+Query Conditionals
+A condition goes inside the field's value: 
+{field: {$operator: value}}.
+Comparison: $gt (>), $gte (≥), $lt (<), $lte (≤), 
+$ne (≠).
+Lists: $in matches any value in a list, like SQL's IN; 
+$nin matches none of them.
+Several conditions in one filter must all be true, 
+like AND in SQL.
+Dr. Stephen A. Adubi
+13
+--- page 14 ---
+Practical 4 
+—
+ 
+Ranges
+Two conditions on one field give a range, like BETWEEN: 
+find the orders between ₦20,000 and ₦50,000.
+Dates compare the same way: find the orders since 1 
+August 2026.
+db.orders.find(
+  { total_amount: { $gte: 20000, $lte: 50000 } },
+  { total_amount: 1 })
+db.orders.find(
+  { order_date: { $gte: ISODate("2026-08-01") } })
+Dr. Stephen A. Adubi
+14
+--- page 15 ---
+Practical 5 
+—
+ 
+$in and $ne
+$in: users in Lagos or Abuja (Adaeze, Ibrahim and 
+Oluwaseun).
+$ne: products that are not physical, i.e. the two 
+digital ones.
+db.users.find(
+  { "address.city": { $in: ["Lagos", "Abuja"] } },
+  { first_name: 1 })
+db.products.find({ product_type: { $ne: "physical" } },
+                 { name: 1 })
+Dr. Stephen A. Adubi
+15
+--- page 16 ---
+Practical 6 
+—
+ 
+$in with distinct
+Orders store only user_id, so the orders of users in 
+Abeokuta or Lagos take two reads, as in Lecture 5: their 
+_ids first, then their orders.
+distinct returns a field's values as a plain array, [1, 7, 
+10], which $in takes as it is. find returns a cursor instead, 
+so some_users._id would be undefined and match 
+nothing.
+const some_users = db.users.distinct("_id",
+  { "address.city": { $in: ["Abeokuta", "Lagos"] } })
+db.orders.find({ user_id: { $in: some_users } },
+               { user_id: 1, total_amount: 1 })
+Dr. Stephen A. Adubi
+16
+--- page 17 ---
+Practical 7 
+—
+ 
+OR Queries
+$or takes an array of filters and matches 
+documents that satisfy at least one: Binatone 
+products (manufacturer 9) or bestsellers.
+For alternatives on the same field, use $in 
+instead, as in Practical 5.
+db.products.find({ $or: [ { manufacturer_id: 9 },
+           { tags: "bestseller" } ] }, { name: 1 })
+Dr. Stephen A. Adubi
+17
+--- page 18 ---
+Practical 8 
+—
+ 
+$not vs $lte
+Only Adaeze has loyalty points, and she has more 
+than 100. So why do these counts differ?
+$not also matches documents without the field: the 
+nine other users. $lte matches only documents that 
+have it.
+db.users.countDocuments(
+  { loyalty_points: { $not: { $gt: 100 } } })   // 9
+db.users.countDocuments(
+  { loyalty_points: { $lte: 100 } })            // 0
+Dr. Stephen A. Adubi
+18
+--- page 19 ---
+Summary: Query Operators (1)
+Operator What it does Example Output
+$gt Greater than
+db.orders.find(
+  { total_amount: { $gt: 400000 } 
+})
+3 orders: 
+₦422,000, 
+₦460,000 and 
+₦616,000
+$gte, $lte
+At least / at most; 
+together they 
+give a range
+db.orders.find({ total_amount:
+  { $gte: 20000, $lte: 50000 } }) 5 orders
+$lt Less than
+db.products.find({
+  "variations.price": { $lt: 1000 
+} })
+Baygon 
+Mosquito Coil, 
+Indomie
+$ne Not equal
+db.products.find({
+  product_type: { $ne: "physical" 
+} })
+Kaspersky 
+Standard, Born 
+on a Tuesday
+Dr. Stephen A. Adubi
+19
+--- page 20 ---
+Summary: Query Operators (2)
+Operator What it does Example Output
+$in Equals any value 
+in the list
+db.users.find({ "address.city":
+  { $in: ["Lagos", "Abuja"] } })
+Adaeze, 
+Ibrahim, 
+Oluwaseun
+$nin
+Equals none of 
+the values in the 
+list
+db.users.find({ "address.city":
+  { $nin: ["Lagos", "Abuja"] } })
+The other 7 
+users
+$or At least one of 
+the filters is true
+db.products.find({ $or: [
+  { manufacturer_id: 9 },
+  { tags: "bestseller" } ] })
+5 products: 2 
+by Binatone, 3 
+bestsellers
+Dr. Stephen A. Adubi
+20
+--- page 21 ---
+Summary: Query Operators (3)
+Operator What it does Example Output
+$not
+Reverses a 
+condition; also 
+matches 
+documents 
+without the field
+db.users.countDocuments(
+  { loyalty_points:
+    { $not: { $gt: 100 } } })
+9
+distinct()
+Returns a field's 
+distinct values as 
+an array
+db.users.distinct("_id",
+  { "address.city": { $in:
+    ["Abeokuta", "Lagos"] } })
+[1, 7, 10]: the 
+_ids of Adaeze, 
+Folake and 
+Oluwaseun
+Dr. Stephen A. Adubi
+21
+--- page 22 ---
+ARRAYS & NESTED STRUCTURES
+Querying and updating inside documents
+Dr. Stephen A. Adubi 22
+--- page 23 ---
+Working Inside Documents
+Nested documents: reach a field with dot notation, 
+e.g., "address.city".
+Arrays of values: match one element, all listed 
+elements ($all), or an exact length ($size).
+Arrays of documents: apply several conditions to one
+element with $elemMatch.
+Projection: return part of an array with $slice or the 
+positional $.
+Updates: $addToSet, $pull and the positional $ 
+change arrays in place.
+Dr. Stephen A. Adubi
+23
+--- page 24 ---
+Practical 9 
+—
+ 
+Nested Documents
+Matching a whole embedded document needs an 
+exact match: every field, in the same order. Both 
+Lagos users have more fields in their address, so the 
+first query finds none.
+Dot notation matches just the field: two users.
+db.users.countDocuments(
+  { address: { city: "Lagos" } })     // 0
+db.users.countDocuments(
+  { "address.city": "Lagos" })       // 2
+Dr. Stephen A. Adubi
+24
+--- page 25 ---
+Practical 10 
+—
+ 
+$all and $size
+$all: the array must contain every listed value, in 
+any order: the Baygon aerosol.
+$size: the array has exactly that many elements; the 
+kettle has no tags. $size does not accept ranges such 
+as $gt.
+db.products.find(
+  { tags: { $all: ["bestseller", "insecticide"] } },
+  { name: 1 })
+db.products.find({ tags: { $size: 0 } }, { name: 1 })
+Dr. Stephen A. Adubi
+25
+--- page 26 ---
+Practical 11 
+—
+ 
+Mixing Elements
+Intended Goal: a variation that is both cheap (under 
+₦5,000) and low in stock (under 100).
+With dot notation, each condition may be met by a
+different variation. Milo matches: one variation is 
+under ₦5,000, but a different one is low in stock.
+db.products.find(
+  { "variations.price": { $lt: 5000 },
+"variations.qty_on_hand": { $lt: 100 } },
+  { name: 1 })   // Baygon aerosol, Milo, Indomie
+Dr. Stephen A. Adubi
+26
+--- page 27 ---
+Practical 12 
+—
+ 
+$elemMatch
+$elemMatch requires one element to meet every 
+condition.
+Only the Baygon aerosol has a single variation 
+that is both: ₦3,500 with 85 in stock.
+db.products.find(
+  { variations: { $elemMatch:
+      { price: { $lt: 5000 }, qty_on_hand: { $lt: 100 } } } },
+  { name: 1 })   // Baygon Multi-Insect Killer Aerosol
+Dr. Stephen A. Adubi
+27
+--- page 28 ---
+Practical 13 
+—
+ 
+$slice and $
+$slice: 1 returns the first variation only; -1 would 
+return the last.
+"variations.$" returns the first element that
+matched the filter: the Samsung variation that is out 
+of stock.
+db.products.findOne({ _id: 8 },
+  { name: 1, variations: { $slice: 1 } })
+db.products.find({ "variations.qty_on_hand": 0 },
+  { name: 1, "variations.$": 1 })
+Dr. Stephen A. Adubi
+28
+--- page 29 ---
+Practical 14 
+—
+ 
+Updating Arrays
+$addToSet adds a value only if it is not already
+there: run it twice, and the second time 
+modifiedCount is 0.
+$pull removes every matching element: the Camon 
+30 is no longer a new arrival.
+db.users.updateOne({ _id: 9 },
+  { $addToSet: { favourite_tags: "bestseller" } })
+db.products.updateOne({ _id: 8 },
+  { $pull: { tags: "new arrival" } })
+Dr. Stephen A. Adubi
+29
+--- page 30 ---
+Summary: Arrays & Nested (1)
+Operator What it does Example Output
+dot 
+notation
+Reaches a field 
+inside an 
+embedded 
+document
+db.users.countDocuments(
+  { "address.city": "Lagos" }) 2
+$all
+The array 
+contains every 
+listed value
+db.products.find({ tags: { $all:
+  ["bestseller", "insecticide"] } 
+})
+Baygon Multi-
+Insect Killer 
+Aerosol
+$size
+The array has 
+exactly n 
+elements (no 
+ranges)
+db.products.find(
+  { tags: { $size: 0 } })
+Binatone 
+Electric Kettle 
+1.7L
+$elemMatch
+One array 
+element meets 
+every condition
+db.products.find({ variations:
+  { $elemMatch:
+    { price: { $lt: 5000 },
+      qty_on_hand: { $lt: 100 } } 
+} })
+Baygon Multi-
+Insect Killer 
+Aerosol
+Dr. Stephen A. Adubi
+30
+--- page 31 ---
+Summary: Arrays & Nested (2)
+Operator What it does Example Output
+$slice
+Projection: 
+returns the first n 
+elements; a 
+negative n 
+returns the last n
+db.products.findOne({ _id: 8 },
+  { variations: { $slice: 1 } })
+Tecno Camon 
+30 with 
+variation 1 only
+$ 
+(projectio
+n)
+Returns the first 
+element that 
+matched the 
+filter
+db.products.find(
+  { "variations.qty_on_hand": 0 },
+  { "variations.$": 1 })
+Samsung 
+Galaxy A15 
+with variation 2 
+only
+$addToSet
+Adds a value 
+unless it is 
+already there
+db.users.updateOne({ _id: 9 },
+  { $addToSet:
+   { favourite_tags: "bestseller" 
+} })
+modifiedCount: 
+1; run again: 0
+$pull
+Removes every 
+matching 
+element
+db.products.updateOne({ _id: 8 },
+  { $pull: { tags: "new arrival" } 
+})
+tags: 
+smartphone, 5g
+Dr. Stephen A. Adubi
+31
+--- page 32 ---
+SUMMARY
+Final Thoughts on the MongoDB Query Language
+Dr. Stephen A. Adubi 32
+--- page 33 ---
+Wrap
+-
+Up: Key Takeaways
+Updates name what to change: $set, $unset and $inc; 
+updateMany and deleteMany act on every match; 
+upsert: true inserts when nothing matches.
+Conditions sit inside a field: $gt, $gte, $lt, $lte, $ne, 
+$in and $nin. Fields in one filter are ANDed; $or offers 
+alternatives; $not reverses a condition and also 
+matches missing fields.
+Arrays and nested documents: dot notation, $all, 
+$size, $elemMatch for one element, $slice and $ to 
+return part of an array, and $addToSet, $pull and $ to 
+update it.
+Dr. Stephen A. Adubi
+33
+--- page 34 ---
+Assignment
+On fresh splendid_stores data, write and run:
+▪ orders placed from January to March 2026 with a total 
+above ₦30,000, showing user_id and total_amount;
+▪ products tagged 'breakfast' or with a variation under 
+₦1,000, showing only names;
+▪ products with one variation that is both 'fragile' 
+(details.shipping_class) and below 10 in stock;
+▪ an update that tags Golden Morn as 'bestseller' without 
+duplicates, and one that reduces the stock of the XL 
+Ankara shirt (variation 4) by 2.
+Then explain in 2–3 sentences why Practical 8's two 
+counts differ.
+Dr. Stephen A. Adubi
+34
+--- page 35 ---
+Lecture References (Page 1)
+MongoDB, Inc. (2026). MongoDB Manual: 
+db.collection.updateOne(). 
+https://www.mongodb.com/docs/manual/reference/
+method/db.collection.updateone/
+MongoDB, Inc. (2026). MongoDB Manual: $inc. 
+https://www.mongodb.com/docs/manual/reference/
+operator/inc/
+MongoDB, Inc. (2026). MongoDB Manual: $unset. 
+https://www.mongodb.com/docs/current/reference/
+operator/update/unset/
+Dr. Stephen A. Adubi
+35
+--- page 36 ---
+Lecture References (Page 2)
+MongoDB, Inc. (2026). MongoDB Manual: $or. 
+https://www.mongodb.com/docs/manual/referen
+ce/operator/query/or/
+MongoDB, Inc. (2026). MongoDB Manual: $not. 
+https://www.mongodb.com/docs/v8.0/reference/
+operator/query/not/
+MongoDB, Inc. (2026). MongoDB Manual: $size. 
+https://www.mongodb.com/docs/v5.2/reference/
+operator/query/size/
+Dr. Stephen A. Adubi
+36
+--- page 37 ---
+Lecture References (Page 3)
+MongoDB, Inc. (2026). MongoDB Manual: Query 
+an Array of Embedded Documents. 
+https://www.mongodb.com/docs/manual/tutorial
+/query-array-of-documents/
+MongoDB, Inc. (2026). MongoDB Manual: $slice 
+(projection). 
+https://mongodb.com/docs/manual/reference/pr
+ojection/slice
+Dr. Stephen A. Adubi
+37
+--- page 38 ---
+Lecture References (Page 4)
+MongoDB, Inc. (2026). MongoDB Manual: 
+$addToSet. 
+https://www.mongodb.com/docs/v8.0/reference/
+operator/update/addtoset/
+MongoDB, Inc. (2026). MongoDB Manual: $ 
+(positional update operator). 
+https://www.mongodb.com/docs/manual/referen
+ce/operator/update/positional/
+Dr. Stephen A. Adubi
+38

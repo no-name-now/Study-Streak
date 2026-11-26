@@ -1,0 +1,123 @@
+PAN-ATLANTIC UNIVERSITY
+PAUCSC 418 – Cloud Computing
+Practical Task CA 2
+Deploying an AlmaLinux Virtual Machine and Hosting a Webpage on Microsoft Azure
+Name: Omotayo Ayeni
+Matric No: 23120112011
+Date: 19 November 2026
+1. Recorded Configuration Details
+Item
+Value
+Subscription
+Azure for Students
+Resource group
+PAUCSC418-RG
+VM name
+PAUCSC418-AlmaLinux-VM
+Region
+South Africa North (Availability Zone 1)
+Image / OS
+AlmaLinux OS 9 – x64 Gen2 (AlmaLinux 9.9), Azure Marketplace, publisher AlmaLinux OSS Foundation
+Architecture
+x64
+Security type
+Trusted launch virtual machines
+VM size
+Standard_B2ats_v2 (2 vCPUs, 1 GiB memory)
+Authentication
+Password, username: studentadmin
+OS disk type / size
+Standard SSD / 30 GiB (image default)
+Disk encryption
+Platform-managed key (default)
+Virtual network / subnet
+vnet-southafricanorth-1 / snet-southafricanorth-1
+Public IP address
+102.37.17.124
+Private IP address
+172.16.0.4
+Azure DNS name
+Not configured – the public IP address was used for the HTTP test
+2. Virtual Machine Configuration
+The VM was created from the Azure Portal (Virtual machines → Create → Azure virtual machine) with the following Basics settings.
+Figure 1: Subscription (Azure for Students), resource group PAUCSC418-RG, VM name and region (South Africa North)
+Figure 2: AlmaLinux OS 9 – x64 Gen2 image, x64 architecture and Standard_B2ats_v2 size
+Figure 3: Password authentication with username studentadmin
+3. Operating System Disk
+On the Disks tab the OS disk was set to Standard SSD with the image default size of 30 GiB, and the default platform-managed key encryption was kept.
+Figure 4: OS disk size (30 GiB), type (Standard SSD) and platform-managed key
+4. Inbound Network Access (NSG Rules)
+The network security group was configured to allow SSH (TCP 22), HTTP (TCP 80) and HTTPS (TCP 443) inbound traffic. HTTP was allowed from Any for the class demonstration; HTTPS was created for a later exercise.
+5. Deployment and VM Overview
+After Review + create passed validation, the VM was created and deployment completed successfully. The Overview page shows the VM running in South Africa North with public IP 102.37.17.124.
+Figure 5: Successful deployment of PAUCSC418-AlmaLinux-VM
+Figure 6: VM Overview – status Running, AlmaLinux 9.9, Standard B2ats v2, public IP 102.37.17.124
+Azure DNS name: Not configured. The public IP address was used for the HTTP test.
+6. SSH Connection
+The VM was accessed from Windows PowerShell using the command: ssh studentadmin@102.37.17.124
+7. Linux System Verification
+whoami
+Explanation: Shows the currently logged-in user. Output: studentadmin, the administrator account created during VM setup.
+Hostname
+Explanation: Shows the machine's host name. Output: PAUCSC418-AlmaLinux-VM, matching the VM name set in Azure.
+cat /etc/os-release
+Explanation: Displays operating system information, confirming the VM runs AlmaLinux 9.9 (a RHEL-compatible distribution).
+free –h
+Explanation: Shows total, used and free memory (RAM) and swap in human-readable units, about 1 GiB of RAM, matching the Standard_B2ats_v2 size.
+df –h
+Explanation: Shows disk space usage for each mounted filesystem. The root (/) filesystem sits on the 30 GiB OS disk.
+ip addr
+Explanation: Lists network interfaces and their addresses. eth0 holds the private IP 172.16.0.4; the public IP 102.37.17.124 does not appear because Azure maps it to the private IP at the network edge (NAT).
+Uptime
+Explanation: Shows the current time, how long the VM has been running, the number of logged-in users and the system load averages.
+8. Apache Web Server Installation
+Apache (httpd) and PHP were installed and the service was started and enabled using:
+sudo dnf update -y
+sudo dnf install httpd php -y
+sudo systemctl enable --now httpd
+sudo systemctl status httpd
+9. AlmaLinux Firewall
+The status of firewalld was checked with sudo systemctl status firewalld. The service was inactive on this Azure AlmaLinux image, so no operating-system firewall rule was required. Inbound HTTP traffic is controlled by the Azure Network Security Group rule for TCP port 80.
+10. Webpage Creation and Upload
+A file named index.php was created locally, uploaded to the VM with scp, and copied into /var/www/html/. SELinux contexts were restored and Apache was restarted:
+scp index.php studentadmin@102.37.17.124:~/
+sudo cp ~/index.php /var/www/html/
+sudo restorecon -Rv /var/www/html
+sudo systemctl restart httpd
+Contents of index.php:
+<!DOCTYPE html>
+<html>
+<head><title>PAUCSC 418 CA2</title></head>
+<body style="font-family:Arial;text-align:center;margin-top:60px">
+  <h1>PAUCSC 418 - Internet of Things CA2</h1>
+  <p>Name: Omotayo Ayeni </p>
+  <p>Matric No: 23120112011 </p>
+  <p>Hosted on AlmaLinux + Apache on Microsoft Azure</p>
+  <p>Server time: <?php echo date('Y-m-d H:i:s'); ?></p>
+</body>
+</html>
+12. Accessing the Website over HTTP
+The webpage was opened in a browser at http://102.37.17.124 and the custom page was displayed.
+12. Answers to Questions
+1. What is a virtual machine, and what role does Azure play in providing one?
+A virtual machine (VM) is a software-based computer that runs its own operating system and applications on shared physical hardware, isolated from other VMs by a hypervisor. Azure acts as the Infrastructure-as-a-Service (IaaS) provider: it owns and maintains the physical servers, hypervisor, storage, networking and data centres, and lets users create, configure, scale and pay for VMs on demand through the Azure Portal, CLI or API.
+2. Why must you select a region that is available under your subscription?
+Each subscription (especially Azure for Students) is permitted to deploy only to certain regions, and each region offers different VM sizes, images and quota limits. Choosing a region that is not available causes validation or deployment to fail. Region choice also affects latency to users, cost and data-residency requirements; South Africa North was chosen because it was allowed and is close to Nigeria.
+3. What is the purpose of the operating system disk, and what factors influence its size and type?
+The OS disk is a managed virtual disk that stores the operating system, boot files, installed software and configuration, so the VM needs it to boot and run. Its size is influenced by the image's minimum requirement, the software and data expected to be stored, and cost. Its type (Standard HDD, Standard SSD, Premium SSD, Ultra Disk) is chosen by balancing performance (IOPS and throughput), reliability/SLA and price. Standard SSD at 30 GiB was used as an economical but reliable option for a basic web server.
+4. What is the function of an Azure Network Security Group (NSG)?
+An NSG is a virtual firewall attached to a subnet or network interface. It contains prioritised inbound and outbound security rules that allow or deny traffic based on source, destination, port and protocol. In this task it allowed SSH (22), HTTP (80) and HTTPS (443) into the VM while blocking other inbound traffic.
+5. What is the purpose of TCP ports 22, 80 and 443 in this exercise?
+Port 22 (SSH) is used for secure remote command-line administration of the VM. Port 80 (HTTP) is used by Apache to serve the webpage to browsers. Port 443 (HTTPS) is reserved for encrypted web traffic in a later exercise; its rule was created but not tested.
+6. Why should SSH access on port 22 be restricted to trusted IP addresses where possible?
+SSH ports open to the whole internet are constantly scanned and attacked with automated brute-force and password-guessing attempts. Restricting the source to trusted IP addresses greatly reduces the attack surface so that only known machines can attempt to log in, which is especially important when password authentication is used.
+7. What is Apache HTTP Server, and what is the purpose of the httpd service?
+Apache HTTP Server is a free, open-source web server that accepts HTTP requests from clients and returns web content. On AlmaLinux and other Red Hat-based systems it runs as the httpd (HTTP daemon) service, which runs in the background, listens on port 80 (and 443 when configured) and serves files from /var/www/html.
+8. What is the difference between starting a service and enabling it?
+Starting a service (systemctl start httpd) runs it immediately, but it will not run again after a reboot. Enabling a service (systemctl enable httpd) configures it to start automatically at every boot but does not start it now. The command systemctl enable --now httpd does both.
+9. Why does opening port 443 in an NSG not automatically make a website available over HTTPS?
+The NSG rule only allows traffic to reach the VM. For HTTPS to work, the web server must also have a valid SSL/TLS certificate (for example from Let's Encrypt), the SSL module (mod_ssl) must be installed and configured, and Apache must be listening on port 443. Without these, nothing on the VM can answer an HTTPS request.
+10. What is the difference between HTTP and HTTPS?
+HTTP transfers data in plain text, usually on port 80, so it can be read or modified by anyone on the network path. HTTPS is HTTP over TLS, usually on port 443; it encrypts the traffic, verifies the server's identity with a certificate and protects data integrity.
+11. What is the difference between accessing the website using a public IP address and using an Azure DNS name?
+A public IP address (e.g. 102.37.17.124) is a numeric address that is hard to remember and may change if it is dynamic and the VM is deallocated. An Azure DNS name label gives a human-readable fully qualified domain name (e.g. name.southafricanorth.cloudapp.azure.com) that resolves to the IP through DNS, making it easier to remember and share and stable even if the underlying IP changes. In this task the DNS label was not configured, so the public IP was used.

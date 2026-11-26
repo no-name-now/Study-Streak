@@ -1,0 +1,189 @@
+
+--- page 1 ---
+Design ethics 
+Value Sensitive Design
+--- page 2 ---
+ Introduction
+ Dimensions of ethical inquiry
+◦ Descriptive approaches to ethical inquiry
+◦ Normative approaches to ethical inquiry
+ Laws, codes vs principles
+ Ethical Questions at Different Levels of Social Organization
+ Various sources of norms & Why we need to reflect on the 
+approaches to ethics and the sources of ethical norms.
+ Fundamental ethical principles.
+ Ethical frameworks
+ Design ethics: Value Sensitive Design
+
+--- page 3 ---
+Values 
+Design ethics
+ Other frameworks for computing & design 
+ethics
+◦ Human flourishing
+◦ Value sensitive design
+◦ Human centred ethics etc.
+
+--- page 4 ---
+In computing and AI use
+--- page 5 ---
+ Other contemporary approaches to design ethics
+◦ Value Sensitive Design 
+◦ Human centred design
+◦ Ethics by design (video on the portal)
+ Exercise exploring the application of VSD to a 
+professional task of your choice.
+ Class exploration of Game design ethics
+
+--- page 6 ---
+ Defining & designing the “goodness” factor within a product 
+design that aims to benefit the individual user, their ecosystem, & 
+the society as a whole.
+ Design products that do not violate fundamental ethical principles.
+ Products and services that promote human flourishing.
+ Work processes and activities that benefit the worker and the 
+whole society in an integral way.
+ Sometimes described as designs that are in accord with values of 
+the people involved in the production and use of goods and 
+services.
+
+--- page 7 ---
+25
+These are principles that help us make right 
+choices (choices that lead to human fulfilment)
+ Rationality
+ Concern for others
+ Fairness 
+ Dedication
+ Life plan
+ Role-responsibility
+ No intentional harm
+--- page 8 ---
+ This ethical theory ignores the special roles that consequences, 
+duties, and social contracts play in moral systems, especially with 
+respect to determining the appropriate standard for evaluating 
+moral behavior. 
+ Rather, it focuses on criteria having to do with the character 
+development of individuals and their acquisition of good character 
+traits from the kinds of habits they develop. 
+ The fundamental principles of virtue ethics were introduced in the 
+writings of Plato and Aristotle nearly 2,500 years ago. In more 
+recent times, virtue ethics has gained respect among ethicists as a 
+viable contemporary ethical theory, in part, through the influential 
+work of Philippa Foot, Alasdair MacIntyre, and others
+26
+--- page 9 ---
+ Happiness and life satisfaction
+ Mental and physical health
+ Meaning and purpose 
+ Character and virtue
+ Close social relationships
+ Read article on the portal. 
+27
+
+--- page 10 ---
+ Batya Friedman
+ Humans need tools, we make new ones and the 
+design for the tool is important for its effectiveness
+ Recognise what I have a say about ethics and what is 
+outside my scope: Effective design does not 
+guarantee ethical products
+ But do your best with what is in your power to 
+promote human good
+ Promoting Human dignity, wellbeing
+ Tripartite approach bases on values
+
+--- page 11 ---
+30
+
+--- page 12 ---
+
+--- page 13 ---
+ How to ground human values in the tech being built 
+ Do the tools I design mirror the values that their 
+users need & appreciate?
+ The goal is a general theory that can be applied to 
+different technological tools e.g. 
+◦ Human-robotic interactions
+◦ Location ware systems
+◦ Implantable medical devices 
+◦ Group software for organizations
+◦ Big data
+
+--- page 14 ---
+
+--- page 15 ---
+ Conceptual: 
+◦ Stakeholders direct &Indirect stakeholders
+◦ What is privacy, define & explore it: (Privacy can be addressed to attention)
+ Empirical 
+◦ Engage with stakeholders and do social science research, how to resolve value 
+tensions, what values would they need to protect
+ Technological investigation: 
+◦ Check old technology, look at new ones to see how to make new ones 
+responsive to values you have discovered
+ Use all three: It needs to be integrated and iterative
+ Use the information from conceptual and empirical to design 
+something and then take it back to people
+ Application video
+
+--- page 16 ---
+35
+
+--- page 17 ---
+ People and environment.
+ Human-centered design is a problem-solving 
+technique that puts real people at the center of the 
+development process, enabling you to create 
+products and services that resonate and are tailored 
+to your audience’s needs.
+ Used in many fields not just computing ethics e.g. 
+entrepreneurs use it.
+
+--- page 18 ---
+
+--- page 19 ---
+ A part of values by design approach
+ The goal is to ultimately maximize the positive impacts of tech 
+and minimize any potential negative effects on the society
+ It is the intentional embedding of ethical and humane use 
+principles into the process of designing, developing, and 
+delivering our software and services.
+ It is not  a method but an approach but can be incorporated in 
+any design methodology.
+ Values an be drawn from UN charter on human rights.
+ Values can be drawn from human flourishing perspectives, virtues 
+ethics, fundamental ethical principles
+
+--- page 20 ---
+It explains the ethical principles which AI systems must 
+support and discusses the key characteristics that an AI-
+based system/ applications must have in order to preserve 
+and promote:
+➢ respect for human agency;
+➢ privacy, personal data protection and data governance;
+➢ fairness;
+➢ Individual, social, and environmental well-being;
+➢ transparency;
+➢ accountability and oversight.
+
+--- page 21 ---
+1. Make a list of values that you think are important 
+for computing ethics
+2. Choose a computing project that you can handle
+3. Using either VSD or Human centred design map 
+out a list of specific guidelines you propose for 
+people working on the project.
+
+--- page 22 ---
+ The goal is to think about the implications of video games for 
+society and the role of developers in creating these digital 
+artifacts.
+ Investigate the impact of video games
+ Choose a video game for your group
+ What values (if any) do you think were at the basis of its creation?
+ What values do you think are missing?
+ What values do you think video games can promote? 
+ What steps would you take to implement VSD or HCD in 
+designing a video game? (keep in mind values, virtues and 
+domains of human flourishing)

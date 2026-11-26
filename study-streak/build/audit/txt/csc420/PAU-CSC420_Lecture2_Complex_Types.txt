@@ -1,0 +1,610 @@
+
+--- page 1 ---
+PAU-CSC420 – Database 
+Management II
+Lecture 2: Complex Types — Arrays & JSON
+--- page 2 ---
+OUTLINE
+Why Complex Types?
+▪ When one value per column is not enough
+The Splendid Stores Database
+▪ Our schema for today's practicals
+Arrays
+▪ Declaring, inserting, querying, updating & deleting
+JSON & JSONB
+▪ JSON vs JSONB, ->, ->>, ?, @> & jsonb_array_elements
+Modifying JSON & Indexing Complex Types
+▪ jsonb_set, removing keys & GIN indexes
+Summary & References
+Dr. Stephen A. Adubi
+2
+--- page 3 ---
+WHY COMPLEX TYPES?
+Beyond one value per column
+Dr. Stephen A. Adubi 3
+--- page 4 ---
+Why Complex Types?
+In Database Management I, every column held a 
+single, atomic value (First Normal Form).
+Real data is not always that tidy:
+▪ A customer may have zero, one or many phone numbers;
+▪ A phone has RAM and storage, a shirt has sizes, an eBook 
+has a file size.
+PostgreSQL offers complex types that let one column 
+hold structured data:
+▪ Arrays — a list of values of the same type, e.g. TEXT[].
+▪ JSON/JSONB — semi-structured documents of keys, values 
+and arrays.
+Dr. Stephen A. Adubi
+4
+--- page 5 ---
+Dos and Don’ts
+Consider complex types when data is:
+▪ static or rarely updated — e.g. product specs, customer 
+preferences;
+▪ sparse — many optional keys that are mostly absent;
+▪ flexible — its shape differs from row to row.
+Prefer ordinary columns and tables when data is 
+updated often, joined, aggregated or filtered 
+heavily.
+Best practice is a hybrid approach: a relational core 
+(keys, constraints) plus complex types where they fit.
+▪ Caution: foreign keys cannot point into an array or a JSON 
+document.
+Dr. Stephen A. Adubi
+5
+--- page 6 ---
+Set
+-
+Up: The Splendid Stores Schema
+Today's practicals run against Splendid Stores, an online 
+retailer in Nigeria, with seven(7) tables:
+▪ manufacturers(manufacturer_id, name)
+▪ attribute_catalogue(attribute_id, name, value)
+▪ tags(tag_name)
+▪ products(product_id, manufacturer_id, name, description, 
+product_type, tags TEXT[])
+▪ variations(product_id, variation_no, product_type, price, 
+qty_on_hand, type_details JSONB, attribute_ids INT[])
+▪ users(user_id, first_name, last_name, email, address_line, city, 
+country, mobiles TEXT[], favourite_tags TEXT[])
+▪ orders(order_id, user_id, order_date, total_amount, items
+JSONB)
+Dr. Stephen A. Adubi
+6
+--- page 7 ---
+Fewer Tables: What the Complex 
+Columns Replace
+A fully traditional design of the same business 
+rules needs more tables; ours needs seven.
+For example:
+▪ products.tags and users.favourite_tags (TEXT[]) 
+replace two junction tables.
+▪ users.mobiles (TEXT[]) replaces a user_mobiles table.
+▪ orders.items (JSONB) replaces an order_items table.
+▪ Each item stores product_id, variation_no, quantity and the 
+unit_price at the time of ordering.
+Dr. Stephen A. Adubi
+7
+--- page 8 ---
+Setting Up the Splendid Stores 
+Database
+In pgAdmin, right-click Databases → Create → 
+Database, and give it a name (e.g. course_db).
+Right-click the new database → Query Tool.
+Open splendid_stores_setup.sql and run it (F5).
+▪ The script creates the splendid schema, its tables and 
+sample data.
+▪ It can be re-run at any time to reset the data.
+Dr. Stephen A. Adubi
+8
+--- page 9 ---
+ARRAYS
+Many values, one column
+Dr. Stephen A. Adubi 9
+--- page 10 ---
+Arrays in PostgreSQL
+A column can be an array of any built-in or user-
+defined type: TEXT[], INT[], NUMERIC[], …
+Array values can be written in two ways:
+▪ As a string literal: '{+2348031234567,+2349051234567}'
+▪ With the ARRAY constructor: ARRAY['ebook', 'software']
+Elements are numbered from 1, not 0.
+An empty array '{}' is not the same as NULL — our 
+schema uses NOT NULL DEFAULT '{}'.
+All elements of an array must have the same type.
+Dr. Stephen A. Adubi
+10
+--- page 11 ---
+Demo 
+—
+ 
+Declaring Array Columns
+Add [] after any data type to declare an array column.
+This is how the setup script declared the users table.
+CREATE TABLE users (
+  user_id SERIAL PRIMARY KEY,
+  …
+  mobiles TEXT[] NOT NULL DEFAULT '{}',
+  favourite_tags TEXT[] NOT NULL DEFAULT '{}’
+);
+Dr. Stephen A. Adubi
+11
+--- page 12 ---
+Practical 1 
+—
+ 
+Inserting Array Values
+Register a new customer with one mobile number 
+and two favourite tags.
+Both array notations are used: a string literal and the 
+ARRAY constructor.
+INSERT INTO users (first_name, last_name, email,
+  address_line, city, country, mobiles, favourite_tags)
+VALUES ('Kemi', 'Adeleke', 'kemi.adeleke@example.com',
+  '9 Awolowo Road, Ikoyi', 'Lagos', 'Nigeria',
+'{+2348023456781}', ARRAY['fashion', 'sale']);
+Dr. Stephen A. Adubi
+12
+--- page 13 ---
+Practical 2 
+—
+ 
+Reading Elements: 
+Subscripts
+Show each customer's main (first) mobile number 
+and how many numbers they have.
+Halima has no mobiles, so mobiles[1] returns 
+NULL and cardinality returns 0.
+SELECT first_name, mobiles[1] AS main_mobile,
+cardinality(mobiles) AS num_mobiles
+FROM users
+ORDER BY user_id;
+Dr. Stephen A. Adubi
+13
+--- page 14 ---
+Practical 3 
+—
+ 
+Searching Arrays with 
+ANY
+Which products are tagged as bestsellers?
+The expression value = ANY(array) is true 
+when the value matches any element of the array.
+SELECT name, tags
+FROM products
+WHERE 'bestseller' = ANY (tags);
+Dr. Stephen A. Adubi
+14
+--- page 15 ---
+Practical 4 
+—
+ 
+Containment (@>) & 
+Overlap (&&)
+@> — the left array contains every element of the 
+right array.
+&& — the two arrays share at least one element.
+Find home appliances that save energy, then users 
+who like eBooks or smartphones.
+SELECT name, tags FROM products
+WHERE tags @> ARRAY['home appliance', 'energy saver'];
+SELECT first_name, favourite_tags FROM users
+WHERE favourite_tags && ARRAY['ebook', 'smartphone'];
+Dr. Stephen A. Adubi
+15
+--- page 16 ---
+Practical 5 
+—
+ 
+Arrays to Rows: unnest
+The unnest function turns each array element into 
+its own row, so arrays can be grouped and 
+counted like normal data.
+Which tags are used by the most products?
+SELECT tag, count(*) AS num_products
+FROM products, unnest(tags) AS tag
+GROUP BY tag
+ORDER BY num_products DESC;
+Dr. Stephen A. Adubi
+16
+--- page 17 ---
+Practical 6 
+—
+ 
+Updating Arrays
+The array_append function adds an element to the end of 
+an array.
+A subscript replaces one element in place.
+User 3 registers her first mobile; User 2 changes his main 
+number.
+UPDATE users
+SET mobiles = array_append(mobiles, '+2348091112223')
+WHERE user_id = 3;
+UPDATE users SET mobiles[1] = '+2348039998887'
+WHERE user_id = 2;
+Dr. Stephen A. Adubi
+17
+--- page 18 ---
+Practical 7 
+—
+ 
+Removing an Element: 
+array_remove
+The array_remove function deletes every 
+occurrence of a value from an array.
+Kemi no longer wants 'sale' among her favourite 
+tags.
+UPDATE users
+SET favourite_tags =
+array_remove(favourite_tags, 'sale')
+WHERE user_id = 11;
+Dr. Stephen A. Adubi
+18
+--- page 19 ---
+Practical 8 
+—
+ 
+Deleting Rows with 
+Array Conditions
+Remove tags that no product and no user are using.
+Arrays cannot hold foreign keys, so ANY is used to 
+look inside them.
+Two tags are deleted: 'sale' and 'organic'.
+DELETE FROM tags t
+WHERE NOT EXISTS (SELECT 1 FROM products p
+        WHERE t.tag_name = ANY (p.tags))
+  AND NOT EXISTS (SELECT 1 FROM users u
+        WHERE t.tag_name = ANY (u.favourite_tags));
+Dr. Stephen A. Adubi
+19
+--- page 20 ---
+Reading: More Array Features
+Many more array operators and functions exist than 
+we covered today.
+Provide answers to the following in your study:
+▪ What do slices such as mobiles[1:2] return?
+▪ What do array_position, array_length and array_cat do?
+▪ How does array_agg build an array from rows (the reverse 
+of unnest)?
+▪ How are multidimensional arrays declared and accessed?
+▪ Can you apply each one to a table in the Splendid Stores 
+database?
+Dr. Stephen A. Adubi
+20
+--- page 21 ---
+JSON & JSONB
+Semi-structured data inside a relational table
+Dr. Stephen A. Adubi 21
+--- page 22 ---
+JSON vs JSONB
+JSON stores the original text exactly as written.
+▪ Fast to store, but the text must be parsed again every 
+time a field is read.
+JSONB stores a parsed binary form.
+▪ Whitespace is removed, duplicate keys keep only the 
+last value, and keys may be reordered.
+▪ Faster to query, supports GIN indexes and has more 
+operators (e.g. ?, @>).
+Rule of thumb: use jsonb unless you must keep 
+the original text exactly.
+Dr. Stephen A. Adubi
+22
+--- page 23 ---
+JSON in Splendid Stores (1)
+variations.type_details holds an object whose 
+keys depend on the product type:
+▪ {"weight_kg": 38, "length_cm": 95, "width_cm": 60, 
+"height_cm": 85, "shipping_class": "oversized"}
+▪ {"file_size_mb": 210, "download_link": "https://…", 
+"licence_key_template": "XXXXX-…"}
+Dr. Stephen A. Adubi
+23
+--- page 24 ---
+JSON in Splendid Stores (2)
+orders.items holds an array of objects, one per 
+item ordered:
+▪ [{"product_id": 8, "variation_no": 2, "quantity": 1, 
+"unit_price": 385000.00}, …]
+CHECK constraints still protect the structure, e.g. 
+every variation of a physical product must have 
+weight and all three dimensions.
+Dr. Stephen A. Adubi
+24
+--- page 25 ---
+Practical 9 
+—
+ 
+Reading JSONB Values
+Return the stored details of both Baygon aerosol 
+sizes: JSONB has reordered their keys.
+jsonb_pretty prints a document over several lines; 
+handy in PSQL (command line), but not needed by 
+applications.
+SELECT variation_no, type_details
+FROM variations WHERE product_id = 1;
+SELECT jsonb_pretty(type_details)
+FROM variations WHERE product_id = 10;
+Dr. Stephen A. Adubi
+25
+--- page 26 ---
+Practical 10 
+—
+ 
+Extracting Fields from 
+JSONB
+The -> operator returns the field as jsonb (strings 
+keep their double quotes).
+The ->> operator returns the field as text, ready for 
+comparisons and further processing.
+Variations without a shipping_class return NULL.
+SELECT product_id, variation_no,
+  type_details -> 'shipping_class' AS as_json,
+  type_details ->> 'shipping_class' AS as_text
+FROM variations WHERE product_type = 'physical';
+Dr. Stephen A. Adubi
+26
+--- page 27 ---
+Practical 11 
+—
+ 
+Filtering & Casting 
+JSON Values
+The ->> operator always returns text, so cast it 
+before comparing numbers.
+Which variations weigh more than 5 kg?
+SELECT p.name, v.variation_no,
+  (v.type_details ->> 'weight_kg')::numeric AS weight_kg
+FROM variations v
+JOIN products p USING (product_id)
+WHERE (v.type_details ->> 'weight_kg')::numeric > 5;
+Dr. Stephen A. Adubi
+27
+--- page 28 ---
+Practical 12 
+—
+ 
+Chaining Operators 
+into JSON Arrays
+The -> operator also accepts an array position 
+(starting at 0, unlike SQL arrays).
+Chain -> and ->> to reach a value inside the first 
+item of each of Adaeze's orders.
+SELECT order_id,
+  items -> 0 ->> 'product_id' AS first_product,
+  items -> 0 ->> 'unit_price' AS first_price
+FROM orders WHERE user_id = 1;
+Dr. Stephen A. Adubi
+28
+--- page 29 ---
+Practical 13 
+—
+ 
+Key Exists (?) & 
+Containment (@>)
+? — Does the document have this top-level key?
+@> — Does the document contain this JSON 
+fragment?
+Find variations that issue licence keys, then variations 
+shipped as fragile.
+SELECT product_id, variation_no FROM variations
+WHERE type_details ? 'licence_key_template';
+SELECT product_id, variation_no FROM variations
+WHERE type_details @> '{"shipping_class": "fragile"}';
+Dr. Stephen A. Adubi
+29
+--- page 30 ---
+Practical 14 
+—
+ 
+JSON Arrays to Rows: 
+jsonb_array_elements
+The jsonb_array_elements function expands a JSON 
+array into one row per element — the JSON version 
+of unnest.
+List every item in Adaeze's orders.
+SELECT o.order_id,
+  item ->> 'product_id' AS product_id,
+  item ->> 'variation_no' AS variation_no,
+  (item ->> 'quantity')::int AS quantity
+FROM orders o, jsonb_array_elements(o.items) AS item
+WHERE o.user_id = 1;
+Dr. Stephen A. Adubi
+30
+--- page 31 ---
+Practical 15 
+—
+ 
+Joining JSON Items to 
+Tables
+Once expanded, JSON items join like normal rows.
+Which five products have sold the most units?
+SELECT p.name, sum((item ->> 'quantity')::int) AS units_sold
+FROM orders o, jsonb_array_elements(o.items) AS item
+JOIN products p
+  ON p.product_id = (item ->> 'product_id')::int
+GROUP BY p.name
+ORDER BY units_sold DESC
+LIMIT 5;
+Dr. Stephen A. Adubi
+31
+--- page 32 ---
+Practical 16 
+—
+ 
+Inserting JSONB: A 
+New Product (1)
+The JSON details now belong to the variation. 
+They are written as a string literal and checked 
+against product_type when stored.
+A product needs at least one variation, so both 
+rows go in one transaction. The new product 
+should get ID 16.
+▪ See the next slide
+Dr. Stephen A. Adubi
+32
+--- page 33 ---
+Practical 16 
+—
+ 
+Inserting JSONB: A 
+New Product (2)
+See the transaction (insertion operation) below.
+BEGIN;
+INSERT INTO products (manufacturer_id, name,
+  product_type)
+VALUES (4, 'Peak Evaporated Milk', 'physical');
+INSERT INTO variations (product_id, variation_no,
+  product_type, price, qty_on_hand, type_details)
+VALUES (16, 1, 'physical', 950.00, 200,
+  '{"weight_kg": 0.2, "length_cm": 7,
+    "width_cm": 7, "height_cm": 9}');
+COMMIT;
+Dr. Stephen A. Adubi
+33
+--- page 34 ---
+Practical 17 
+—
+ 
+Updating a Value: 
+jsonb_set
+jsonb_set(document, path, new_value) returns a 
+copy of the document with one value changed.
+If the key is missing, it is added (the optional 4th 
+argument defaults to true).
+The new value must be valid JSON, so a string needs 
+double quotes.
+UPDATE variations
+SET type_details = jsonb_set(type_details,
+    '{shipping_class}', '"standard"')
+WHERE product_id = 16 AND variation_no = 1;
+Dr. Stephen A. Adubi
+34
+--- page 35 ---
+Practical 18 
+—
+ 
+Updating Inside a JSON 
+Array
+A path can include an array position: '{1,quantity}' 
+is the quantity of the second item.
+Kemi now wants three tins of milk, so the total 
+must rise by 950 in the same statement.
+UPDATE orders
+SET items = jsonb_set(items, '{1,quantity}', '3'),
+    total_amount = total_amount + 950.00
+WHERE order_id = '20261001093000_11';
+Dr. Stephen A. Adubi
+35
+--- page 36 ---
+Practical 19 
+—
+ 
+Removing Keys from 
+JSONB
+The expression jsonb-'key' removes a top-level 
+key.
+The expression jsonb #- '{path}' removes a 
+value at a nested path; e.g. items #- '{0}' drops the 
+first item.
+Remove the shipping class we added to the Peak 
+milk.
+UPDATE variations
+SET type_details = type_details - 'shipping_class'
+WHERE product_id = 16 AND variation_no = 1;
+Dr. Stephen A. Adubi
+36
+--- page 37 ---
+Practical 20 
+—
+ 
+Deleting Rows with 
+JSONB Conditions
+The @> operator also works on JSON arrays: does 
+any item match this fragment?
+Cancel Kemi's order that contains the Peak milk 
+(product 16).
+DELETE FROM orders
+WHERE user_id = 11
+  AND items @> '[{"product_id": 16}]';
+Dr. Stephen A. Adubi
+37
+--- page 38 ---
+Reading 
+—
+ 
+GIN Indexes for Arrays & 
+JSONB
+GIN indexes (Lecture 1) speed up @> and && on 
+arrays, and ? and @> on JSONB.
+CREATE INDEX idx_products_tags
+  ON products USING GIN (tags);
+CREATE INDEX idx_variations_details
+  ON variations USING GIN (type_details);
+Dr. Stephen A. Adubi
+38
+--- page 39 ---
+SUMMARY
+Final Thoughts on Complex Types
+Dr. Stephen A. Adubi 39
+--- page 40 ---
+Choosing the Right Type
+A simple list of values of one type → an array (e.g. 
+mobiles, tags).
+Structured data whose shape varies → JSONB (e.g. 
+variation details).
+Data you must keep exactly as received → JSON.
+Data that is updated often, joined or must be 
+enforced by foreign keys → a separate table (e.g. 
+variations, with its stock levels).
+Searching inside arrays or JSONB on large tables → a 
+GIN index.
+Dr. Stephen A. Adubi
+40
+--- page 41 ---
+Wrap
+-
+Up: Key Takeaways
+Complex types let one column hold a list (array) or a 
+document (JSON/JSONB), reducing the number of 
+tables.
+Arrays: declare with [], index from 1, search with ANY , 
+@> and &&, expand with unnest, and change with 
+array_append, array_remove or subscripts.
+JSONB is the default choice for JSON: extract with -> 
+and ->>, search with ? and @>, expand arrays with 
+jsonb_array_elements.
+jsonb_set, - and #- change parts of a document 
+without rewriting it in the application.
+Dr. Stephen A. Adubi
+41
+--- page 42 ---
+Lecture References (Page 1)
+Magda, D. (2026). Just Use Postgres! Manning Publications. 
+Ch. 5, "Postgres and JSON," pp. 129–163.
+PostgreSQL Global Development Group. (2025). PostgreSQL 
+18 Documentation. §8.14, "JSON Types," pp. 184–193. 
+https://www.postgresql.org/docs/current/datatype-
+json.html
+PostgreSQL Global Development Group. (2025). PostgreSQL 
+18 Documentation. §8.15, "Arrays," pp. 194–203. 
+https://www.postgresql.org/docs/current/arrays.html
+Dr. Stephen A. Adubi
+42
+--- page 43 ---
+Lecture References (Page 2)
+PostgreSQL Global Development Group. (2025). PostgreSQL 
+18 Documentation. §9.16, "JSON Functions and Operators," 
+pp. 330–362. 
+https://www.postgresql.org/docs/current/functions-
+json.html
+PostgreSQL Global Development Group. (2025). PostgreSQL 
+18 Documentation. §9.19, "Array Functions and Operators," 
+pp. 367–370. 
+https://www.postgresql.org/docs/current/functions-
+array.html
+PostgreSQL Global Development Group. (2025). PostgreSQL 
+18 Documentation. §65.4, "GIN Indexes," pp. 2629–2635. 
+https://www.postgresql.org/docs/current/gin.html
+Dr. Stephen A. Adubi
+43

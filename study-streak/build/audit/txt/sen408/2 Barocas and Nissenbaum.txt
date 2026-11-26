@@ -1,0 +1,410 @@
+
+--- page 1 ---
+NOVEMBER 2014  |  VOL. 57  |  NO. 11  |  COMMUNICATIONS OF THE ACM     31
+V
+viewpoints
+Computing Ethics 
+Big Data’s End Run 
+Around Procedural 
+Privacy Protections 
+Recognizing the inherent limitations of consent and anonymity. 
+informed consent and anonymity.a Nev-
+ertheless, many continue to see them 
+as the best and only workable solutions 
+for coping with privacy hazards. b They 
+do not deny the practical challenges, 
+a For concise explanations for the growing lack 
+of conﬁdence in anonymization and informed 
+consent, see Narayanan and Shmatikov 7 and 
+Solove, D.J.,11 respectively.
+b As evidenced by their continued centrality 
+in the policy documents under discussion in 
+both the U.S. and Europe and the entrenched 
+role that they play in commercial privacy poli -
+cies and codes of conduct.
+P
+R I VAC Y  P ROT E C T I O N S  F O R 
+the past 40 years have con -
+centrated on two types of 
+procedural mitigations: in -
+formed consent and anony -
+mization. Informed consent attempts 
+to turn the collection, handling, and 
+processing of data into matters of in -
+dividual choice, while anonymization 
+promises to render privacy concerns ir-
+relevant by decoupling data from iden-
+tiﬁable subjects. This familiar pairing 
+dates to the historic 1973 report to 
+the Department of Health, Education 
+& Welfare, Records, Computers and the 
+Rights of Citizens , that articulated a set 
+of principles in which informed con -
+sent played a pivotal role (what have 
+come to be known as the Fair Informa -
+tion Practice Principles (FIPPs)) and 
+proposed distinct standards for the 
+treatment of statistical records (that 
+is to say, records not identiﬁable with 
+speciﬁc individuals).
+In the years since, as threats to pri -
+vacy have expanded and evolved, re -
+searchers have documented serious 
+cracks in the protections afforded by 
+DOI:10.1145/2668897 Solon Barocas and Helen Nissenbaum
+ COLLAGE BY ALICIA KUBISTA/ANDRIJ BORYS ASSOCIATES
+--- page 2 ---
+32    COMMUNICATIONS OF THE ACM    |  NOVEMBER 2014  |  VOL. 57  |  NO. 11
+viewpoints
+sent diminishes the more effectively 
+a company can draw inferences from 
+the set of people that do consent as it 
+approaches a representative sample. 
+Once a dataset reaches this thresh -
+old, the company can rely on readily 
+observable data to draw probabilistic 
+inferences about an individual, rather 
+than seeking consent to obtain these 
+details. This possibility also reveals 
+why the increasingly common prac -
+tice of vacuuming up innocuous bits 
+of data may not be quite so innocent: 
+who knows what inferences might be 
+drawn on the basis of which bits?
+Anonymity
+Most online outﬁts make a serious 
+show about anonymity.d But when they 
+claim they only maintain anonymous 
+records,12 they rarely mean they have 
+no way to distinguish a speciﬁc per -
+son—or his browser, computer, net -
+work equipment, or phone—from oth -
+ers. Nor do they mean they have no way 
+to recognize him as the same person 
+with whom they have interacted previ -
+ously, to associate observed behaviors 
+with the record assigned to him, or to 
+tailor their content and services ac -
+cordingly. They simply mean they do 
+not rely on the limited set of informa -
+tion commonly conceived as “person -
+ally identiﬁable” (for example, name, 
+Social Security number, date of birth, 
+and so forth), while still employing 
+unique persistent identiﬁers. Hence the 
+oxymoronic notion of an “anonymous 
+identiﬁer”2—more accurately labeled 
+a pseudonym. These identiﬁers are 
+anonymous only insofar as they do not 
+depend on traditional categories of 
+identity while still serving the function 
+of persistent identiﬁcation.
+Such practices may make it more 
+difﬁcult for someone to show up on 
+a person’s doorstep with a folder full 
+of embarrassing, discrediting, or in -
+criminating facts, but they do nothing 
+to limit the ability of these companies 
+to draw upon this information in shap-
+ing a growing share of everyday expe -
+riences that take place on these com -
+panies’ platforms. Stated differently, 
+d That this type of anonymity bears little resem -
+blance to the rigorous speciﬁcations of anonym-
+ity developed by computer scientists is not our 
+concern here; ours is a discussion of the value of 
+anonymity evinced by these techniques.
+but their solution is to try harder—to 
+develop more sophisticated mathe -
+matical and statistical techniques and 
+new ways of furnishing notice tuned 
+to the cognitive and motivational con -
+tours of users. Although we applaud 
+these important efforts, the problem 
+we see with informed consent and ano-
+nymization is not only that they are dif-
+ﬁcult to achieve; it is that, even if they 
+were achievable, they would be ineffec-
+tive against the novel threats to privacy 
+posed by big data. The cracks become 
+impassable chasms because, against 
+these threats, anonymity and consent 
+are largely irrelevant.1
+Informed Consent
+Long-standing operational challeng -
+es to informed consent (“notice and 
+choice”) have come to a head with on -
+line behavioral advertising. Companies 
+eager to exploit readily available trans -
+actional data, data captured through 
+customer tracking, or data explicitly 
+provided by users have crafted notices 
+comprising a mish-mash of practices 
+and purposes. Even before big data 
+entered common parlance, authors of 
+privacy policies faced profound chal -
+lenges in trying to explain complex 
+ﬂows, assemblages, and uses of data. 
+Anxious to provide easily digestible 
+accounts of information practices, 
+they have confronted something we 
+have called the transparency paradox 8: 
+simplicity and ﬁdelity cannot both be 
+achieved because details necessary to 
+convey properly the impact of the in -
+formation practices in question would 
+confound even sophisticated users, let 
+alone the rest of us.
+Big data extinguishes what little 
+hope remains for the notice and choice 
+regime. Stated simply, upfront notice 
+is not possible because new classes of 
+goods and services reside in future and 
+unanticipated uses.4 Two decades ago, 
+experts were already warning that data 
+mining posed insurmountable chal -
+lenges to the foundations of emerg -
+ing privacy law; 5,9,10 the situation now 
+is worse than they had feared. Even if 
+it were possible, as a theoretical mat -
+ter, to achieve meaningful notice and 
+render informed, rational decisions 
+concerning our own privacy, these 
+decisions would nevertheless affect 
+what companies can then infer about 
+others, whether or not these others 
+have consented. The willingness of a 
+few individuals to disclose informa -
+tion about themselves may implicate 
+others who happen to share the more 
+easily observable traits that correlate 
+with the traits disclosed. We call this 
+the tyranny of the minority  because it is 
+a choice forced upon the majority by a 
+consenting minority.
+How might this happen? Consider 
+the familiar trope about “the company 
+you keep.” What your friends say or do 
+(on social networking sites, for exam -
+ple) can affect what others infer about 
+you.c Information about social ties, 
+however, is unnecessary when drawing 
+such inferences, as we learned from 
+Target’s infamous pregnancy predic -
+tion score. To discover the telltale signs 
+of pregnancy, Target looked over the 
+purchase histories of those few cus -
+tomers who also made use of the com -
+pany’s baby shower registry. Analysts 
+then employed data mining techniques 
+to isolate the distinctive shopping hab -
+its of these women and then searched 
+for similar purchases in other custom -
+ers’ records to identify those who were 
+likely to be pregnant. Target was thus 
+able to induce a rule about the relation-
+ship between certain purchases and 
+pregnancy from what must have been a 
+tiny proportion of all its customers. 
+When analysts can draw rules from 
+the data of a small cohort of consent -
+ing individuals that generalize to an 
+entire population, consent loses its 
+practical import. In fact, the value of 
+a particular individual’s withheld con -
+c See, for example, Mislove, M. et al.6
+Long-standing 
+operational 
+challenges to 
+informed consent 
+(“notice and choice”) 
+have come to a head 
+with online behavioral 
+advertising.  
+--- page 3 ---
+NOVEMBER 2014  |  VOL. 57  |  NO. 11  |  COMMUNICATIONS OF THE ACM     33
+viewpoints
+When consent is given (or not with -
+held) or the data is anonymized, virtu -
+ally any information practice becomes 
+permissible. These procedural mitiga -
+tions have long relieved decision-mak -
+ers of the burden of rendering judg -
+ment on the substantive legitimacy 
+of speciﬁc information practices and 
+the ends that such practices serve. It is 
+time to recognize the limits of purely 
+procedural approaches to protecting 
+privacy. It is time to confront the sub -
+stantive values at stake in these infor -
+mation practices and to decide what 
+choices can and cannot legitimately be 
+placed before us—for our consent. 
+References
+1. Barocas, S. and Nissenbaum, H. Big data’s end run 
+around anonymity and consent. In Privacy, Big Data, 
+and the Public Good: Frameworks for Engagement. J. 
+Lane, V. Stodden, S. Bender, and H. Nissenbaum, Eds. 
+Cambridge University Press, NY, 2014.
+2. Barr, A. Google may ditch ‘cookies’ as online ad 
+tracker. USA Today (Sept. 17, 2013).
+3. Cate, F.H. The failure of fair information practice 
+principles. In Consumer Protection in the Age of 
+the “Information Economy.” J.K. Winn, Ed. Ashgate, 
+Burlington, VT, 2006, 341–378.
+4. Cate, F.H. and Mayer-Schonberger, V. Notice and 
+consent in a world of big data. International Data 
+Privacy Law 3, 2 (May 20, 2013), 67–73.
+5. Klösgen, W. KDD: Public and private concerns. IEEE 
+Expert: Intelligent Systems and Their Applications 10, 
+2 (Feb. 1995), 55–57.
+6. Mislove, M. et al. You are who you know: Inferring 
+user proﬁles in online social networks. In WSDM 
+‘10 Proceedings of the Third ACM International 
+Conference on Web Search and Data Mining. ACM, NY, 
+2010, 251–60; DOI: 10.1145/1718487.1718519.
+7. Narayanan, A. and Shmatikov, V. Myths and fallacies of 
+‘personally identiﬁable information.’ Commun. ACM 53, 
+6 (June 2010), 24; DOI: 10.1145/1743546.1743558.
+8. Nissenbaum, H. A contextual approach to privacy 
+online. Daedalus 140, 4 (Oct. 2011),  32–48; DOI: 
+10.1162/DAED_a_00113.
+9. O’Leary, D.E. Some privacy issues in knowledge 
+discovery: The OECD personal privacy guidelines. 
+IEEE Expert: Intelligent Systems and Their 
+Applications 10, 2 (Apr. 1995), 48–59. 
+10. Piatetsky-Shapiro, G. Knowledge discovery in personal 
+data vs. privacy: A mini-symposium. IEEE Expert: 
+Intelligent Systems and Their Applications 10, 2 (Apr. 
+1995), 46–47.
+11. Solove, D.J. Privacy self-management and the consent 
+dilemma. Harvard Law Review 126, 7 (May 2013), 1880. 
+12. Steel, E. and Angwin, J. On the Web’s cutting edge, 
+anonymity in name only. The Wall Street Journal (Aug. 
+4, 2010).
+13. Walker, J. Data mining to recruit sick people. The Wall 
+Street Journal (Dec. 17, 2013).
+Solon Barocas (sib237@nyu.edu) is a postdoctoral 
+research associate at the Center for Information 
+Technology Policy at Princeton University.
+Helen Nissenbaum (helen.nissenbaum@nyu.edu) is a 
+professor of media, culture, and communication at New 
+York University. 
+An expanded version of the arguments presented in this 
+Viewpoint appears in Barocas and Nissenbaum.1 The 
+authors thank Arvind Narayanan and an anonymous 
+reviewer for their helpful feedback and gratefully 
+acknowledge research support from the Intel Science and 
+Technology Center for Social Computing and NSF awards 
+DGE-0966187 and CNS-1355398.
+Copyright held by authors.
+while anonymous identiﬁers can make 
+it more difﬁcult to use information 
+about a speciﬁc user outside an orga -
+nization’s universe, they do nothing 
+to alleviate worries individuals might 
+have about their fates within it—the in-
+formation they are presented, the op -
+portunities they are offered, or the way 
+they are treated in the marketplace.
+Whatever protections this arrange -
+ment offers are further undermined 
+by the kinds of inferences companies 
+can draw having discovered patterns 
+in large assemblages of diverse data -
+sets. A company that may have been 
+unable to learn about individuals’ 
+medical conditions without matching 
+records across datasets using person -
+ally identiﬁable information may be 
+able to infer these conditions from the 
+more easily observable or accessible 
+qualities that happen to correlate with 
+them.13 I f  o r g a n i z a t i o n s  b e c o m e  s u f-
+ﬁciently conﬁdent to act on these un -
+certain inferences, the ability to draw 
+these inferences will pose as serious 
+a threat to privacy as the increasingly 
+well-recognized risk of de-anonymiza -
+tion. But rather than going to the trou -
+ble of attempting to re-associate “ano -
+nymized” medical ﬁles with speciﬁc 
+individuals, companies might instead 
+discover patterns that allow them to 
+estimate the likelihood someone has 
+a particular medical condition. That 
+certain institutions could meaning -
+fully affect a person’s experiences and 
+prospects in the absence of identifying 
+information or without violating re -
+cord-keepers’ promises of anonymity 
+deﬁes the most basic intuitions about 
+the value of anonymity.
+We Are Not Saying…
+There is no role for consent and ano -
+nymity in privacy protection.  Consent 
+and anonymity should not bear, and 
+should never have borne, the entire 
+burden of protecting privacy. Recog -
+nizing their limits allows us to assess 
+better where and under what condi -
+tions they may perform the work for 
+which they are well suited.
+Privacy loses the trade-off with big 
+data. This tired argument misunder -
+stands the nature and value of privacy 
+and mistakes means for ends. Weak -
+nesses in existing procedures for pro -
+tecting privacy do not undercut the vi -
+ability of privacy itself.
+We need to try even harder to achieve 
+fail-safe anonymization and effective -
+ly operationalize notice and consent.  
+Though worthy goals, the practices 
+described here bypass not only weak 
+mechanisms but also defeat the ideal.
+What to Do?
+Mathematicians and computer scien -
+tists will continue to worry about re-
+identiﬁcation. Policymakers will con -
+tinue down the rabbit hole of deﬁning 
+personally identiﬁable information 
+and informed consent. Social scien -
+tists and designers will continue to 
+worry about reﬁning notice and choice. 
+In the meantime, miners of big data 
+are making end runs around informed 
+consent and anonymity.
+A lesson may be drawn from bio -
+medicine where informed consent 
+and anonymity function against a rich 
+ethical backdrop. They are important 
+but not the only protective mecha -
+nisms in play. Patients and research 
+subjects poised to sign consent forms 
+know there are limits to what may be 
+asked of them. Treatment or research 
+protocols that lie outside the norm 
+or involve a higher than normal risk 
+must have passed the tests of justice 
+and beneﬁcence. In other words, cli -
+nicians and researchers must already 
+have proven to their expert peers and 
+institutional review boards that the 
+protocols being administered or stud -
+ied are of such great potential value 
+to the individual subject or to society 
+that the reasonable risks are worth -
+while. Consent forms have undergone 
+ethical scrutiny and come at the end 
+of a process in which the values at 
+stake have been thoroughly debated. 
+The individual’s signature is not the 
+sole gatekeeper of welfare.
+By contrast, informed consent and 
+anonymity have served as the sole 
+gatekeepers of informational privacy. 
+Big data extinguishes 
+what little hope 
+remains for the notice 
+and choice regime.

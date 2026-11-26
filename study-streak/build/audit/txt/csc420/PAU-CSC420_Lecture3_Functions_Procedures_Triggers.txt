@@ -1,0 +1,532 @@
+
+--- page 1 ---
+PAU-CSC420 – Database 
+Management II
+Lecture 3: Functions, Procedures & Triggers
+--- page 2 ---
+OUTLINE
+Why Server-Side Logic?
+▪ Functions, procedures & triggers at a glance
+The Splendid Stores Database
+▪ Business rules still waiting to be enforced
+User-Defined Functions
+▪ SQL functions & PL/pgSQL functions
+Stored Procedures
+▪ CALL & an all-or-nothing order
+Triggers
+▪ BEFORE, AFTER, NEW & OLD
+Summary, Assignment & References
+Dr. Stephen A. Adubi
+2
+--- page 3 ---
+WHY SERVER-SIDE LOGIC?
+Putting business rules next to the data
+Dr. Stephen A. Adubi 3
+--- page 4 ---
+Why Put Logic in the Database?
+Constraints check one row at a time. Many business 
+rules need more:
+▪ looking at other rows or tables, e.g. a tag must exist;
+▪ computing values, e.g. an order total;
+▪ running several steps as one unit, e.g. place an order and 
+reduce stock.
+PostgreSQL can store such logic inside the database 
+as functions, procedures and triggers.
+Every application using the database then follows the
+same rules.
+Dr. Stephen A. Adubi
+4
+--- page 5 ---
+Functions, Procedures & Triggers 
+(Comparison)
+Function — takes inputs and returns a value (or a table); 
+used inside SQL, e.g. SELECT fn(…).
+Procedure — performs an action and returns no value; run 
+with CALL; may COMMIT or ROLLBACK partway through.
+Trigger — runs automatically when rows are inserted, 
+updated or deleted; its body is a function that RETURNS 
+TRIGGER.
+Functions and procedures can be written in plain SQL or in 
+PL/pgSQL, PostgreSQL's procedural language. Trigger 
+functions need PL/pgSQL (or another procedural language).
+Dr. Stephen A. Adubi
+5
+--- page 6 ---
+Set
+-
+Up: The Splendid Stores Database
+The same Splendid Stores database from Lecture 
+2 (the same seven tables and data) is used for this 
+Lecture.
+Dr. Stephen A. Adubi
+6
+--- page 7 ---
+Rules Lecture 2 Could Not Enforce
+These Splendid Stores rules could not be written 
+as constraints:
+▪ The order total must equal the sum of unit_price × 
+quantity, and stay consistent automatically;
+▪ The order ID combines the date-time (to the second) 
+with the customer's user ID.
+We also want placing an order to reduce 
+qty_on_hand, and to fail if stock runs out.
+Dr. Stephen A. Adubi
+7
+--- page 8 ---
+USER-DEFINED FUNCTIONS
+Reusable logic that returns a value
+Dr. Stephen A. Adubi 8
+--- page 9 ---
+From SQL to PL/pgSQL
+A SQL function runs queries only: no variables, no IF, 
+no loops.
+PL/pgSQL adds programming constructs:
+▪ DECLARE variables and assign them with :=;
+▪ SELECT … INTO a variable;
+▪ IF … ELSIF … ELSE … END IF and FOR … LOOP … 
+END LOOP;
+▪ RAISE EXCEPTION to stop with an error, RAISE NOTICE 
+to print a message;
+▪ FOUND, which is true when the last statement found or 
+changed a row.
+Dr. Stephen A. Adubi
+9
+--- page 10 ---
+Demo: The Structure of a PL/pgSQL 
+Body
+Variables go before BEGIN. This BEGIN … END groups 
+statements; it does not start a transaction (Lecture 
+1).
+CREATE [OR REPLACE] FUNCTION name(…) RETURNS type
+LANGUAGE plpgsql AS $$
+DECLARE
+  -- variables, e.g., v_qty INT;
+BEGIN
+  -- statements, e.g. RETURN value;
+END;
+$$;
+Dr. Stephen A. Adubi
+10
+--- page 11 ---
+Practical 1: Our First Function
+The function returns the total sum of all items in an order: here, the sum 
+of 𝑢𝑛𝑖𝑡_𝑝𝑟𝑖𝑐𝑒 ×  𝑞𝑢𝑎𝑛𝑡𝑖𝑡𝑦.
+CREATE FUNCTION compute_order_total(p_items JSONB) 
+RETURNS NUMERIC
+LANGUAGE plpgsql AS $$
+DECLARE
+  total_amount numeric;
+BEGIN
+  SELECT sum((i ->> 'unit_price')::numeric
+                      * (i ->> 'quantity')::int) INTO total_amount
+  FROM jsonb_array_elements(p_items) AS i;
+  RETURN total_amount;
+END
+$$;
+Dr. Stephen A. Adubi
+11
+--- page 12 ---
+Practical 2: Calling a Function in a Query
+A function can be used wherever an expression is 
+allowed: SELECT, WHERE, ORDER BY , …
+SELECT order_id, total_amount,
+compute_order_total(items) AS computed_total
+FROM orders WHERE user_id = 1;
+Dr. Stephen A. Adubi
+12
+--- page 13 ---
+Practical 3: Creating Order IDs
+We create an order ID for a new order.
+CREATE FUNCTION create_order_id(p_user_id   INT)
+RETURNS TEXT
+LANGUAGE plpgsql AS $$
+DECLARE
+    order_id TEXT;
+BEGIN
+    order_id := to_char(now(), 'YYYYMMDDHH24MISS') || '_' || 
+p_user_id;
+    RETURN order_id;
+END;
+$$;
+Dr. Stephen A. Adubi
+13
+--- page 14 ---
+Practical 3: Creating Order IDs (2)
+Build order IDs such as 20261020124605_7, 
+without a second argument.
+SELECT create_order_id(7);
+Dr. Stephen A. Adubi
+14
+
+--- page 15 ---
+Practical 4: Functions that return a 
+Table (1)
+RETURNS TABLE (…) makes a function return rows.
+Task: Return the orders of a certain customer, ordered 
+by date.
+CREATE FUNCTION customer_orders(p_user_id INT)
+RETURNS TABLE (o_id TEXT, o_date DATE, t_amount NUMERIC)
+LANGUAGE plpgsql AS $$
+BEGIN
+  --- Fill in the gap
+END;
+$$;
+Dr. Stephen A. Adubi
+15
+--- page 16 ---
+Practical 4: Functions that return a 
+Table (2)
+Call it in FROM, like a table, to list Adaeze's orders.
+SELECT *
+FROM customer_orders(1);
+Dr. Stephen A. Adubi
+16
+--- page 17 ---
+Practical 5: Check Stock Status (1)
+fn_stock_status reports whether a variation is in 
+stock, low (fewer than 10) or out of stock.
+CREATE FUNCTION stock_status(
+    p_product_id INT, p_variation_no INT)
+RETURNS TEXT
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_qty INT;
+BEGIN
+Dr. Stephen A. Adubi
+17
+--- page 18 ---
+Practical 5: Check Stock Status (2)
+SELECT … INTO stores the result in v_qty. If no row 
+matches, FOUND is false, and RAISE EXCEPTION stops 
+with an error.
+  SELECT qty_on_hand INTO v_qty FROM variations
+  WHERE product_id = p_product_id
+    AND variation_no = p_variation_no;
+  IF NOT FOUND THEN
+RAISE EXCEPTION 'Product (%) with Variation (%) does not exist',
+                    p_product_id, p_variation_no;
+Dr. Stephen A. Adubi
+18
+--- page 19 ---
+Practical 5: Check Stock Status (3)
+ELSIF and ELSE choose which text to return.
+ELSIF v_qty = 0 THEN RETURN 'Out of stock';
+ELSIF v_qty < 10 THEN RETURN 'Low stock';
+ELSE RETURN 'In stock';
+  END IF;
+END;
+$$;
+Dr. Stephen A. Adubi
+19
+--- page 20 ---
+Practical 6: Using the stock_status 
+function
+Check the stock of the phones and the freezer.
+A missing variation raises our error: try SELECT 
+stock_status(9, 7);
+SELECT p.name, v.variation_no, v.qty_on_hand,
+stock_status(v.product_id, v.variation_no) AS status
+FROM variations v JOIN products p USING (product_id)
+WHERE v.product_id IN (8, 9, 10);
+Dr. Stephen A. Adubi
+20
+--- page 21 ---
+STORED PROCEDURES
+Business operations that run as one unit
+Dr. Stephen A. Adubi 21
+--- page 22 ---
+Functions vs Procedures
+A procedure is created with CREATE PROCEDURE 
+and run with CALL, not SELECT.
+It returns no value. Use a procedure to do something 
+(a business operation); use a function to compute 
+something.
+If any step of a CALL fails, every change it made is
+undone: atomicity from Lecture 1.
+A procedure may also COMMIT or ROLLBACK partway 
+through (when not called inside an explicit 
+transaction). A function never can.
+Dr. Stephen A. Adubi
+22
+--- page 23 ---
+Practical 7: A Procedure that places 
+an Order (1)
+The whole basket arrives as one JSONB parameter, 
+items.
+CREATE OR REPLACE PROCEDURE make_order(
+    p_user_id INT, items JSONB)
+LANGUAGE plpgsql AS $$
+DECLARE
+  total_amount NUMERIC;  order_id TEXT;
+  item JSONB;  counter INT := 0;
+  qty_sold INT;  item_price NUMERIC;
+Dr. Stephen A. Adubi
+23
+--- page 24 ---
+Practical 7: A Procedure that places 
+an Order (2)
+create_order_id builds the order ID. FOR … LOOP 
+visits each item in the basket, and the UPDATE 
+reduces its variation's stock.
+BEGIN
+  order_id = create_order_id(p_user_id);
+FOR item IN SELECT jsonb_array_elements(items) LOOP
+    qty_sold = (item->>'quantity')::int;
+    UPDATE variations
+    SET qty_on_hand = qty_on_hand - qty_sold
+Dr. Stephen A. Adubi
+24
+--- page 25 ---
+Practical 7: A Procedure that places 
+an Order (3)
+RETURNING … INTO STRICT reads the 
+variation's current price and raises an error if no 
+variation matches.
+    WHERE product_id = (item->>'product_id')::int
+      AND variation_no = (item->>'variation_no')::int
+RETURNING price INTO STRICT item_price
+Dr. Stephen A. Adubi
+25
+--- page 26 ---
+Practical 7: A Procedure that places 
+an Order (4)
+jsonb_set adds unit_price to the item at position 
+counter. ARRAY[…] builds the path from the 
+variable's value.
+JSON positions start at 0, so counter starts at 0.
+    items := jsonb_set(items,
+ARRAY[counter::text, 'unit_price'],
+               to_jsonb(item_price));
+    counter = counter + 1;
+  END LOOP;
+Dr. Stephen A. Adubi
+26
+--- page 27 ---
+Practical 7: A Procedure that places 
+an Order (5)
+compute_order_total sums unit_price × quantity over 
+the completed items; then the order is inserted.
+  total_amount = compute_order_total(items);
+  INSERT INTO orders (order_id, user_id,
+                      total_amount, items)
+  VALUES (order_id, p_user_id, total_amount, items);
+END;
+$$;
+Dr. Stephen A. Adubi
+27
+--- page 28 ---
+Practical 8: Calling the Procedure
+Halima orders 2 Indomie cartons, then checks her 
+orders.
+CALL make_order(3, '[
+    {"product_id": 7, "variation_no": 2, "quantity": 2},
+    {"product_id": 1, "variation_no": 2, "quantity": 1}
+]')
+SELECT * FROM customer_orders(3);
+Dr. Stephen A. Adubi
+28
+--- page 29 ---
+TRIGGERS
+Rules that run automatically
+Dr. Stephen A. Adubi 29
+--- page 30 ---
+What Is a Trigger?
+A trigger makes Postgres run a trigger function 
+automatically when a table changes.
+Each trigger is defined by its:
+▪ event: INSERT, UPDATE, DELETE (or TRUNCATE);
+▪ timing: BEFORE or AFTER the change;
+▪ level: FOR EACH ROW (once per row) or FOR EACH 
+STATEMENT (once per statement).
+It is created in two steps: a function that RETURNS 
+TRIGGER, then CREATE TRIGGER … EXECUTE 
+FUNCTION.
+Dr. Stephen A. Adubi
+30
+--- page 31 ---
+NEW, OLD & BEFORE vs AFTER
+Inside a row-level trigger function:
+▪ NEW is the new row (INSERT, UPDATE); OLD is the old row 
+(UPDATE, DELETE);
+▪ TG_OP holds 'INSERT’, 'UPDATE' or 'DELETE'; 
+TG_TABLE_NAME holds the table's name.
+BEFORE triggers can change the row by changing 
+NEW and returning it, or skip the row by returning 
+NULL. Use them to fill in or check values.
+AFTER triggers run once the row is saved, and their 
+return value is ignored. Use them to react, e.g. write 
+an audit log.
+Dr. Stephen A. Adubi
+31
+--- page 32 ---
+Demo: Anatomy of a Trigger
+The Trigger syntax is as follows:
+▪ The specified function after the EXECUTE FUNCTION 
+command must have been created.
+CREATE [OR REPLACE] TRIGGER trigger_name
+{BEFORE | AFTER} {INSERT | UPDATE [OF column] | DELETE} 
+[OR …]
+ON table_name
+FOR EACH {ROW | STATEMENT}
+[WHEN (condition)]
+EXECUTE FUNCTION trigger_function_name();
+Stephen A. Adubi
+32
+--- page 33 ---
+Practical 9: Keeping the Total Amount 
+Correct (1)
+The function overwrites NEW.total_amount and returns the 
+row.
+RETURNS, LANGUAGE and AS can share one line, as here.
+CREATE FUNCTION trg_fn_order_total()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+NEW.total_amount := compute_order_total(NEW.items);
+  RETURN NEW;
+END;
+$$;
+Dr. Stephen A. Adubi
+33
+--- page 34 ---
+Practical 9: Keeping the Total Amount 
+Correct (2)
+Attach the function to orders, so it runs before 
+every insert and update of each row.
+CREATE TRIGGER trg_order_total
+BEFORE INSERT OR UPDATE ON orders
+FOR EACH ROW
+EXECUTE FUNCTION trg_fn_order_total();
+Dr. Stephen A. Adubi
+34
+--- page 35 ---
+Practical 10: Testing the Total Trigger
+Halima wants two Baygon Insecticides. We changed only 
+the quantity, and the trigger raised the total to 30,000.
+Even a wrong total set directly is corrected.
+UPDATE orders
+       SET items = jsonb_set(items, '{1,quantity}', '2')
+WHERE order_id = '20261022082118_3';
+UPDATE orders SET total_amount = 10000
+WHERE order_id = '20261022082118_3'
+RETURNING total_amount;
+Dr. Stephen A. Adubi
+35
+--- page 36 ---
+Dos and Don’ts
+Do prefer constraints (NOT NULL, CHECK, FOREIGN KEY) 
+whenever they can express a rule.
+Do use triggers only for rules that constraints cannot 
+express.
+Do keep trigger functions short and clearly named (e.g. 
+trg_fn_…).
+Don’t hide surprising behaviour in triggers; others may not 
+know they exist.
+Don’t forget the cost: a row-level trigger runs for every row, 
+slowing bulk loads.
+Beware of triggers that fire other triggers: they can 
+cascade.
+Dr. Stephen A. Adubi
+36
+--- page 37 ---
+Reading: More on Triggers
+Provide answers to the following in your study:
+▪ What does a WHEN clause in CREATE TRIGGER do? 
+Write a trigger that fires only when a variation's price 
+changes.
+▪ How do FOR EACH STATEMENT triggers with transition 
+tables (REFERENCING NEW TABLE AS …) work?
+▪ What are INSTEAD OF triggers, and why are they used 
+only on views?
+▪ How could a deferred CONSTRAINT TRIGGER enforce 
+the rule that every product has at least one variation?
+Dr. Stephen A. Adubi
+37
+--- page 38 ---
+SUMMARY
+Final Thoughts on Functions, Procedures & Triggers
+Dr. Stephen A. Adubi 38
+--- page 39 ---
+Choosing the Right Tool
+Compute a value to reuse in queries → a function 
+(e.g. fn_order_total).
+Carry out a multi-step operation, all or nothing → a 
+procedure (e.g. sp_place_order).
+Fill in or check data automatically, whoever changes 
+it → a BEFORE trigger (e.g. trg_order_total).
+React to changes, e.g. keep a history → an AFTER 
+trigger (e.g. an audit log).
+Check a single row's own values → a CHECK 
+constraint; no code needed.
+Dr. Stephen A. Adubi
+39
+--- page 40 ---
+Assignment
+Using the Splendid Stores database, write and test:
+▪ a trigger that rejects unknown tags in products.tags (hint: 
+the <@ array operator);
+▪ a trigger that rejects an order whose items refer to a 
+variation that does not exist;
+▪ a procedure sp_cancel_order(p_order_id TEXT) that 
+returns each item's quantity to stock and deletes the 
+order, all or nothing;
+▪ an AFTER trigger that records every price change in an 
+audit table.
+Submit one SQL script with a short test for each.
+Dr. Stephen A. Adubi
+40
+--- page 41 ---
+Wrap
+-
+Up: Key Takeaways
+Functions return a value or a table and are used 
+inside SQL. SQL functions run queries; PL/pgSQL adds 
+variables, IF, loops and RAISE.
+Procedures are run with CALL and undo all their work 
+if any step fails.
+Triggers run a function automatically: BEFORE triggers 
+fill in or check NEW; AFTER triggers react to changes.
+Together they enforced rules Lecture 2 could not: 
+order totals, order IDs and stock levels.
+Dr. Stephen A. Adubi
+41
+--- page 42 ---
+Lecture References (Page 1)
+PostgreSQL Global Development Group. (2025). 
+PostgreSQL 18 Documentation. §36.3–36.5, "User-
+Defined Functions," "User-Defined Procedures" and 
+"Query Language (SQL) Functions," pp. 1249–1266. 
+https://www.postgresql.org/docs/current/xfunc.html
+PostgreSQL Global Development Group. (2025). 
+PostgreSQL 18 Documentation. §36.7, "Function 
+Volatility Categories," pp. 1268–1269. 
+https://www.postgresql.org/docs/current/xfunc-
+volatility.html
+Dr. Stephen A. Adubi
+42
+--- page 43 ---
+Lecture References (Page 2)
+PostgreSQL Global Development Group. (2025). 
+PostgreSQL 18 Documentation. Ch. 37, "Triggers," pp. 
+1340–1349. 
+https://www.postgresql.org/docs/current/triggers.ht
+ml
+PostgreSQL Global Development Group. (2025). 
+PostgreSQL 18 Documentation. Ch. 41, "PL/pgSQL — 
+SQL Procedural Language," §41.1–41.10, pp. 1388–
+1439. 
+https://www.postgresql.org/docs/current/plpgsql.ht
+ml
+Dr. Stephen A. Adubi
+43
+--- page 44 ---
+Lecture References (Page 3)
+PostgreSQL Global Development Group. (2025). 
+PostgreSQL 18 Documentation. SQL Commands: 
+CALL (pp. 1731–1732), CREATE FUNCTION (pp. 
+1795–1803), CREATE PROCEDURE (pp. 1833–
+1836) and CREATE TRIGGER (pp. 1906–1912). 
+https://www.postgresql.org/docs/current/sql-
+commands.html
+Dr. Stephen A. Adubi
+44

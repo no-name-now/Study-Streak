@@ -1,0 +1,325 @@
+## slide1.xml
+IoT and Edge Computing
+Lino Isawhe
+School: SEN/CSC
+Pan-Atlantic University, Epe
+PAU-CSC 418
+## slide2.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unocking Potential. Building Responsible Leaders
+What is IOT?
+??
+What is Edge Computing?
+## slide3.xml
+
+## slide4.xml
+1. IoT Fundamentals
+Explain Internet of Things in simple terms, identifying key characteristics, components, and ecosystems.
+2. Cloud Capabilities
+Describe cloud computing, scalable storage, and analyze trade-offs like network latency and bandwidth.
+3. Edge Computing
+Understand why local processing close to data sources enables low-latency, and helps with mission-critical decisions.
+Learning Objectives
+4. The Trifecta
+Differentiate and combine IoT, Edge, and Cloud into a unified real-world architecture: Connect, Respond, Scale.
+5. Practical Use Cases
+Analyze autonomous vehicles, smart farming, and healthcare to determine optimal processing locations.
+6. Architecture Myths
+Debunk common misconceptions regarding cloud reliance, standalone edge systems, and raw data transmission.
+## slide5.xml
+Human Body vs. Computing Systems
+Consider touching a hot object: your skin senses heat, nerves transmit signals, reflexes jerk your hand instantly, and your brain processes the experience for long-term memory.
+Nervous System
+Carries information
+Network Gateways
+Local Reflexes
+Immediate local reaction
+Edge Computing
+Central Brain
+Complex thought & storage
+Cloud Infrastructure
+Eyes / Skin
+Detects physical stimuli
+Sensors
+Core insight: IoT produces the data, Edge processes time-critical events locally, and Cloud stores, analyze and provides large scale computing resources.
+The basic idea:
+IoT is about connecting things.
+Edge Computing is about processing information close to where it is produced.
+Cloud Computing is about providing large-scale computing and storage resources.
+## slide6.xml
+What Is the Internet of Things?
+The Internet of Things refers to a network of physical objects or “things” embedded with sensors, software, processing capabilities and communication technologies that enable them to collect and exchange data over a network.
+Simple DescriptionPhysical things + Sensors + Connectivity + Data + Action = IoT
+Definition
+Vehicles
+Farm equipment
+Medical devices
+Wearable devices
+Home appliances
+Security systems
+Environmental sensors
+Examples of IoT 'things' include:
+## slide7.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+What Makes Something “IoT”?
+## slide8.xml
+Traditional thermometer:
+Temperature → Display → Human reads it
+IoT temperature sensor:
+Temperature → Sensor → Processing → Network             → Edge/Cloud → Application → Action
+An IoT system can collect data automatically, transmit data, process data, trigger an action, and communicate with other systems.
+Compare a traditional thermometer with an IoT temperature sensor:
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+## slide9.xml
+Interconnectivity
+Devices can communicate with one another or with other systems through networks.
+Dynamic Nature
+IoT systems are dynamic because their state and environment can continuously change.
+Scale
+IoT systems can contain a very large number of devices, creating challenges in device management and data processing.
+Heterogeneity
+Different types of devices, technologies and systems can work together even when they have different hardware, operating systems, protocols and capabilities.
+Self-Adapting Behavior
+IoT systems can respond automatically to changing conditions, such as turning on a fan when temperature exceeds a threshold.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Key Characteristics of IoT
+## slide10.xml
+A normal wristwatch tells you the time.
+A smartwatch can monitor activity, communicate with your phone and receive notifications.
+Is the smartwatch an IoT device? If yes why?
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Checking for Understanding
+## slide11.xml
+An IoT system is rarely just one device. It is an ecosystem of devices, networks, processing systems, applications and users.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The IoT Ecosystem
+## slide12.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The Four Layers of an IoT Ecosystem
+1. Sensors & Actuators
+Sensors: Detect temperature, motion, light, cameras, GPS.Actuators: Perform physical actions like switching relays, motors, valves, locks.
+2. IoT Gateways
+Acts as a communication bridge between local sensory devices and remote networks (e.g., Raspberry Pi, industrial smart routers).
+3. Cloud / Server
+Provides centralized historical storage, heavy databases, artificial intelligence training, and global analytics.
+4. Applications
+User dashboards, mobile interfaces, automated alert networks, and enterprise enterprise decision support systems.
+## slide13.xml
+Sensors
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Sensor
+Detects
+Temperature sensor
+Temperature
+Humidity sensor
+Humidity
+Motion sensor
+Movement
+Light sensor
+Light intensity
+Camera
+Images/video
+GPS
+Location
+Pressure sensor
+Pressure
+A sensor detects something from the physical environment.
+Think of sensors as the eyes and ears of an IoT system.
+## slide14.xml
+An actuator is a machine component or system that moves or controls the mechanism of the system. Sensors in the device sense the environment, then control signals are generated for the actuators according to the actions needed to perform.
+Actuators
+Electric actuators: Use electrical current to drive motors for precise, clean movement.
+Hydraulic actuators: Use pressurized liquid to lift or move heavy loads.
+Pneumatic actuators: Use compressed air to operate fast-acting industrial valves and switches.
+Types Actuators
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+## slide15.xml
+Sensor = ?
+Actuator = ?
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Checking for Understanding
+## slide16.xml
+The gateway acts as a bridge between devices and other networks or computing systems.
+A gateway can be a physical device or software program that serves as a secure bridge between local smart devices and the cloud, translating different communication languages and routing data.
+Gateways
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+## slide17.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Cloud Computing
+What is Cloud Computing?
+## slide18.xml
+Cloud Computing is the delivery of computing resources such as processing power, storage, databases, networking, software and applications over a network, usually the Internet.
+Instead of buying and maintaining a powerful computer yourself, you can rent computing resources from a cloud provider.
+Think of the Cloud as a giant collection of computing resources that can provide massive storage, processing and scalable services.
+Resources can be scaled vertically or horizontally.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Cloud Computing
+## slide19.xml
+The cloud's major advantage is access to massive computing resources without physically owning all of them.
+Ability to scale up and down very quickly depending on required resources.
+High availability.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Why do we need the Cloud?
+## slide20.xml
+What is latency?
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+But there is a problem -  Latency
+## slide21.xml
+Imagine a self-driving car detects an obstacle. If the vehicle must send the information to a distant cloud server, wait for processing, and then receive the response, the delay may be unacceptable.
+Car → Internet → Cloud → Processing → Internet → Car → Brake
+Latency is the delay between sending information and receiving a response.
+For some applications, a delay of several seconds may be acceptable.
+For other applications, delays measured in milliseconds can be critical.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The Latency problem
+## slide22.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The Bandwidth Problem
+What is bandwidth?
+## slide23.xml
+Bandwidth is the maximum rate at which data can be transmitted over a network connection. This is usually measured in bits per second (bps).
+IoT devices can produce huge amounts of data.
+For example, if thousands of cameras continuously send raw video to the cloud, the network may become heavily loaded.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The Bandwidth problem
+Camera  →  Huge amount of video  →  Internet  →  Cloud
+High bandwidth consumption
+Increased costs
+Network congestion
+Unnecessary data transmission
+This leads to an important question: Do we really need to send everything to the cloud?
+## slide24.xml
+Edge Computing
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+## slide25.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Edge Computing
+Edge computing is a distributed computing model in which data processing occurs closer to the source of data generation, such as sensors, devices, or local gateways, rather than relying entirely on centralized cloud servers.
+Core Insight: The edge handles immediate processing, while the cloud handles things like long-term storage, analytics, dashboards, and large-scale processing.
+Traditional Cloud:
+CCTV Camera → Local Network → Internet → Cloud Data Center → Processing
+The camera's video travels through the network and Internet to a remote cloud server for processing.
+Edge Computing:
+CCTV Camera → Local Network → Edge Computer → Processing
+Here, the camera still communicates over a network, but the edge computer is nearby, often on the same local network.
+## slide26.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Edge Computing Cont’d
+The edge is not necessarily one specific device. It refers to computing resources located near the source of data.
+Raspberry Pi
+Industrial computer
+Smart gateway
+Local server
+Intelligent camera
+Vehicle computer
+## slide27.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Why did Edge Computing become necessary?
+## slide28.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Why did Edge Computing become necessary?
+Data is increasingly generated far away from centralized cloud servers, and some applications need faster or more local processing.
+Sensor 1 ─┐Sensor 2 ─┤Sensor 3 ─┤Sensor 4 ─┤Sensor 5 ─┤   ...    ┤Sensor N ─┘      │      ▼     EDGE      │      ├── Analyze locally      ├── Detect problems      └── Send useful information               │               ▼             CLOUD
+## slide29.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Benefits of Edge Computing
+Low Latency
+Processing closer to the device generally reduces the time required to make a decision. This is critical for autonomous vehicles, industrial control, robotics, security systems and real-time monitoring.
+Data → Edge → DecisionversusData → Internet → Cloud → Internet → Decision
+Bandwidth Savings
+The edge can filter, summarize, compress or analyze data before transmission.
+Camera produce 100 GB raw data  →  Edge  →  2 GB useful information  →  Cloud
+## slide30.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Benefits of Edge Computing Cont’d
+Privacy
+Some data is sensitive, such as medical information, security camera footage, personal conversations and location data. Local processing can reduce the need to transmit all raw data to a remote cloud environment.
+Important: Edge computing does not automatically make a system private or secure. Security and privacy still need to be designed into the system.
+## slide31.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+IoT + Edge + Cloud Trifecta
+IoTConnects the physical world.
+EdgeProcesses information close to the physical world.
+CloudProvides large-scale computing, storage and applications.
+## slide32.xml
+Closing Remarks
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University

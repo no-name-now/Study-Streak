@@ -1,0 +1,37 @@
+
+--- page 1 ---
+PAN-ATLANTIC UNIVERSITY 
+PAU-CSC 418 / SEN 418: Internet of Things & Edge Computing 
+Coursework Assignment: Domain-Specific IoT Architectures 
+ 
+Module: Domain-Specific IoT 
+Architectures & Real-World 
+Systems 
+Total Marks: 2 Marks 
+    
+Overview & Instructions 
+Select ONE domain scenario below. Your solutions must demonstrate clear end-to-end system thinking 
+moving from physical perception to edge processing, network routing 
+Scenario Options (Select One) 
+Option A: Smart City & Environmental Safety — River Flood Early Warning System 
+Describe how you will design an automated real-time river flood detection and warning infrastructure deployed 
+across flood-prone urban watercourses to protect human life, civil infrastructure, and urban property.  
+Option B: Smart Logistics— Real-Time Food Shipment Monitoring 
+Describe how you will design an end-to-end IoT tracking solution integrated into refrigerated shipping containers 
+to continuously monitor environmental conditions and dynamically re -route sensitive food produce before 
+spoilage occurs. 
+Option C: Precision Agriculture — Automated Greenhouse & Smart Irrigation 
+Describe how you will design an intelligent greenhouse micro-climate control and smart irrigation system that 
+monitors soil and atmospheric metrics to maximize crop yields while optimizing water and energy resource 
+consumption. 
+Important: 
+• Sensors: Identify specific sensors required for your selected scenario.  
+• Actuators / Feedback: Specify one actuator or automated dynamic control device triggered by system outputs 
+to modify environmental conditions or alert operators. 
+• Threshold Parameters: Define the operational threshold limits (e.g., critical moisture level, temperature 
+ceiling, water level offset) that trigger automated edge interventions. 
+• Structure a multi-layer IoT architectural pipeline detailing how data flows across all operational layers: 
+Perception Layer (Sensors) -> Edge/Gateway Node -> Network Protocol -> Cloud Backend / Dashboard. 
+• Describe the explicit connectivity technologies (e.g., LoRaWAN, Cellular, MQTT, CoAP) utilized to convey 
+sensor measurements from rural/field nodes to centralized cloud servers and web/mobile user applications.  
+• Evaluate how your proposed IoT architecture outperforms traditional, non -automated manual processes. 

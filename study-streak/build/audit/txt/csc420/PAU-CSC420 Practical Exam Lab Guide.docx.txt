@@ -1,0 +1,581 @@
+PAU-CSC420: Database Management II
+Practical Exam Lab Guide: Transactions, Indexing, Complex Types, Functions, Procedures and Triggers
+Practical companion to the Complete Study Guide (Lectures 1 to 3, Dr. Stephen A. Adubi). Every SQL example here was run on PostgreSQL 16 before it went in, so the outputs shown are real, not guessed.
+How to use this guide
+Your test is mostly practical, so this guide trains your hands, not just your memory. Every topic follows the same loop: set up, run it, predict before you look, break it on purpose, then write it from a blank page. Type each command yourself instead of pasting it; typing is the practice.
+Labels: FROM MY MATERIAL = supported by your slides or Study Guide. TESTED = I ran it on PostgreSQL 16.15 and the output matches what is shown. ADDITIONAL CONTEXT = general PostgreSQL knowledge that is not on the slides (verify against the PostgreSQL documentation before relying on it). UNCLEAR FROM MATERIAL = the slides do not settle it.
+Three honest caveats:
+I do not know your test format. The task types here (write it, predict the output, fix the broken code, read the plan, pick the right tool) are the ones the slides' practicals naturally lead to. Ask your lecturer which database the test uses.
+The schemas are rebuilt from your slides and Study Guide. Column types are my guesses, so the lecturer's database may differ in small ways. Practise the pattern, then adapt the names on the day.
+The IMDb tables here hold generated data (400,000 people, not the real 2.5 million titles). Row counts and times will not match the slides. What matters is the shape of the plan.
+The skills the test can ask for
+Topic
+You must be able to do this without notes
+1. Transactions
+Write BEGIN, COMMIT and ROLLBACK; predict what survives after an error; name the ACID property a scenario shows; order the five states
+2. Indexing
+Run EXPLAIN and EXPLAIN ANALYZE; read a plan; write CREATE INDEX for B-tree, hash, composite, covering (INCLUDE), partial (WHERE), functional and GIN; decide whether an index will be used
+3. Complex types
+Insert, read, update and remove array values; use ANY, @>, && and unnest; read JSONB with ->, ->>, ? and @>; expand with jsonb_array_elements; change with jsonb_set, - and #-; add GIN indexes
+4. Functions, procedures, triggers
+Write a PL/pgSQL function, a procedure, and a trigger with its trigger function from memory; call each one correctly; choose the right one
+Setup tip: make one fresh database for the labs (in pgAdmin: right-click Databases, Create, Database, name it csc420_lab, then open the Query Tool on it). Run each Setup script once.
+Topic 1 Lab: Transactions and ACID
+Setup A: the university mini-database
+Rebuilt from slide 4 (the full lecture database has more tables; these are enough for every demo).
+CREATE TABLE department (deptname text PRIMARY KEY, building text, budget numeric);CREATE TABLE student (id int PRIMARY KEY, name text NOT NULL,  deptname text REFERENCES department, tot_cred int DEFAULT 0 CHECK (tot_cred >= 0));CREATE TABLE course (coursecode text PRIMARY KEY, title text,  deptname text REFERENCES department, credits int);CREATE TABLE takes (id int REFERENCES student, coursecode text REFERENCES course,  grade text, PRIMARY KEY (id, coursecode));INSERT INTO department VALUES ('Comp. Sci.','Taylor',100000), ('Physics','Watson',70000);INSERT INTO course VALUES ('CS-347','Database Systems','Comp. Sci.',3), ('PH-101','Physics I','Physics',4);INSERT INTO student VALUES (1,'Ada','Comp. Sci.',10), (2,'Bola','Physics',8);INSERT INTO takes VALUES (1,'CS-347','A'), (2,'PH-101','B');
+Lab 1.1 Atomicity, the success path
+Ada drops CS-347: remove her enrolment and take back the credits, as one unit.
+BEGIN;DELETE FROM takes WHERE id = 1 AND coursecode = 'CS-347';UPDATE student SET tot_cred = tot_cred - (SELECT credits FROM course WHERE coursecode = 'CS-347') WHERE id = 1;COMMIT;SELECT tot_cred FROM student WHERE id = 1;        -- 7SELECT count(*) FROM takes WHERE id = 1;          -- 0
+TESTED. Both changes happened. That is atomicity working normally.
+Lab 1.2 Atomicity, the failure path (a typo in step two)
+Now Bola drops PH-101, but the second statement has a typo (courses instead of course).
+BEGIN;DELETE FROM takes WHERE id = 2 AND coursecode = 'PH-101';UPDATE student SET tot_cred = tot_cred - (SELECT credits FROM courses WHERE coursecode = 'PH-101') WHERE id = 2;COMMIT;SELECT count(*) FROM takes WHERE id = 2;          -- 1 (the DELETE was undone)
+TESTED. The first line reports DELETE 1, the second fails with relation "courses" does not exist, and the COMMIT line prints ROLLBACK, not COMMIT. The enrolment is still there.
+What to observe and say in the exam: after an error inside BEGIN ... COMMIT the transaction is dead. Postgres rolls everything back, even the statement that printed success. A later command in the same block would say current transaction is aborted, commands ignored until end of transaction block (ADDITIONAL CONTEXT).
+Lab 1.3 Consistency (the Biochemistry demo)
+BEGIN;INSERT INTO department VALUES ('Biochemistry','Pasteur',50000);   -- INSERT 0 1INSERT INTO student VALUES (3,'Chidi','Zoology',0);                -- ERROR: foreign key violationCOMMIT;                                                            -- prints ROLLBACKSELECT * FROM department WHERE deptname = 'Biochemistry';          -- 0 rows
+TESTED. The error is violates foreign key constraint "student_deptname_fkey" with the detail Key (deptname)=(Zoology) is not present in table "department". The Biochemistry row vanished even though its own INSERT printed INSERT 0 1. A constraint was violated (consistency) so the whole unit was undone (atomicity).
+Lab 1.4 Isolation (two sessions)
+Open two sessions: two psql windows, or two Query Tool tabs in pgAdmin (each tab is its own session). I did not run this one with two live sessions; the expected results are what slides 15 to 18 describe.
+Step
+Session 1
+Session 2
+Expected
+1
+BEGIN;
+2
+UPDATE course SET credits = 4 WHERE coursecode = 'CS-347';
+UPDATE 1
+3
+SELECT credits FROM course WHERE coursecode = 'CS-347';
+4 (own change visible)
+4
+SELECT credits FROM course WHERE coursecode = 'CS-347';
+3 (old value, change hidden)
+5
+UPDATE course SET credits = 3 WHERE coursecode = 'CS-347';
+Hangs (waits) for the lock
+6
+COMMIT;
+Session 2's update now finishes
+Exam sentence: Session 2 cannot see Session 1's uncommitted change (isolation), and its conflicting update waits until Session 1 commits or rolls back.
+Lab 1.5 ROLLBACK by hand
+BEGIN;UPDATE student SET tot_cred = 99 WHERE id = 1;SELECT tot_cred FROM student WHERE id = 1;   -- 99 (you see your own change)ROLLBACK;SELECT tot_cred FROM student WHERE id = 1;   -- 7 (back to the prior state)
+TESTED. ROLLBACK is the command that gives the aborted state its meaning: the database is restored to its prior state.
+Lab 1.6 Durability (know it, you cannot demo it safely)
+Durability means committed changes survive a crash because every change is written to the write-ahead log (WAL) before the data files. After a crash, Postgres replays the log on restart. Do not try to crash your server; just be able to say it.
+Quick command reference (Topic 1)
+Command
+Effect
+After it
+BEGIN;
+Opens a transaction (state: active)
+Changes are provisional
+COMMIT;
+Makes all changes permanent
+Point of no return
+ROLLBACK;
+Abandons all changes
+State: aborted, prior state restored
+(no BEGIN)
+psql and pgAdmin auto-commit each statement on its own (ADDITIONAL CONTEXT)
+Each statement is its own tiny transaction
+Topic 1 exercises: predict first
+Use Setup A in its starting state (Ada 10 credits, Bola 8) for each one.
+P1.
+BEGIN;INSERT INTO department VALUES ('Law','Main',1000);INSERT INTO department VALUES ('Law','Annex',2000);COMMIT;SELECT count(*) FROM department WHERE deptname = 'Law';
+P2. No BEGIN this time:
+INSERT INTO department VALUES ('Law','Main',1000);INSERT INTO student VALUES (3,'Chidi','Zoology',0);SELECT count(*) FROM department WHERE deptname = 'Law';
+P3.
+BEGIN;UPDATE student SET tot_cred = tot_cred + 3 WHERE id = 2;UPDATE student SET tot_cred = tot_cred - 50 WHERE id = 2;COMMIT;SELECT tot_cred FROM student WHERE id = 2;
+P4. Session 1 runs BEGIN; UPDATE ... and forgets to COMMIT. Session 2 runs the same SELECT repeatedly and never sees the new value. Name the property and give the fix.
+P5. Give the state path for each: (a) runs fine and commits; (b) the last statement runs, then the disk fills up before the commit completes; (c) a statement errors halfway.
+Fix-it F1. A student wrote this and found a half-finished transfer. What is wrong?
+UPDATE account SET balance = balance - 100 WHERE account_id = 123;UPDATE account SET balance = balance + 100 WHERE account_id = 456;
+Answers (cover until you have tried)
+P1: 0. The second INSERT breaks the primary key, so the whole block rolls back, including the first INSERT. COMMIT prints ROLLBACK.
+P2: 1. Without BEGIN each statement auto-commits, so the Law row is saved before the second statement fails. (ADDITIONAL CONTEXT: this is why BEGIN matters.)
+P3: 8. The second UPDATE sets tot_cred to -42, which breaks CHECK (tot_cred >= 0). The block rolls back, so Bola stays at 8 (the +3 is undone too).
+P4: Isolation (uncommitted changes stay hidden). Fix: Session 1 must COMMIT (or ROLLBACK to discard).
+P5: (a) active, partially committed, committed. (b) active, partially committed, failed, aborted. (c) active, failed, aborted.
+F1: There is no BEGIN ... COMMIT around the two statements, so each one commits separately; a crash between them leaves money debited but not credited (atomicity broken). Wrap both in BEGIN; ... COMMIT;
+Topic 2 Lab: Indexing and EXPLAIN
+Setup B: a mini IMDb with generated data
+Schema from slide 35; the rows are generated so you can practise anywhere. Takes a few seconds to load.
+CREATE TABLE movies  (id serial PRIMARY KEY, title text, year int);CREATE TABLE people  (id serial PRIMARY KEY, name text, birth int);CREATE TABLE ratings (id serial PRIMARY KEY, movie_id int, rating numeric(3,1), votes int);CREATE TABLE stars   (movie_id int, person_id int);INSERT INTO movies(title, year) SELECT 'Movie ' || g, 1950 + (g % 75) FROM generate_series(1, 300000) g;INSERT INTO people(name, birth) SELECT 'Person ' || g, 1930 + (g % 70) FROM generate_series(1, 400000) g;UPDATE people SET name = 'Leonardo DiCaprio' WHERE id = 123456;INSERT INTO ratings(movie_id, rating, votes)  SELECT g, round((random()*9 + 1)::numeric, 1), (random()*200000)::int FROM generate_series(1, 300000) g;INSERT INTO stars SELECT (random()*299999 + 1)::int, (random()*399999 + 1)::int FROM generate_series(1, 500000);ANALYZE;
+How to read any plan (do this every time)
+Find the scan node: Seq Scan, Index Scan, Bitmap Heap Scan (with a Bitmap Index Scan under it), or Index Only Scan.
+Read the condition line: Filter (checked row by row after reading) or Index Cond (used to search the index).
+Read Rows Removed by Filter. A huge number with one row returned screams "add an index".
+For Index Only Scan, check Heap Fetches: 0.
+Compare Execution Time before and after (only EXPLAIN ANALYZE gives it).
+Plain EXPLAIN shows the plan without running the query. EXPLAIN ANALYZE runs it (so on INSERT, UPDATE or DELETE it really changes data; I confirmed it does, so wrap those in BEGIN ... ROLLBACK).
+Lab 2.1 Baseline: no index
+EXPLAIN ANALYZE SELECT * FROM people WHERE name = 'Leonardo DiCaprio';
+TESTED (trimmed): Parallel Seq Scan on people, Filter: (name = 'Leonardo DiCaprio'::text), Rows Removed by Filter: 200000 per worker, Execution Time: 42.8 ms. Your slide showed 430,491 rows removed and 85.97 ms on the real data. Same shape, bigger table.
+Lab 2.2 Single-column B-tree
+CREATE INDEX idx_name ON people (name);EXPLAIN ANALYZE SELECT * FROM people WHERE name = 'Leonardo DiCaprio';
+TESTED: Index Scan using idx_name, Index Cond: (name = ...), Execution Time: 0.054 ms. The full scan became a lookup, roughly 800 times faster here.
+Lab 2.3 Add a hash index on the same column
+CREATE INDEX idx_name_hash ON people USING hash (name);EXPLAIN ANALYZE SELECT * FROM people WHERE name = 'Leonardo DiCaprio';
+TESTED: the plan now says Index Scan using idx_name_hash. With two usable indexes, the planner chose the hash for an equality query, as slide 40 says.
+Now prove hash is equality-only. Drop it and try a range:
+DROP INDEX idx_name_hash;EXPLAIN SELECT * FROM people WHERE name > 'Person 99990' AND name < 'Person 99992';
+TESTED: the B-tree is used (Index Scan using idx_name). A hash index on a range query is useless: with only a hash index on birth, the query WHERE birth > 2000 stayed a Seq Scan.
+Lab 2.4 Covering index (INCLUDE) and Index Only Scan
+Baseline, then a plain index, then the covering index:
+EXPLAIN ANALYZE SELECT movie_id, votes FROM ratings WHERE rating > 9.5;   -- Seq ScanCREATE INDEX idx_rating ON ratings (rating);EXPLAIN ANALYZE SELECT movie_id, votes FROM ratings WHERE rating > 9.5;   -- Bitmap Heap ScanDROP INDEX idx_rating;CREATE INDEX idx_rating_incl ON ratings (rating) INCLUDE (movie_id, votes);VACUUM ratings;EXPLAIN ANALYZE SELECT movie_id, votes FROM ratings WHERE rating > 9.5;   -- Index Only Scan
+TESTED: Seq Scan 39 ms (284,902 rows removed), plain index Bitmap Heap Scan 7.5 ms, covering index Index Only Scan with Heap Fetches: 0 at 3.3 ms. The slide's before and after (13.557 ms to 2.714 ms) shows the same story.
+Two practical notes: (1) The planner may pick a bitmap scan for the plain index even though the slides' version shows a Seq Scan; the plan depends on how selective the condition is. (2) The VACUUM matters: an Index Only Scan relies on the table's visibility map, so after bulk loads run VACUUM or you may see Heap Fetches above 0 (ADDITIONAL CONTEXT).
+One sentence for the exam: a covering index stores the extra columns with INCLUDE, so the query is answered from the index alone and the table is never read.
+Lab 2.5 Partial index
+CREATE INDEX idx_ratings_blockbuster ON ratings (votes) WHERE votes > 199000;EXPLAIN SELECT * FROM ratings WHERE votes > 199500;   -- uses the partial indexEXPLAIN SELECT * FROM ratings WHERE votes > 150000;   -- Seq Scan
+TESTED. The first query's condition implies the index's condition, so the index applies. The second asks for rows outside the indexed slice, so the index cannot answer it.
+Lab 2.6 Functional (expression) index
+EXPLAIN SELECT * FROM people WHERE lower(name) = 'person 5';   -- Seq Scan (index on name is no help)CREATE INDEX idx_lower_name ON people (lower(name));EXPLAIN SELECT * FROM people WHERE lower(name) = 'person 5';   -- now uses idx_lower_name
+TESTED. The query must use the same expression as the index. An index on name does not help a query on lower(name).
+Lab 2.7 Composite index and the leading column
+CREATE INDEX idx_stars_comp ON stars (movie_id, person_id);EXPLAIN SELECT * FROM stars WHERE movie_id = 100;                    -- uses the indexEXPLAIN SELECT * FROM stars WHERE movie_id = 100 AND person_id = 5;  -- Index Only ScanEXPLAIN SELECT * FROM stars WHERE person_id = 5;                     -- Seq Scan
+TESTED. The index helps when the query filters on the leading column (movie_id). Filtering only on the second column (person_id) did not use it. (The slides do not state this rule; it is ADDITIONAL CONTEXT, but you just saw it happen.)
+Lab 2.8 Bitmap scans
+CREATE INDEX idx_movies_year ON movies (year);EXPLAIN ANALYZE SELECT * FROM movies WHERE year BETWEEN 1990 AND 1992;EXPLAIN SELECT * FROM movies WHERE year = 1990 OR year = 2000;EXPLAIN SELECT * FROM movies WHERE year > 1951;
+TESTED:
+The BETWEEN query gives Bitmap Heap Scan on movies, Recheck Cond: ..., Heap Blocks: exact=1911, with a Bitmap Index Scan on idx_movies_year underneath: the two-phase plan for a medium-selectivity query.
+The OR query shows a BitmapOr joining two Bitmap Index Scans (bitmaps combined before touching the table).
+year > 1951 matches almost every row, so Postgres ignores the index and uses a Seq Scan. When most of the table is needed, reading it straight through is cheaper.
+Selectivity ladder: very few rows = Index Scan; a medium slice = Bitmap Index plus Bitmap Heap Scan; the index holds everything = Index Only Scan; most of the table or no usable index = Seq Scan.
+Lab 2.9 LIKE prefix and the question mark on slide 38
+EXPLAIN SELECT * FROM people WHERE name LIKE 'Person 1234%';   -- Seq Scan with the default B-treeCREATE INDEX idx_name_tpo ON people (name text_pattern_ops);EXPLAIN SELECT * FROM people WHERE name LIKE 'Person 1234%';   -- Index ScanEXPLAIN SELECT * FROM people WHERE name LIKE '%1234';           -- Seq Scan (unanchored)
+TESTED on my server (default locale, not the C locale). This resolves slide 38's "?": a B-tree can serve a prefix pattern only when the index uses text_pattern_ops (or the database uses the C locale), and never a pattern starting with %. UNCLEAR FROM MATERIAL, so confirm with your lecturer what answer they expect.
+Lab 2.10 Over-indexing: see the cost
+SELECT indexrelname, idx_scan, pg_size_pretty(pg_relation_size(indexrelid)) AS sizeFROM pg_stat_user_indexes WHERE relname = 'people';
+TESTED. Each extra index on people took about 12 MB here and had to be updated on every INSERT, UPDATE and DELETE. An index with idx_scan = 0 has never been used; that is a candidate to DROP INDEX. This is slide 55's rule of thumb in one query.
+Topic 2 exercises: predict, write, read
+E2.1 Will the index be used? Answer yes or no for each, then check the answers below.
+#
+Index that exists
+Query
+1
+B-tree on people(name)
+WHERE name = 'Person 5'
+2
+B-tree on people(name)
+WHERE lower(name) = 'person 5'
+3
+Hash on people(birth)
+WHERE birth > 2000
+4
+Partial on ratings(votes) WHERE votes > 199000
+WHERE votes > 150000
+5
+Composite on stars(movie_id, person_id)
+WHERE person_id = 5
+6
+B-tree on movies(year)
+WHERE year > 1951
+7
+Default B-tree on people(name)
+WHERE name LIKE 'Person 1234%'
+E2.2 Write the statement. One CREATE INDEX for each need:
+(a) Fast equality lookups on movies.title only, never ranges.
+(b) SELECT movie_id, votes FROM ratings WHERE rating >= 9 should never touch the table.
+(c) Almost every query is about ratings with votes above 100000.
+(d) Case-insensitive title search: WHERE lower(title) = ...
+(e) Queries always filter on movie_id and person_id together in stars.
+E2.3 Read the plan.
+Bitmap Heap Scan on movies  Recheck Cond: ((year >= 1990) AND (year <= 1992))  Heap Blocks: exact=1911  ->  Bitmap Index Scan on idx_movies_yearExecution Time: 4.390 ms
+(i) Name the two phases. (ii) What does exact=1911 tell you? (iii) Is this a new index type?
+Index Only Scan using idx_rating_incl on ratings  Index Cond: (rating > 9.5)  Heap Fetches: 0
+(iv) Why is the table never read?
+Seq Scan on ratings  Filter: (rating > 9.5)  Rows Removed by Filter: 284902
+(v) What does the big removed-rows number suggest, and what would you try?
+Answers (cover until you have tried)
+E2.1: 1 yes. 2 no (the query uses lower(name); needs an index on lower(name)). 3 no (hash handles only =). 4 no (the query reaches outside the indexed slice). 5 no (not the leading column). 6 no (nearly every row matches, so a Seq Scan is cheaper). 7 no on a default-locale database (needs text_pattern_ops). All TESTED.
+E2.2:
+CREATE INDEX idx_movies_title_hash ON movies USING hash (title);                 -- (a)CREATE INDEX idx_rating_cover ON ratings (rating) INCLUDE (movie_id, votes);     -- (b)CREATE INDEX idx_ratings_popular ON ratings (votes) WHERE votes > 100000;        -- (c)CREATE INDEX idx_movies_lower_title ON movies (lower(title));                    -- (d)CREATE INDEX idx_stars_mp ON stars (movie_id, person_id);                        -- (e)
+E2.3: (i) Bitmap Index Scan (builds an in-memory bitmap of matching rows), then Bitmap Heap Scan (visits those table pages in physical order). (ii) 1,911 pages were visited and the exact rows on them were known, so no whole-page recheck was needed (lossy would mean every row on the page is rechecked). (iii) No. A bitmap scan is an access method the planner chooses on an existing index. (iv) The index stores rating plus the INCLUDEd movie_id and votes, so it answers the query alone; Heap Fetches: 0 confirms it. (v) The condition matches few rows yet every row was read and discarded; create an index on rating (a covering one if the query needs movie_id and votes), then re-run EXPLAIN ANALYZE and compare the time.
+Topic 3 Lab: Arrays and JSON/JSONB
+Setup C: Splendid Stores (shared with Topic 4)
+Rebuilt from slides 6 to 8 of Lecture 2. Your lecturer's version has more columns and rows; this is enough for every practical.
+CREATE TABLE manufacturers (manufacturer_id serial PRIMARY KEY, name text NOT NULL);CREATE TABLE tags (tag_name text PRIMARY KEY);CREATE TABLE products (product_id serial PRIMARY KEY, manufacturer_id int REFERENCES manufacturers,  name text NOT NULL, description text, product_type text NOT NULL, tags text[] NOT NULL DEFAULT '{}');CREATE TABLE variations (product_id int REFERENCES products, variation_no int, product_type text,  price numeric(12,2) NOT NULL, qty_on_hand int NOT NULL CHECK (qty_on_hand >= 0),  type_details jsonb NOT NULL DEFAULT '{}', attribute_ids int[] NOT NULL DEFAULT '{}',  PRIMARY KEY (product_id, variation_no));CREATE TABLE users (user_id serial PRIMARY KEY, first_name text, last_name text, email text,  address_line text, city text, country text,  mobiles text[] NOT NULL DEFAULT '{}', favourite_tags text[] NOT NULL DEFAULT '{}');CREATE TABLE orders (order_id text PRIMARY KEY, user_id int REFERENCES users,  order_date timestamp NOT NULL DEFAULT now(), total_amount numeric(14,2) NOT NULL DEFAULT 0,  items jsonb NOT NULL);INSERT INTO manufacturers(name) VALUES ('Tecno'), ('Indomie');INSERT INTO tags VALUES ('smartphone'),('sale'),('organic'),('ebook'),('fashion'),('bestseller');INSERT INTO products(manufacturer_id, name, product_type, tags) VALUES  (1,'Tecno Spark','physical','{smartphone,bestseller}'),  (2,'Indomie Carton','physical','{bestseller,sale}'),  (1,'Python eBook','ebook','{ebook}');INSERT INTO variations VALUES  (1,1,'physical',150000,10,'{"weight_kg":0.2,"dimensions":{"l":15,"w":7,"h":1},"shipping_class":"fragile"}','{}'),  (1,2,'physical',235000,5,'{"weight_kg":0.25,"dimensions":{"l":16,"w":8,"h":1},"shipping_class":"fragile"}','{}'),  (2,1,'physical',9500,50,'{"weight_kg":6,"shipping_class":"standard"}','{}'),  (3,1,'ebook',3000,999,'{"file_size_mb":4.5,"licence_key_template":"PY-XXXX"}','{}');INSERT INTO users(first_name, last_name, email, mobiles, favourite_tags) VALUES  ('Ada','Obi','ada@x.com','{+2348031234567,+2349051234567}', ARRAY['ebook','fashion']),  ('Bola','Ade','bola@x.com','{}','{}');INSERT INTO orders(order_id, user_id, items) VALUES ('20260402120000_1', 1,  '[{"product_id":1,"variation_no":2,"quantity":1,"unit_price":235000.00},    {"product_id":2,"variation_no":1,"quantity":2,"unit_price":9500.00}]');
+Lab 3.1 Array rules you can prove in one query
+SELECT '{}'::text[] IS NULL AS empty_is_null, ('{}'::text[])[1] AS first_of_empty, cardinality('{}'::text[]) AS card;SELECT (ARRAY[10,20,30])[1] AS one, (ARRAY[10,20,30])[0] AS zero;
+TESTED: an empty array is not NULL (false), its first element is NULL, its cardinality is 0. Subscript 1 returns 10; subscript 0 returns NULL (no error, which is why people miss the bug).
+Lab 3.2 Read, search and expand arrays
+Query
+Result (TESTED)
+SELECT first_name, mobiles[1], cardinality(mobiles) FROM users;
+Ada: +2348031234567, 2. Bola: NULL, 0
+SELECT name FROM products WHERE 'bestseller' = ANY (tags);
+Tecno Spark, Indomie Carton
+SELECT name FROM products WHERE tags @> ARRAY['smartphone','bestseller'];
+Tecno Spark (has all of them)
+SELECT first_name FROM users WHERE favourite_tags && ARRAY['ebook','smartphone'];
+Ada (shares at least one)
+SELECT tag, count(*) FROM products, unnest(tags) AS tag GROUP BY tag ORDER BY 2 DESC, 1;
+bestseller 2, ebook 1, sale 1, smartphone 1
+Drill: ARRAY['a','b','c'] @> ARRAY['a','b'] is true; ARRAY['a','b'] && ARRAY['b','z'] is true; ARRAY['a'] <@ ARRAY['a','b'] is true (<@ is "is contained by", the flip of @>).
+Lab 3.3 Update, remove, and delete using arrays
+UPDATE users SET mobiles = array_append(mobiles, '+2348099999999') WHERE user_id = 2;UPDATE users SET mobiles[1] = '+2347000000000' WHERE user_id = 1;UPDATE users SET favourite_tags = array_remove(favourite_tags, 'fashion') WHERE user_id = 1;DELETE FROM tags tWHERE NOT EXISTS (SELECT 1 FROM products p WHERE t.tag_name = ANY (p.tags))  AND NOT EXISTS (SELECT 1 FROM users u WHERE t.tag_name = ANY (u.favourite_tags))RETURNING tag_name;
+TESTED. Bola's empty array became {+2348099999999}; Ada's first mobile was replaced; 'fashion' was removed. The DELETE returned organic and fashion: arrays cannot hold foreign keys, so you must look inside them with ANY. (RETURNING prints the deleted rows; ADDITIONAL CONTEXT.)
+Lab 3.4 JSONB: -> versus ->>
+SELECT type_details -> 'shipping_class'  AS arrow,       type_details ->> 'shipping_class' AS arrow2FROM variations WHERE product_id = 1;
+TESTED: arrow shows "fragile" with quotes (it is jsonb); arrow2 shows fragile (it is text).
+Statement
+Result (TESTED)
+WHERE type_details -> 'shipping_class' = 'fragile'
+ERROR: invalid input syntax for type json (Postgres tries to read fragile as JSON)
+WHERE type_details ->> 'shipping_class' = 'fragile'
+Works (returns 2 rows)
+WHERE (type_details ->> 'weight_kg')::numeric > 5
+Works: variation (2,1) only
+WHERE type_details ? 'licence_key_template'
+Product 3 (key exists at top level)
+WHERE type_details @> '{"shipping_class":"fragile"}'
+Variations (1,1) and (1,2)
+type_details -> 'dimensions' ->> 'l' (product 1, variation 1)
+15 (chain -> then ->> last)
+Rule: use -> to keep digging, ->> for the final value. ->> gives text, so cast before comparing numbers (without a cast, '10' sorts before '5' as text; ADDITIONAL CONTEXT).
+Lab 3.5 JSON arrays: positions and expansion
+SELECT items -> 0 ->> 'product_id' AS first_item,       items -> 1 ->> 'product_id' AS second_item,       items -> 2                  AS third_item FROM orders;SELECT o.order_id, item ->> 'product_id' AS pid, (item ->> 'quantity')::int AS qtyFROM orders o, jsonb_array_elements(o.items) AS item;SELECT p.name, sum((item ->> 'quantity')::int) AS units_soldFROM orders o, jsonb_array_elements(o.items) AS itemJOIN products p ON p.product_id = (item ->> 'product_id')::intGROUP BY p.name ORDER BY units_sold DESC LIMIT 5;
+TESTED: first_item 1, second_item 2, third_item NULL (out of range gives NULL, not an error). The expansion gives one row per item. The join gives Indomie Carton 2, Tecno Spark 1. JSON arrays start at 0 (items -> 0 is the first item) while SQL arrays start at 1. Also: items ->> 0 returns the whole first object as text, not a field.
+Lab 3.6 Modifying JSONB
+SELECT jsonb_set(type_details, '{shipping_class}', '"express"') FROM variations WHERE product_id = 1 AND variation_no = 1;SELECT jsonb_set(type_details, '{insured}', 'true') FROM variations WHERE product_id = 2;SELECT jsonb_set(items, '{1,quantity}', '3') FROM orders;SELECT type_details - 'shipping_class' FROM variations WHERE product_id = 2;SELECT items #- '{0}' FROM orders;
+TESTED: the first changes shipping_class to express; the second adds a missing key (insured: true); the third changes the second item's quantity (path {1,quantity}); - removes a top-level key; #- '{0}' drops the first array item. All five are SELECTs that return a modified copy. To save the change, put the expression in an UPDATE ... SET column = ...
+Trap
+What happens (TESTED)
+jsonb_set(type_details, '{shipping_class}', 'express')
+ERROR: invalid input syntax for type json. The new value must be valid JSON: use '"express"'
+items @> '[{"product_id": 2}]'
+Matches the order (array contains a matching object)
+items @> '{"product_id": 2}'
+0 rows: an array does not contain a bare object
+Lab 3.7 JSON versus JSONB in one query
+SELECT '{"a":1,"a":2,"b": 3}'::json AS j, '{"a":1,"a":2,"b": 3}'::jsonb AS jb;
+TESTED: json keeps the text exactly as written (duplicate key and odd spacing included); jsonb returns {"a": 2, "b": 3}: parsed, the duplicate key keeps the last value, whitespace normalised.
+Lab 3.8 GIN indexes: which queries use them?
+CREATE INDEX idx_products_tags ON products USING GIN (tags);CREATE INDEX idx_variations_details ON variations USING GIN (type_details);SET enable_seqscan = off;   -- only so this tiny table does not hide the indexEXPLAIN SELECT * FROM products   WHERE tags @> ARRAY['sale'];EXPLAIN SELECT * FROM products   WHERE 'sale' = ANY (tags);EXPLAIN SELECT * FROM variations WHERE type_details @> '{"shipping_class":"fragile"}';EXPLAIN SELECT * FROM variations WHERE type_details ? 'weight_kg';EXPLAIN SELECT * FROM variations WHERE (type_details ->> 'weight_kg')::numeric > 5;RESET enable_seqscan;
+TESTED: @> on the array, @> on the JSONB and ? on the JSONB all used the GIN index (Bitmap Index Scan). 'sale' = ANY (tags) and the cast on an extracted value did not: they stayed Seq Scans. Tiny tables normally pick a Seq Scan regardless, which is why I forced the demo with enable_seqscan = off (ADDITIONAL CONTEXT).
+Topic 3 exercises
+W (write the SQL). Splendid Stores in its starting state.
+All products tagged sale (use ANY).
+Products tagged both bestseller and sale.
+Users whose favourite_tags overlap ARRAY['ebook','sale'].
+How many products carry each tag.
+Add +2348000000000 to Bola's mobiles.
+Remove the tag sale from every product that has it.
+Each variation's shipping_class as plain text, only where the key exists.
+Variations heavier than 5 kg.
+Every order line: order_id, product_id, quantity, and line_total (unit_price times quantity).
+Set the quantity of the second item of order '20260402120000_1' to 3.
+Remove the shipping_class key from variation (2,1).
+Delete every order that contains product 2.
+F (fix the broken code). Each line has one bug; say what it does and fix it.
+F1: WHERE type_details -> 'shipping_class' = 'fragile'
+F2: SET type_details = jsonb_set(type_details, '{shipping_class}', 'express')
+F3: SELECT mobiles[0] FROM users; (meant: the first number)
+F4: WHERE items @> '{"product_id": 2}' (meant: orders containing product 2)
+F5: WHERE type_details ->> 'weight_kg' > 5
+F6: A big products table has a GIN index on tags, but WHERE 'sale' = ANY (tags) is slow.
+Answers (cover until you have tried)
+-- W1SELECT * FROM products WHERE 'sale' = ANY (tags);-- W2SELECT * FROM products WHERE tags @> ARRAY['bestseller','sale'];-- W3SELECT * FROM users WHERE favourite_tags && ARRAY['ebook','sale'];-- W4SELECT tag, count(*) FROM products, unnest(tags) AS tag GROUP BY tag;-- W5UPDATE users SET mobiles = array_append(mobiles, '+2348000000000') WHERE first_name = 'Bola';-- W6UPDATE products SET tags = array_remove(tags, 'sale') WHERE tags @> ARRAY['sale'];-- W7SELECT product_id, variation_no, type_details ->> 'shipping_class' AS shipping_classFROM variations WHERE type_details ? 'shipping_class';-- W8SELECT * FROM variations WHERE (type_details ->> 'weight_kg')::numeric > 5;-- W9SELECT o.order_id, item ->> 'product_id' AS product_id, (item ->> 'quantity')::int AS quantity,       (item ->> 'unit_price')::numeric * (item ->> 'quantity')::int AS line_totalFROM orders o, jsonb_array_elements(o.items) AS item;-- W10UPDATE orders SET items = jsonb_set(items, '{1,quantity}', '3') WHERE order_id = '20260402120000_1';-- W11UPDATE variations SET type_details = type_details - 'shipping_class' WHERE product_id = 2 AND variation_no = 1;-- W12DELETE FROM orders WHERE items @> '[{"product_id": 2}]';
+W1 to W4, W7, W8 and the W9 pattern were run (TESTED); W5, W6 and W10 to W12 apply the tested patterns inside UPDATE or DELETE. Note W10 uses position 1 because JSON arrays start at 0 (the second item). If you also run the Topic 4 trigger, an UPDATE on orders recomputes total_amount for you.
+F1: -> returns jsonb, so the comparison errors. Use ->> (text), or compare with '"fragile"'::jsonb.
+F2: the new value must be valid JSON. Use '"express"' (double quotes inside the single quotes).
+F3: SQL arrays start at 1, so mobiles[0] is always NULL. Use mobiles[1].
+F4: a JSON array contains an object, so wrap the fragment in brackets: @> '[{"product_id": 2}]'. The bare object returned 0 rows.
+F5: ->> returns text, so you cannot compare it to the number 5. Cast first: (type_details ->> 'weight_kg')::numeric > 5.
+F6: GIN supports the operators @>, && and ? (not = ANY). Rewrite as WHERE tags @> ARRAY['sale']. TESTED in Lab 3.8.
+Topic 4 Lab: Functions, Procedures and Triggers
+Uses Setup C from Topic 3. If you ran the Topic 3 DELETE or UPDATE exercises, re-run Setup C on a fresh database so the sample rows are back.
+Scope note: like your Study Guide, I have not solved the Lecture 3 assignment (slide 38: the unknown-tags trigger, the nonexistent-variation trigger, sp_cancel_order and the price-change audit trigger). That looks like graded work. Labs 4.2 to 4.5 teach the patterns you need for it using different examples.
+Three skeletons to memorise
+-- FUNCTION: computes and returns a value; use it inside SELECTCREATE OR REPLACE FUNCTION fn_name(p_arg INT) RETURNS NUMERICLANGUAGE plpgsql AS $$DECLARE v_x NUMERIC;BEGIN  SELECT ... INTO v_x FROM ... WHERE ... = p_arg;  RETURN v_x;END;$$;-- PROCEDURE: does a multi-step job; no return value; run it with CALLCREATE OR REPLACE PROCEDURE sp_name(p_arg INT)LANGUAGE plpgsql AS $$BEGIN  UPDATE ... ;  INSERT ... ;END;$$;-- TRIGGER: two parts. 1) the trigger function  2) the triggerCREATE OR REPLACE FUNCTION trg_fn_name() RETURNS TRIGGERLANGUAGE plpgsql AS $$BEGIN  NEW.col := ... ;      -- BEFORE only  RETURN NEW;           -- BEFORE: return NEW (or NULL to skip the row)END;$$;CREATE TRIGGER trg_name BEFORE INSERT OR UPDATE ON some_tableFOR EACH ROW EXECUTE FUNCTION trg_fn_name();
+Checklist when you write one: language plpgsql; the $$ quotes opened and closed; BEGIN ... END; with a semicolon after END; a RETURN in every function path; RETURN NEW in a BEFORE row trigger; the trigger function RETURNS TRIGGER. Naming from the lecture: fn_ for functions, sp_ for procedures, trg_fn_ for trigger functions, trg_ for triggers.
+Lab 4.1 Functions (Practicals 1 to 6)
+CREATE OR REPLACE FUNCTION fn_order_total(p_items JSONB) RETURNS NUMERICLANGUAGE plpgsql AS $$DECLARE total_amount NUMERIC;BEGIN  SELECT COALESCE(sum((i ->> 'unit_price')::numeric * (i ->> 'quantity')::int), 0)    INTO total_amount FROM jsonb_array_elements(p_items) AS i;  RETURN total_amount;END;$$;CREATE OR REPLACE FUNCTION fn_make_order_id(p_user_id INT) RETURNS TEXTLANGUAGE sql AS $$  SELECT to_char(now(), 'YYYYMMDDHH24MISS') || '_' || p_user_id;$$;CREATE OR REPLACE FUNCTION customer_orders(p_user_id INT)RETURNS TABLE (o_id TEXT, o_date DATE, t_amount NUMERIC)LANGUAGE plpgsql AS $$BEGIN  RETURN QUERY  SELECT o.order_id, o.order_date::date, o.total_amount  FROM orders o WHERE o.user_id = p_user_id ORDER BY o.order_date;END;$$;CREATE OR REPLACE FUNCTION stock_status(p_product_id INT, p_variation_no INT) RETURNS TEXTLANGUAGE plpgsql AS $$DECLARE v_qty INT;BEGIN  SELECT qty_on_hand INTO v_qty FROM variations   WHERE product_id = p_product_id AND variation_no = p_variation_no;  IF NOT FOUND THEN    RAISE EXCEPTION 'Variation %-% does not exist', p_product_id, p_variation_no;  ELSIF v_qty = 0 THEN RETURN 'Out of stock';  ELSIF v_qty < 10 THEN RETURN 'Low stock';  ELSE RETURN 'In stock';  END IF;END;$$;
+TESTED calls and results:
+Call
+Result
+SELECT fn_order_total('[{"product_id":1,"variation_no":2,"quantity":2,"unit_price":235000.00}]');
+470000.00
+SELECT fn_order_total('[]');
+0 (my COALESCE; without it an empty array gives NULL)
+SELECT fn_make_order_id(7);
+an ID such as 20261027075253_7 (date, time, underscore, user)
+SELECT stock_status(1, 2);
+Low stock (qty 5, below 10)
+SELECT stock_status(1, 1);
+In stock (qty 10)
+SELECT stock_status(9, 7);
+ERROR: Variation 9-7 does not exist
+SELECT * FROM customer_orders(1);
+a function with RETURNS TABLE is used in FROM, like a table
+Slide 17 mentions fn_stock_status but the code creates stock_status (UNCLEAR FROM MATERIAL); use whichever name the question gives. The function-is-an-expression idea means you can put it in WHERE or SELECT, for example SELECT p.name, stock_status(v.product_id, v.variation_no) FROM variations v JOIN products p USING (product_id);
+Lab 4.2 Procedure: sp_place_order
+CREATE OR REPLACE PROCEDURE sp_place_order(p_user_id INT, p_product_id INT, p_variation_no INT, p_quantity INT)LANGUAGE plpgsql AS $$DECLARE v_price NUMERIC; v_items JSONB;BEGIN  UPDATE variations SET qty_on_hand = qty_on_hand - p_quantity   WHERE product_id = p_product_id AND variation_no = p_variation_no  RETURNING price INTO STRICT v_price;  v_items := jsonb_build_array(jsonb_build_object('product_id', p_product_id,             'variation_no', p_variation_no, 'quantity', p_quantity, 'unit_price', v_price));  INSERT INTO orders (order_id, user_id, total_amount, items)  VALUES (fn_make_order_id(p_user_id), p_user_id, fn_order_total(v_items), v_items);END;$$;
+Run the three outcomes and compare with TESTED results:
+Call
+What happens
+CALL sp_place_order(1, 2, 1, 2);
+CALL succeeds. Indomie qty goes 50 to 48. A new order appears with total 19000.00
+CALL sp_place_order(2, 1, 2, 10);
+ERROR: violates check constraint variations_qty_on_hand_check (only 5 in stock). Nothing changed: stock still 5, no order inserted
+CALL sp_place_order(2, 9, 9, 1);
+ERROR: query returned no rows (INTO STRICT found no variation)
+Say this in the exam: if any step of a CALL fails, every change it made is undone (atomicity from Lecture 1). The check failing on step 1 means step 3 never runs.
+Two practical points: a failed CALL leaves no half-done order; and a procedure is run with CALL, never SELECT.
+Lab 4.3 BEFORE trigger: fill in a value
+CREATE FUNCTION trg_fn_order_total() RETURNS TRIGGER LANGUAGE plpgsql AS $$BEGIN  NEW.total_amount := fn_order_total(NEW.items);  RETURN NEW;END;$$;CREATE TRIGGER trg_order_total BEFORE INSERT OR UPDATE ON ordersFOR EACH ROW EXECUTE FUNCTION trg_fn_order_total();INSERT INTO orders(order_id, user_id, total_amount, items)VALUES ('T1', 1, 1, '[{"product_id":1,"variation_no":1,"quantity":1,"unit_price":150000}]')RETURNING total_amount;                                                  -- 150000.00 (not 1)UPDATE orders SET items = jsonb_set(items, '{0,quantity}', '2') WHERE order_id = 'T1'RETURNING total_amount;                                                  -- 300000.00UPDATE orders SET total_amount = 1 WHERE order_id = 'T1' RETURNING total_amount;   -- 300000.00
+TESTED. Even a wrong total supplied directly is overwritten: the BEFORE trigger changes NEW before the row is saved. This is the lecture's Practical 9 and 10.
+Lab 4.4 AFTER trigger: record, do not change
+CREATE TABLE order_log (log_id serial PRIMARY KEY, order_id text, action text, logged_at timestamptz DEFAULT now());CREATE FUNCTION trg_fn_order_log() RETURNS TRIGGER LANGUAGE plpgsql AS $$BEGIN  INSERT INTO order_log(order_id, action) VALUES (NEW.order_id, TG_OP);  RETURN NULL;     -- ignored in an AFTER triggerEND;$$;CREATE TRIGGER trg_order_log AFTER INSERT OR UPDATE ON ordersFOR EACH ROW EXECUTE FUNCTION trg_fn_order_log();
+TESTED: inserting order 'L1' and then updating it produced two log rows, INSERT then UPDATE (TG_OP says which event fired). An AFTER trigger reacts; it cannot change the saved row.
+Lab 4.5 BEFORE trigger: veto or skip a row
+CREATE FUNCTION trg_fn_price_check() RETURNS TRIGGER LANGUAGE plpgsql AS $$BEGIN  IF NEW.price <= 0 THEN    RAISE EXCEPTION 'Price must be positive, got %', NEW.price;  END IF;  RETURN NEW;END;$$;CREATE TRIGGER trg_price_check BEFORE INSERT OR UPDATE ON variationsFOR EACH ROW EXECUTE FUNCTION trg_fn_price_check();UPDATE variations SET price = -5 WHERE product_id = 1 AND variation_no = 1;
+TESTED: ERROR: Price must be positive, got -5.00, and the price is unchanged. Returning NULL from a BEFORE row trigger instead skips that row silently (I tested this too: the INSERT reported INSERT 0 0). Use RAISE EXCEPTION when you want a loud failure, NULL when you want to quietly drop the row.
+Constraint first: a rule about one row's own values, like price above zero, is better as CHECK (price > 0). The trigger above is only the practice pattern (slide 34: prefer constraints).
+Lab 4.6 Break it on purpose (all TESTED)
+What you try
+Message you get
+SELECT sp_place_order(1, 2, 1, 1);
+ERROR: sp_place_order(...) is a procedure. HINT: To call a procedure, use CALL.
+CALL fn_order_total('[]');
+ERROR: fn_order_total(unknown) is not a procedure. HINT: To call a function, use SELECT.
+A function whose body runs COMMIT;
+ERROR: invalid transaction termination
+A BEFORE trigger function with no RETURN NEW;
+ERROR: control reached end of trigger procedure without RETURN
+An AFTER trigger function that sets NEW.total := 10; and returns NEW
+No error and no effect: the row keeps its old value (the return value is ignored)
+SELECT trg_fn_order_total();
+ERROR: trigger functions can only be called as triggers
+CREATE TRIGGER pointing at a function that RETURNS void
+ERROR: function ... must return type trigger
+A FOR EACH STATEMENT trigger on a 3-row INSERT
+Fires once; a FOR EACH ROW trigger would fire 3 times
+The BEGIN trap: inside a PL/pgSQL body, BEGIN ... END only groups statements. It does not start a transaction. The transaction is the one around the statement that called the function (or the one you opened with SQL BEGIN;).
+Topic 4 exercises
+W (write it from memory, then check).
+SQL function fn_discount(p_price NUMERIC, p_pct NUMERIC) RETURNS NUMERIC giving the price after the percentage discount, rounded to 2 decimals. Then list variations whose discounted price is below 10000.
+PL/pgSQL function fn_mobile_count(p_user_id INT) RETURNS INT returning how many mobile numbers a user has; raise an error if the user does not exist.
+Procedure sp_restock(p_product_id, p_variation_no, p_qty) that adds stock. Reject a quantity of zero or less, and raise an error if the variation does not exist.
+A BEFORE INSERT OR UPDATE trigger on variations that rejects a price of zero or less (you did this in Lab 4.5; now write it blind).
+A BEFORE INSERT trigger on orders that silently skips an order whose first item has quantity 0.
+F (spot the bug).
+F1: SELECT sp_restock(2, 1, 10);
+F2: A BEFORE trigger function ends with NEW.total_amount := fn_order_total(NEW.items); and then END; with no RETURN.
+F3: An AFTER trigger tries to correct total_amount with NEW.total_amount := 0; RETURN NEW; and the total is still wrong.
+F4: A student says BEGIN ... END inside their function "starts a transaction, so it can COMMIT halfway". Respond.
+F5: CREATE TRIGGER trg_x BEFORE INSERT ON orders FOR EACH ROW EXECUTE FUNCTION fn_order_total();
+C (choose the tool). Function, procedure, BEFORE trigger, AFTER trigger, or CHECK constraint?
+(a) Quantity on hand can never be negative.
+(b) Return a customer's lifetime spend for use in reports.
+(c) Place an order: reduce stock and insert the order, all or nothing.
+(d) Whoever edits orders, the total must always be recomputed.
+(e) Write a history row whenever a variation's stock changes.
+Answers (cover until you have tried)
+-- W1CREATE OR REPLACE FUNCTION fn_discount(p_price NUMERIC, p_pct NUMERIC) RETURNS NUMERICLANGUAGE sql AS $$ SELECT round(p_price * (1 - p_pct / 100), 2) $$;SELECT product_id, variation_no, price, fn_discount(price, 10) AS sale_priceFROM variations WHERE fn_discount(price, 10) < 10000;-- W2CREATE OR REPLACE FUNCTION fn_mobile_count(p_user_id INT) RETURNS INTLANGUAGE plpgsql AS $$DECLARE v_n INT;BEGIN  SELECT cardinality(mobiles) INTO v_n FROM users WHERE user_id = p_user_id;  IF NOT FOUND THEN RAISE EXCEPTION 'User % not found', p_user_id; END IF;  RETURN v_n;END;$$;-- W3CREATE OR REPLACE PROCEDURE sp_restock(p_product_id INT, p_variation_no INT, p_qty INT)LANGUAGE plpgsql AS $$BEGIN  IF p_qty <= 0 THEN RAISE EXCEPTION 'Restock quantity must be positive'; END IF;  UPDATE variations SET qty_on_hand = qty_on_hand + p_qty   WHERE product_id = p_product_id AND variation_no = p_variation_no;  IF NOT FOUND THEN RAISE EXCEPTION 'Variation %-% does not exist', p_product_id, p_variation_no; END IF;END;$$;-- W4: same as Lab 4.5 (trg_fn_price_check and trg_price_check)-- W5CREATE FUNCTION trg_fn_skip_zero_qty() RETURNS TRIGGER LANGUAGE plpgsql AS $$BEGIN  IF (NEW.items -> 0 ->> 'quantity')::int = 0 THEN RETURN NULL; END IF;  RETURN NEW;END;$$;CREATE TRIGGER trg_skip_zero BEFORE INSERT ON ordersFOR EACH ROW EXECUTE FUNCTION trg_fn_skip_zero_qty();
+W1 to W3 and W5 are TESTED: fn_discount(9500, 10) gave 8550.00; fn_mobile_count gave 2 for Ada and 1 for Bola (after Topic 3 edits) and the error for user 99; CALL sp_restock(2,1,10) took stock from 48 to 58 and the bad calls raised the custom errors; the zero-quantity INSERT reported INSERT 0 0. Note the first item is position 0 in W5 (JSON array).
+F1: it is a procedure, so use CALL sp_restock(2, 1, 10);. F2: add RETURN NEW; before END. F3: in an AFTER trigger the row is already saved and the return value is ignored; do the correction in a BEFORE trigger (TESTED: no error, no effect). F4: wrong. In PL/pgSQL BEGIN ... END only groups statements. A procedure may COMMIT or ROLLBACK (when not already inside an explicit transaction), but a function never can (TESTED: invalid transaction termination). F5: the trigger must call a function that RETURNS TRIGGER; fn_order_total returns NUMERIC and takes an argument. Write trg_fn_order_total() and point the trigger at it.
+C: (a) CHECK constraint (a single row's own value, no code needed). (b) Function (compute and reuse). (c) Procedure (multi-step, all or nothing). (d) BEFORE trigger (fills in a value whoever changes the data). (e) AFTER trigger (react and record).
+Decision method: can a constraint do it? Use the constraint. A value to compute? Function. Several steps that must all succeed? Procedure. Must it happen on every data change, whoever makes it? Trigger: BEFORE to fix or veto, AFTER to record or react.
+Practical Practice Exam (All Topics)
+How to sit it: use Setup A, B and C in fresh databases. Write each answer in the Query Tool before looking at the key, run it, and fix it until the output makes sense. Suggested timing if you want exam pressure: Section A 10 min, B 15 min, C 20 min, D 20 min, E 15 min, F 5 min. I do not know your real time limit, so adjust.
+Section A: Transactions (Setup A)
+A1. Write the statements to move 100 from account 123 to account 456 so that both changes happen or neither does.
+A2. Ada starts with 10 credits. Predict her tot_cred after this runs, and say why:
+BEGIN;UPDATE student SET tot_cred = tot_cred + 5  WHERE id = 1;UPDATE student SET tot_cred = tot_cred - 30 WHERE id = 1;COMMIT;
+A3. Name the ACID property: (i) a second clerk's UPDATE on the same row waits; (ii) after a crash, the committed rows are still there; (iii) a failed constraint left no half-done changes.
+A4. Which of these state moves are impossible? (a) active to committed (b) partially committed to committed (c) failed to committed (d) failed to aborted (e) committed to aborted.
+Section B: Indexing (Setup B)
+B1. Write one CREATE INDEX for each: (i) equality-only lookups on people.name; (ii) queries filter on stars.movie_id and then stars.person_id; (iii) SELECT votes FROM ratings WHERE rating > 9 never touching the table; (iv) searches on lower(title) in movies; (v) only blockbuster rows (votes above 100000) are queried.
+B2. True or false: (a) a hash index supports range queries; (b) a B-tree can serve ORDER BY; (c) a bitmap scan is a separate index type; (d) a covering index uses INCLUDE; (e) adding indexes makes writes faster; (f) EXPLAIN ANALYZE does not run the query.
+B3. An index exists on movies(year), yet WHERE year > 1951 shows a Seq Scan. Why is that the right choice?
+B4. Write a query that lists indexes that have never been scanned, and say what you would do with them.
+Section C: Arrays and JSONB (Setup C)
+C1. Products tagged bestseller but not sale.
+C2. For each user, first_name and how many favourite tags they have.
+C3. Variations whose shipping_class is fragile and weight is over 0.2 kg.
+C4. Total units sold per product name.
+C5. Change the unit_price of the first item in every order to 200000 (show the SELECT, then the UPDATE).
+C6. Predict each result:
+SELECT '{a,b,c}'::text[] @> ARRAY['a','c'];            -- (1)SELECT (ARRAY[5,6,7])[2];                              -- (2)SELECT '{"a":{"b":7}}'::jsonb -> 'a' ->> 'b';          -- (3)SELECT '{"a":1}'::jsonb ? 'b';                         -- (4)SELECT '[10,20,30]'::jsonb -> 0, '[10,20,30]'::jsonb -> 3;   -- (5)SELECT '{"a":1,"a":2}'::jsonb;                        -- (6)SELECT ARRAY['x','y'] && ARRAY['z'];                   -- (7)SELECT '{"k":"v"}'::jsonb -> 'k', '{"k":"v"}'::jsonb ->> 'k';   -- (8)SELECT '{"a":1,"b":2}'::jsonb - 'a';                  -- (9)SELECT array_remove(ARRAY[1,2,1,3], 1);                -- (10)
+Section D: Functions, procedures and triggers (Setup C)
+D1. Write fn_line_count(p_items JSONB) RETURNS INT that returns how many items an order has. Then list each order with its count.
+D2. Write sp_apply_discount(p_product_id INT, p_pct NUMERIC): reduce the price of every variation of the product by the percentage (reuse fn_discount from the Topic 4 exercises). Reject a percentage outside 1 to 90 and a product with no variations. All or nothing.
+D3. Write a trigger so that every email saved in users is stored in lower case, whoever inserts or updates it.
+D4. Choose the tool and justify in one line: (i) a total that must always be recomputed; (ii) a reusable "price after tax" calculation; (iii) "order placed, so deduct stock and insert the order"; (iv) a history row each time a user row changes.
+Section E: End-to-end tasks
+E1. Add a new product 'Peak Milk' (physical, tag sale, manufacturer 2) and its first variation (price 950, stock 200, details with weight_kg 0.2 and shipping_class standard) in a way that both succeed or neither does, without hard-coding the new product_id.
+E2. Orders will grow to millions of rows and you often run WHERE items @> '[{"product_id": 2}]'. Write the index and say why a plain B-tree is the wrong choice.
+Section F: Short answers
+F1. One sentence: why does a COMMIT line sometimes print ROLLBACK?
+F2. One sentence: BEGIN ... END inside a function versus SQL BEGIN;
+F3. Why does the lecture store unit_price inside each order's items?
+F4. When should you choose a separate table over an array or JSONB column?
+Practice Exam Answer Key
+Section A
+A1.
+BEGIN;UPDATE account SET balance = balance - 100 WHERE account_id = 123;UPDATE account SET balance = balance + 100 WHERE account_id = 456;COMMIT;
+TESTED with a CHECK (balance >= 0): a normal run gave 400 and 150; a transfer of 900 failed on the first UPDATE, the second UPDATE then said current transaction is aborted, commands ignored until end of transaction block, and the COMMIT printed ROLLBACK. Balances stayed 400 and 150.
+A2: 10. After +5 she would be 15, then 15 minus 30 is -15, which breaks CHECK (tot_cred >= 0). The error aborts the block and COMMIT rolls back both updates.
+A3: (i) isolation (lock wait). (ii) durability (write-ahead log). (iii) consistency, with atomicity as the mechanism: the whole transaction was rolled back.
+A4: (a) impossible (must pass through partially committed). (c) impossible (a failed transaction can only be aborted). (e) impossible (a committed transaction cannot be undone by rollback). (b) and (d) are legal.
+Section B
+B1.
+CREATE INDEX idx_people_name_hash ON people USING hash (name);                  -- (i)CREATE INDEX idx_stars_mp ON stars (movie_id, person_id);                       -- (ii)CREATE INDEX idx_rating_cover ON ratings (rating) INCLUDE (votes);              -- (iii)CREATE INDEX idx_movies_lower_title ON movies (lower(title));                   -- (iv)CREATE INDEX idx_ratings_blockbuster ON ratings (votes) WHERE votes > 100000;   -- (v)
+The covering and partial patterns were TESTED; the hash, composite and functional patterns were tested on other columns. Remember composite: the leading column is what lets the index help.
+B2: (a) false. (b) true. (c) false (an access method, not an index type). (d) true. (e) false (every index adds write cost). (f) false (it runs the query).
+B3: year > 1951 matches almost every row, so reading the table straight through is cheaper than bouncing through the index (TESTED: Seq Scan).
+B4:
+SELECT relname, indexrelname, idx_scan, pg_size_pretty(pg_relation_size(indexrelid))FROM pg_stat_user_indexes WHERE idx_scan = 0 AND indexrelname NOT LIKE '%pkey';
+Indexes with zero scans (over a representative period) are candidates for DROP INDEX, which cuts write cost and storage. Exclude primary keys, which also appear with 0 scans when nothing has looked rows up by key.
+Section C
+-- C1SELECT name FROM products WHERE tags @> ARRAY['bestseller'] AND NOT (tags @> ARRAY['sale']);-- C2SELECT first_name, cardinality(favourite_tags) AS n FROM users;-- C3SELECT product_id, variation_no FROM variationsWHERE type_details ->> 'shipping_class' = 'fragile' AND (type_details ->> 'weight_kg')::numeric > 0.2;-- C4SELECT p.name, sum((item ->> 'quantity')::int) AS units_soldFROM orders o, jsonb_array_elements(o.items) AS itemJOIN products p ON p.product_id = (item ->> 'product_id')::intGROUP BY p.name ORDER BY units_sold DESC;-- C5SELECT jsonb_set(items, '{0,unit_price}', '200000') FROM orders;UPDATE orders SET items = jsonb_set(items, '{0,unit_price}', '200000');
+C1 returned Tecno Spark; C2 gave Ada 1 and Bola 0 after earlier edits (counts depend on your data); C3 returned variation (1,2) only; C5's position is 0 because it is the first item. C6 (TESTED): (1) true (2) 6 (3) 7 (4) false (5) 10 and NULL (index 3 is out of range) (6) {"a": 2} (7) false (8) "v" with quotes, then v without (9) {"b": 2} (10) {2,3} (every occurrence removed).
+Section D
+-- D1CREATE OR REPLACE FUNCTION fn_line_count(p_items JSONB) RETURNS INT LANGUAGE plpgsql AS $$DECLARE v_n INT;BEGIN  SELECT count(*) INTO v_n FROM jsonb_array_elements(p_items);  RETURN v_n;END;$$;SELECT order_id, fn_line_count(items) FROM orders;-- D2CREATE OR REPLACE PROCEDURE sp_apply_discount(p_product_id INT, p_pct NUMERIC)LANGUAGE plpgsql AS $$BEGIN  IF p_pct < 1 OR p_pct > 90 THEN    RAISE EXCEPTION 'Discount must be between 1 and 90, got %', p_pct;  END IF;  UPDATE variations SET price = fn_discount(price, p_pct) WHERE product_id = p_product_id;  IF NOT FOUND THEN    RAISE EXCEPTION 'Product % has no variations', p_product_id;  END IF;END;$$;-- D3CREATE OR REPLACE FUNCTION trg_fn_lower_email() RETURNS TRIGGER LANGUAGE plpgsql AS $$BEGIN  NEW.email := lower(NEW.email);  RETURN NEW;END;$$;CREATE TRIGGER trg_lower_email BEFORE INSERT OR UPDATE ON usersFOR EACH ROW EXECUTE FUNCTION trg_fn_lower_email();
+TESTED: D1 gave 1 for each sample order and 0 for an empty array; D2 took (1,1) from 160000 to 144000 and (1,2) from 235000 to 211500, rejected 95 and rejected product 99; D3 stored TUNDE@Example.COM as tunde@example.com.
+D4: (i) BEFORE trigger (must happen whoever changes the data, and it fills in a value). (ii) Function (compute and reuse inside SELECT). (iii) Procedure (multi-step, all or nothing, run with CALL). (iv) AFTER trigger (react and record once the row is saved).
+Section E
+-- E1BEGIN;WITH p AS (  INSERT INTO products (manufacturer_id, name, product_type, tags)  VALUES (2, 'Peak Milk', 'physical', '{sale}') RETURNING product_id)INSERT INTO variations (product_id, variation_no, product_type, price, qty_on_hand, type_details)SELECT product_id, 1, 'physical', 950.00, 200,       '{"weight_kg": 0.2, "shipping_class": "standard"}' FROM p;COMMIT;-- E2CREATE INDEX idx_orders_items ON orders USING GIN (items);
+E1 (TESTED) uses RETURNING in a CTE to pass the generated product_id into the second insert; the lecture hard-codes 16, which is why I called that fragile (RETURNING is ADDITIONAL CONTEXT). The BEGIN ... COMMIT makes the product and its variation one unit. E2 (TESTED): the plan used a Bitmap Index Scan on the GIN index for the @> query. A plain B-tree indexes the whole JSON value in order, so it cannot search inside the document for a contained fragment; GIN indexes the keys and values inside.
+Section F
+F1: because the transaction hit an error earlier in the block, so Postgres rolled everything back and COMMIT on an aborted transaction acts as a rollback.
+F2: inside a function, BEGIN ... END only groups statements; SQL BEGIN; opens a transaction.
+F3: the price may change later, and the order must keep what the customer actually paid.
+F4: when data is updated often, joined, aggregated, filtered heavily, or needs foreign keys (arrays and JSON cannot hold them).
+Error Messages Decoder (all TESTED unless noted)
+Message
+Usual cause
+Fix
+relation "courses" does not exist
+Typo in a table name
+Correct the name (inside BEGIN the whole block then rolls back)
+violates foreign key constraint
+Inserting a value with no parent row (Zoology)
+Insert the parent first, or fix the value
+violates check constraint
+Value outside the rule (negative stock)
+Fix the data; in a procedure the whole CALL is undone
+invalid input syntax for type json
+Comparing -> output to plain text, or a non-JSON literal in jsonb_set
+Use ->>, or write the value as valid JSON ('"express"')
+operator does not exist: text > integer
+Comparing ->> text to a number (ADDITIONAL CONTEXT)
+Cast: (col ->> 'key')::numeric
+current transaction is aborted, commands ignored until end of transaction block
+An earlier error in the same BEGIN block
+ROLLBACK, fix the error, start again
+... is a procedure. HINT: use CALL
+SELECT used on a procedure
+CALL sp_name(...)
+... is not a procedure. HINT: use SELECT
+CALL used on a function
+SELECT fn_name(...)
+invalid transaction termination
+COMMIT or ROLLBACK inside a function
+Only procedures may do that
+query returned no rows
+INTO STRICT found nothing
+Check the key values you passed
+control reached end of trigger procedure without RETURN
+BEFORE trigger function missing RETURN NEW
+Add RETURN NEW (or RETURN NULL to skip)
+function ... must return type trigger
+Trigger pointed at a function not declared RETURNS TRIGGER
+Declare RETURNS TRIGGER
+Practical Cheat Sheet
+Transactions
+BEGIN;  ...statements...  COMMIT;    -- all permanentBEGIN;  ...statements...  ROLLBACK;  -- all undone
+Error in the block = whole block fails. States: active, partially committed, committed, failed, aborted. Only partially committed reaches committed; only failed reaches aborted.
+Indexes and plans
+EXPLAIN SELECT ...;                       -- plan onlyEXPLAIN ANALYZE SELECT ...;               -- runs it, real timingsCREATE INDEX i ON t (col);                -- B-tree (default)CREATE INDEX i ON t USING hash (col);     -- equality onlyCREATE INDEX i ON t (a, b);               -- composite (leading column matters)CREATE INDEX i ON t (a) INCLUDE (b, c);   -- covering, Index Only ScanCREATE INDEX i ON t (a) WHERE cond;       -- partialCREATE INDEX i ON t (lower(a));           -- functionalCREATE INDEX i ON t USING GIN (col);      -- arrays, JSONB, full-text
+Plan node
+Means
+Seq Scan
+Whole table read
+Index Scan
+Walk the index, fetch rows
+Bitmap Index plus Bitmap Heap Scan
+Two phases, medium selectivity
+Index Only Scan, Heap Fetches 0
+Index answered it, table untouched
+Arrays and JSONB operators
+Operator or function
+Works on
+Meaning
+arr[1]
+array
+First element (1-based; arr[0] is NULL)
+'x' = ANY (arr)
+array
+Value equals some element (not GIN-friendly)
+arr @> ARRAY[...]
+array
+Contains all (GIN-friendly)
+arr && ARRAY[...]
+array
+Shares at least one (GIN-friendly)
+unnest(arr)
+array
+One row per element
+array_append, array_remove
+array
+Add one / remove every occurrence
+doc -> 'k'
+jsonb
+Returns jsonb (keeps quotes); use to chain
+doc ->> 'k'
+jsonb
+Returns text; cast for numbers
+doc -> 0
+jsonb array
+First element (0-based)
+doc ? 'k'
+jsonb
+Top-level key exists
+doc @> '{...}'
+jsonb
+Contains this fragment (array needs '[{...}]')
+jsonb_array_elements(arr)
+jsonb
+One row per JSON item
+jsonb_set(doc, '{path}', 'valid json')
+jsonb
+Copy with a value changed or added
+doc - 'k' , doc #- '{path}'
+jsonb
+Remove top-level key / nested path
+Server-side code
+Function
+Procedure
+Trigger
+Create
+CREATE FUNCTION ... RETURNS type
+CREATE PROCEDURE
+CREATE FUNCTION ... RETURNS TRIGGER, then CREATE TRIGGER
+Run
+SELECT fn(...)
+CALL sp(...)
+Automatic
+COMMIT inside?
+Never
+Allowed
+No
+Memory hook
+Compute
+Do
+React
+BEFORE row trigger: change NEW and RETURN NEW (or RETURN NULL to skip). AFTER trigger: return value ignored. TG_OP gives INSERT, UPDATE or DELETE. FOUND is true when the last statement found or changed a row. RAISE EXCEPTION stops with an error. SELECT ... INTO v reads into a variable; INTO STRICT errors unless exactly one row.
+Exam-day routine
+Read the task and name the object: transaction, index, array or JSONB query, function, procedure or trigger.
+Write the skeleton first (the three skeletons in Topic 4), then fill the middle.
+Run a tiny test immediately; check NULLs, casts, ->> versus ->, array position 1 versus JSON position 0.
+For performance questions: EXPLAIN before, create the index, EXPLAIN after, say which node changed.
+For anything multi-step, ask "must it be all or nothing?" and wrap it in a transaction or a procedure.
+Re-read the question for the exact name, argument order and output columns it asked for.
+Verification note
+I ran the SQL on a PostgreSQL 16.15 server in my sandbox, using the schemas rebuilt in this guide. Things I did not run live: the two-session isolation lab (Lab 1.4, described from your slides), the exact CREATE INDEX statements in E2.2 (a) and (d) and B1 (i) to (iv) (they follow tested patterns on other columns), and Topic 3 answers W5, W6 and W10 to W12 (they apply tested patterns inside UPDATE or DELETE). Plan numbers (times, row counts) come from generated data and will differ from your slides and from your own machine. If anything here disagrees with your lecturer's database or slides, the lecturer's version wins.

@@ -1,0 +1,399 @@
+
+--- page 1 ---
+PAU-CSC420 – Database 
+Management II
+Lecture 5: MongoDB Basics
+--- page 2 ---
+OUTLINE
+MongoDB Architecture
+▪ Documents, collections, databases & the server
+Setting Up
+▪ Local MongoDB, Compass & the Splendid Stores data
+CRUD Operations
+▪ Create, read, update & delete documents
+Schema Design
+▪ Embedded vs referenced data
+Summary, Assignment & References
+Dr. Stephen A. Adubi
+2
+--- page 3 ---
+MONGODB ARCHITECTURE
+From tables to documents
+Dr. Stephen A. Adubi 3
+--- page 4 ---
+What Is MongoDB?
+MongoDB is a document database: it stores data as 
+JSON-like documents instead of rows in tables.
+A document can hold nested objects and arrays, so 
+related data can live together in one record.
+Documents in the same collection do not need the 
+same fields: the schema is flexible.
+It is built to scale out across many servers.
+Industry relevance: flexible storage for e-commerce 
+product catalogues, where every product type has 
+different details.
+Dr. Stephen A. Adubi
+4
+--- page 5 ---
+From Tables to Documents
+Table → collection
+Row → document
+Column → field
+Primary key → the _id field: every document has 
+one, unique within its collection.
+CREATE TABLE → nothing: a collection is created the 
+first time you insert into it.
+JOIN → usually not needed: related data is
+embedded in one document or referenced by its _id.
+Dr. Stephen A. Adubi
+5
+--- page 6 ---
+Demo 
+—
+ 
+Anatomy of a Document
+A Splendid Stores product: plain fields, an array and 
+embedded documents.
+{ _id: 1,
+  name: "Baygon Multi-Insect Killer Aerosol",
+  manufacturer_id: 1,
+  tags: ["insecticide", "household", "bestseller"],
+variations: [
+    { variation_no: 1, price: 2600, qty_on_hand: 120 },
+    { variation_no: 2, price: 3500, qty_on_hand: 85 } ] }
+Dr. Stephen A. Adubi
+6
+--- page 7 ---
+Documents Are Stored as BSON
+MongoDB stores documents as BSON: a binary form 
+of JSON with extra types, such as Date and ObjectId.
+If a document has no _id, one is generated 
+automatically as an ObjectId.
+A single document can be at most 16 MiB.
+Fields inside embedded documents are reached with 
+dot notation, e.g. "address.city".
+Compare Lecture 2: a JSONB column holds one 
+document in a table; in MongoDB, the whole record 
+is the document.
+Dr. Stephen A. Adubi
+7
+--- page 8 ---
+MongoDB Architecture
+mongod is the database server. It listens on port 27017 by 
+default.
+Clients connect with a connection string, e.g. 
+mongodb://localhost:27017:
+▪ mongosh, the MongoDB Shell; Compass, the graphical tool; and 
+drivers for Python, Java, Node.js, …
+One server holds many databases; a database holds 
+collections; a collection holds documents.
+At scale, replica sets keep copies of the data on several 
+servers, and sharding spreads a collection across servers.
+Dr. Stephen A. Adubi
+8
+--- page 9 ---
+How MongoDB Organises Data
+DATABASE
+COLLECTIONS
+DOCUMENTS
+Student Instructor Course …
+School
+_id: 1 "name": "Ada" "level": 300 …
+_id: 2 "name": "Tunde" …
+_id: 3 "level": 200 …
+Each row is one Student document: no schema, so fields can differ.
+One server holds many 
+databases
+Dr. Stephen A. Adubi
+9
+--- page 10 ---
+SETTING UP
+Local MongoDB, Compass & our data
+Dr. Stephen A. Adubi 10
+--- page 11 ---
+Installing MongoDB Locally 
+(Windows)
+Download MongoDB Community Server (.msi) from 
+mongodb.com/try/download/community.
+▪ On macOS or Linux, follow the MongoDB Manual's guide.
+Choose the Complete setup and keep Install MongoD as a 
+Service so the server starts automatically.
+Keep Install MongoDB Compass ticked; it is selected by 
+default.
+The MongoDB Shell (mongosh) is a separate download, but
+Compass has one built in.
+Alternative: a free cloud cluster on MongoDB Atlas; 
+Compass connects to it with the connection string Atlas 
+gives you.
+Dr. Stephen A. Adubi
+11
+--- page 12 ---
+Connecting with Compass
+Open Compass, add a new connection with the URI 
+mongodb://localhost:27017, and connect.
+Create a database named splendid_stores, with 
+products as its first collection.
+Add three more collections: manufacturers, users 
+and orders.
+Open the built-in shell with the _MONGOSH panel at 
+the bottom of the Compass window. Today's 
+practicals run there.
+Dr. Stephen A. Adubi
+12
+--- page 13 ---
+Loading the Splendid Stores Data
+Four files: manufacturers.json, products.json, 
+users.json and orders.json.
+For each collection: Add Data → Import JSON or 
+CSV file → select the matching file → Import.
+Check the counts: 13 manufacturers, 15 products, 
+10 users and 14 orders.
+These are the same records as in Lectures 2 and 3, 
+reshaped as documents: seven tables became
+four collections.
+Dr. Stephen A. Adubi
+13
+--- page 14 ---
+CRUD OPERATIONS
+Create, read, update & delete documents
+Dr. Stephen A. Adubi 14
+--- page 15 ---
+Practical 1 
+—
+ 
+Finding Your Way in the 
+Shell
+use switches to a database; db then refers to it.
+countDocuments() counts the documents in a 
+collection.
+show dbs
+use splendid_stores
+show collections
+db.products.countDocuments()
+Dr. Stephen A. Adubi
+15
+--- page 16 ---
+Practical 2 
+—
+ 
+Reading Documents
+The filter is itself a document: 
+{ field: value }.
+findOne returns the first match; find returns all 
+matches. An empty filter {} matches everything.
+db.products.findOne({ _id: 8 })
+db.products.find({ product_type: "digital" })
+Dr. Stephen A. Adubi
+16
+--- page 17 ---
+Practical 3 
+—
+ 
+Projection: Choosing 
+Fields
+The second argument picks the fields to return: 1 
+includes, 0 excludes. _id is returned unless you 
+exclude it.
+In SQL: SELECT name, tags FROM products WHERE 
+product_type = 'digital';
+db.products.find(
+  { product_type: "digital" },
+  { name: 1, tags: 1, _id: 0 })
+Dr. Stephen A. Adubi
+17
+--- page 18 ---
+Practical 4 
+—
+ 
+Embedded Fields & 
+Arrays
+Dot notation reaches inside embedded 
+documents; the field path needs quotes.
+Matching an array field matches any element, like 
+'bestseller' = ANY (tags) in Lecture 2.
+db.users.find({ "address.city": "Lagos" },
+              { first_name: 1 })
+db.products.find({ tags: "bestseller" }, { name: 1 })
+Dr. Stephen A. Adubi
+18
+--- page 19 ---
+Practical 5 
+—
+ 
+Creating Documents (1)
+Kemi registers. No CREATE TABLE is needed, and the 
+address is embedded.
+db.users.insertOne({
+  _id: 11, first_name: "Kemi", last_name: "Adeleke",
+  email: "kemi.adeleke@example.com",
+  address: { line: "9 Awolowo Road, Ikoyi",
+             city: "Lagos", country: "Nigeria" },
+  mobiles: ["+2348023456781"],
+  favourite_tags: ["fashion"]
+})
+Dr. Stephen A. Adubi
+19
+--- page 20 ---
+Practical 5 
+—
+ 
+Creating Documents (2)
+insertMany takes an array of documents.
+Without an _id, MongoDB generates an ObjectId, as 
+the third document shows.
+db.manufacturers.insertMany([
+  { _id: 14, name: "PZ Cussons" },
+  { _id: 15, name: "Nigerian Breweries" }
+])
+db.manufacturers.insertOne({ name: "Innoson" })
+Dr. Stephen A. Adubi
+20
+--- page 21 ---
+Practical 6 
+—
+ 
+Updating Documents
+The first argument finds the document; the second 
+says what to change.
+$set sets a field, even a nested one; $push adds an 
+element to an array. Kemi moves to Abuja and adds a 
+number.
+db.users.updateOne(
+  { _id: 11 },
+  { $set: { "address.city": "Abuja" },
+$push: { mobiles: "+2349034567812" } })
+Dr. Stephen A. Adubi
+21
+--- page 22 ---
+Practical 7 
+—
+ 
+Deleting Documents
+countDocuments returns 0: Chi Limited makes 
+no products, so it is safe to delete.
+MongoDB has no foreign keys: it would delete SC 
+Johnson (_id: 1) too, though products still refer to 
+it. Your application must check first.
+db.products.countDocuments({ manufacturer_id: 13 })
+db.manufacturers.deleteOne({ _id: 13 })
+Dr. Stephen A. Adubi
+22
+--- page 23 ---
+SCHEMA DESIGN
+Embedded vs referenced data
+Dr. Stephen A. Adubi 23
+--- page 24 ---
+Two Ways to Relate Data
+Embedded: related data is stored inside the 
+document.
+▪ a product's variations and their attributes; a user's 
+address.
+Referenced: a document stores another document's 
+_id.
+▪ a product's manufacturer_id; an order's user_id.
+This is why seven tables became four collections: 
+variations and attribute_catalogue are now inside 
+products, and tags are plain strings.
+Dr. Stephen A. Adubi
+24
+--- page 25 ---
+Practical 8 
+—
+ 
+Embedded: One Read
+One query returns the product with all its 
+variations. In PostgreSQL, this needed a JOIN.
+A write to one document is all-or-nothing, so a 
+product and its variations change together.
+db.products.findOne(
+  { _id: 1 },
+  { name: 1, variations: 1 })
+Dr. Stephen A. Adubi
+25
+--- page 26 ---
+Practical 9 
+—
+ 
+Referenced: Two Reads
+The order stores only user_id, so finding the 
+customer takes a second query.
+const keeps the first result in a shell variable.
+const order = db.orders.findOne(
+                { _id: "20260112093015_1" })
+db.users.findOne({ _id: order.user_id },
+                 { first_name: 1, last_name: 1 })
+Dr. Stephen A. Adubi
+26
+--- page 27 ---
+Embed or Reference?
+Embed when the data belongs to one parent and is 
+read or updated with it, e.g. variations, an address.
+Reference when the data is shared by many 
+documents, can exist on its own, or would grow 
+without limit, e.g. manufacturers, a user's orders.
+Remember the 16 MiB limit: embedding every order 
+inside its user would keep growing that document.
+Copies of shared data that change often are hard to 
+keep in step; reference them instead.
+Dr. Stephen A. Adubi
+27
+--- page 28 ---
+SUMMARY
+Final Thoughts on MongoDB Basics
+Dr. Stephen A. Adubi 28
+--- page 29 ---
+Wrap
+-
+Up: Key Takeaways
+MongoDB stores BSON documents in collections; 
+every document has a unique _id, and the schema is 
+flexible.
+mongod is the server; mongosh, Compass and drivers 
+connect to it with a connection string.
+CRUD: insertOne/insertMany, find/findOne with a 
+filter and projection, updateOne with $set or $push, 
+and deleteOne.
+Schema design: embed what belongs together; 
+reference what is shared or grows without limit.
+Dr. Stephen A. Adubi
+29
+--- page 30 ---
+Assignment
+Using splendid_stores in the Compass shell, write and 
+run:
+▪ a query for the physical products made by manufacturer 9, 
+showing only name and tags;
+▪ a query for users who live in Lagos and have 'smartphone' 
+among their favourite tags;
+▪ an insertOne that adds a new product with two embedded 
+variations;
+▪ an updateOne that adds a tag to that product with $push 
+and renames it with $set.
+Then answer in 3–4 sentences: should orders be 
+embedded inside users? Justify with today's rules.
+Dr. Stephen A. Adubi
+30
+--- page 31 ---
+Lecture References (Page 1)
+MongoDB, Inc. (2026). MongoDB Manual: 
+Documents. 
+https://www.mongodb.com/docs/manual/core/d
+ocument/
+MongoDB, Inc. (2026). MongoDB Manual: 
+Embedding vs. References. 
+https://www.mongodb.com/docs/manual/data-
+modeling/concepts/embedding-vs-references/
+Dr. Stephen A. Adubi
+31
+--- page 32 ---
+Lecture References (Page 2)
+MongoDB, Inc. (2026). MongoDB Manual: Install 
+MongoDB Community Edition on Windows. 
+https://www.mongodb.com/docs/manual/tutorial
+/install-mongodb-on-windows/
+MongoDB, Inc. (2026). MongoDB Compass: 
+Import and Export Data. 
+https://www.mongodb.com/docs/compass/curre
+nt/import-export/
+Dr. Stephen A. Adubi
+32

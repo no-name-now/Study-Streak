@@ -1,0 +1,158 @@
+## slide1.xml
+CHOOSING THE RIGHT BOARD [EDGE DEVICE] FOR YOUR PROJECT
+Lino Isawhe
+School: SEN/CSC
+Pan-Atlantic University, Epe
+PAU-CSC 418
+## slide2.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Embedded Hardware Selection
+Before choosing a specific development board, engineers must determine whether their application requires a Microcontroller Unit (MCU) or a Single-Board Computer (SBC).
+This is to prevent hardware misallocation in engineering projects, guiding engineers from selecting overly complex Linux boards for simple hardware control or underpowered microcontrollers for heavy computing tasks.
+Arduino Mega
+Arduino uno
+Rasberry Pi 5
+## slide3.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Parameters we can consider to choose a suitable board
+1.  Processing power
+2.  Connectivity
+3.  GPIO & Hardware interfaces
+4.  Community and & ease of learning
+5.  Power Consumption
+## slide4.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Arduino Uno
+The Arduino Uno powered by the ATmega328P microcontroller is designed for low-complexity, real-time control applications.
+Below is an overview of how these specific hardware parameters shape its practical usage:
+1. CPU: ATmega328P (8-bit AVR RISC)
+2. Clock Speed: 16 MHz
+3. RAM: 2 KB (SRAM)
+4. Flash Memory: 32 KB
+Ideal Target Applications
+Sensors & Actuators: Reading analog/digital sensors (temperature, ultrasonic, PIR) and controlling relays, servos, or LEDs.
+Basic Automation: Small robotics (line-following or obstacle-avoiding rovers), home automation triggers, and switch controllers.
+## slide5.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Arduino Uno Cont’d
+Processing Power: Classic R3: Microchip ATmega328P (8-bit AVR RISC), 16 MHz clock speed, 2 KB SRAM, 32 KB Flash memory.
+R4 Minima: Renesas RA4M1 (32-bit Arm Cortex-M4 with FPU) @ 48 MHz, 32 KB SRAM, 256 KB Flash.
+Connectivity: Bare-board USB (Type-B or Type-C for programming/Serial communication). Lacks native Wi-Fi or Bluetooth; requires external peripheral expansion shields.
+GPIO & Hardware Interfaces:
+14 Digital I/O pins (6 support hardware PWM)
+6 Analog Input pins (ADC).
+Bus interfaces: 1× UART, 1× SPI, 1× I2C. 5V operating logic level (R3/R4).
+Power Consumption: Very low baseline: ~45 mA (~0.22 W) at 5V DC in standard operating mode.
+Basic sleep modes available down to microampere range for basic MCU sleep states.
+## slide6.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Arduino Mega 2560
+The Arduino Mega 2560 is an extended MCU platform designed for projects requiring expanded input/output capacity and multiple dedicated serial communication ports without switching away from the 8-bit Arduino environment.
+Ease of Learning: High. Identical software workflow and API structures as the Arduino Uno. Ideal transition path for beginners encountering pin limitations.
+Processing Power: Microchip ATmega2560 (8-bit AVR RISC), 16 MHz clock speed, 8 KB SRAM, 256 KB Flash memory, 4 KB EEPROM.
+Connectivity: USB Type-B for serial/programming interface. No native wireless (Wi Fi/Bluetooth); relies on SPI/UART-attached network expansion shields.
+GPIO & Hardware Interfaces:
+54 Digital I/O pins (15 support PWM).
+16 Analog Input pins (10-bit ADC).
+Bus interfaces: 4× dedicated Hardware UART ports, 1× SPI, 1× I2C. 5V logic operation.
+Power Consumption: Low baseline: ~70 mA (~0.35 W) at 5V DC. Higher static draw than the Uno due to the onboard USB interface chip and larger pin breakdown circuit.
+## slide7.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Raspberry Pi 5
+Unlike microcontrollers that run bare-metal code, the Raspberry Pi 5 is a fully realized Single Board Computer (SBC). It executes full operating systems (primarily Linux) and targets high-performance computing tasks.
+Ease of Learning: Moderate to Advanced. Requires knowledge of Linux OS configuration, terminal navigation, system permissions, and high-level programming languages (Python, C++, JavaScript).
+Processing Power: Broadcom BCM2712 Quad-core 64-bit Arm Cortex-A76 @ 2.4 GHz. 4 GB, 8 GB, or 16 GB LPDDR4X SDRAM. MicroSD / PCIe 2.0 (NVMe SSD) external storage interface.
+Connectivity:
+Integrated Dual-band (2.4 GHz / 5.0 GHz) 802.11ac Wi-Fi.
+Bluetooth 5.0 & Bluetooth Low Energy (BLE).
+Gigabit Ethernet (PoE+ supported via HAT).
+2× USB 3.0, 2× USB 2.0, 2× 4K60 micro-HDMI outputs, PCIe Gen 2.0 interface.
+## slide8.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Raspberry Pi 5 Cont’d
+GPIO & Hardware Interfaces:
+40-pin GPIO Expansion Header (3.3V logic level).
+Bus interfaces:
+Software/Hardware configurable UART, SPI, I2C, I2S.
+No onboard Analog-to-Digital Converter (ADC); requires an external ADC IC for analog reading.
+2× 4-lane MIPI camera/display transceivers.
+Power Consumption:
+High (Requires active management).
+Idle: ~2.7 W to 3.0 W.
+Under full load: 8 W to 12 W+ (requires dedicated 5V/5A Power Supply and active fan cooling).
+## slide9.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+ESP32 [Espressif Systems]
+The ESP32 is a low-power system-on-a-chip (SoC) microcontroller with integrated wireless capabilities. It is the dominant platform for Internet of Things (IoT) applications.
+Ease of Learning: Moderate. Compatible with the Arduino IDE ecosystem (using C/C++ libraries), MicroPython, and ESP-IDF (C-framework). Requires attention to 3.3V logic levels and pin multiplexing quirks.
+Processing Power:
+Tensilica Xtensa Dual-Core 32-bit LX6 @ up to 240 MHz. 520 KB SRAM, supported by 4 MB to 16 MB external SPI Flash. Includes a Ultra-Low-Power (ULP) co-processor.
+Connectivity:
+On-chip Wi-Fi (802.11 b/g/n up to 150 Mbps).
+On-chip Bluetooth v4.2 BR/EDR and BLE.
+## slide10.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+ESP32 [Espressif Systems] Cont’d
+GPIO & Hardware Interfaces:
+~34 Digital GPIO pins (3.3V logic level, not 5V tolerant).
+18 channels of 12-bit ADC, 2 channels of 8-bit DAC.
+Touch-capacitive GPIO pins.
+Bus interfaces: 3× UART, 2× SPI, 2× I2C, 2× I2S (for digital audio), PWM channels.
+Power Consumption:
+Highly Dynamic / Ultra-Low Power Optimized.
+Active TX mode (Wi-Fi transmitting): 160 mA – 260 mA (~0.8 W – 1.3 W).
+Idle: ~20 mA – 50 mA.
+Deep Sleep mode: ~10 µA – 15 µA (ideal for multi-year battery operation).
+## slide11.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Class Activity – Using Arduino Mega to setup a blinking led
+The Arduino kit will be provided for students
+Students are to download Arduino IDE with the link below:
+Arduino Software: Download the Arduino IDE, Cloud and App Lab
+Sample code for blinking Led:
+void setup() {
+// put your setup code here, to run once:
+pinMode(6,OUTPUT);
+}
+void loop() {
+// put your main code here, to run repeatedly:
+digitalWrite(6,HIGH);
+delay(1000);
+digitalWrite(12,LOW);
+delay(1000);
+}
+## slide12.xml
+Closing Remarks
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University

@@ -1,0 +1,223 @@
+## slide1.xml
+Evolution and Architecture of IoT
+Lino Isawhe
+School: SEN/CSC
+Pan-Atlantic University, Epe
+PAU-CSC 418
+## slide2.xml
+The "Things" in IoT refers to devices which have unique identities and can perform remote sensing, actuating and monitoring capabilities.
+IoT devices can exchange data with other connected devices and applications (directly or indirectly), or collect data from other devices and process the data either locally or send the data to centralized servers or cloud-based application back-ends for processing the data, or perform some tasks locally and other tasks within the IoT infrastructure, based on temporal and space constraints (i.e., memory, processing capabilities, communication latencies and speeds, and deadlines).
+An IoT device may consist of several interfaces for connections to other devices, both wired and wireless. These can include (i) I/O interfaces for sensors,
+(ii) interfaces for Internet connectivity,
+(iii) memory and storage interfaces
+(iv) audio/video interfaces.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Things in IoT
+## slide3.xml
+An IoT device can collect various types of data from the attached sensors, such as temperature, humidity, light intensity. The sensed data can be communicated either to other devices or cloud-based servers/storage.
+IoT devices can also be of varied types, for instance, wearable sensors, smart watches, LED lights, automobiles and industrial machines. Almost all IoT devices generate data in some form or the other which when processed by data analytics systems leads to useful information to guide further actions locally or remotely.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Things in IoT Cont’d
+## slide4.xml
+Link Layer
+Link layer protocols determine how the data is physically sent over the network's physical layer or medium (e.g., copper wire, coaxial cable, or a radio wave). The scope of the link layer is the local network connection to which host is attached. Hosts on the same link exchange data packets over the link layer using link layer protocols. Link layer determines how the packets are coded and signaled by the hardware device over the medium to which the host is attached (such as a coaxial cable). Let us now look at some link layer protocols which are relevant in the context of IoT.
+802.3 Ethernet – IEEE 802.3 is a collection of wired Ethernet standards for the link layer. For example, 802.3 is the standard for 10BASE5 Ethernet that uses coaxial cable as a shared medium, 802.3.i is the standard for 10BASE-T Ethernet over copper twisted-pair connections, 802.3.j is the standard for 10BASE-F Ethernet over fiber optic connections, 802.3ae is the standard for 10 Gbit/s Ethernet over fiber, and so on. These standards provide data rates from 10 Mb/s to 40 Gb/s and higher. The shared medium in Ethernet can be a coaxial cable, twisted-pair wire or an optical fiber.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+IoT Protocols
+## slide5.xml
+Link Layer
+802.11 - WiFi : IEEE 802.11 is a collection of wireless local area network (WLAN) communication standards, including extensive description of the link layer. For example, 802.11a operates in the 5 GHz band, 802.11b and 802.11g operate in the 2.4 GHz band, 802.11n operates in the 2.4/5 GHz bands, 802.11ac operates in the 5 GHz band and 802.11ad operates in the 60 GHz band. These standards provide data rates from 1 Mb/s to upto 6.75 Gb/s.
+802.16 -WiMax: IEEE802.16 is a collection of wireless broadband standards including extensive descriptions for the link layer (also called WiMax). WiMax standards provide data rates from 1.5Mb/s to 1GB/s. The recent update (802.16m) provides data rates of 100Mbit/s for mobile station and 1Gbit/s for fixed stations.
+802.15.4 - LR-WPAN : IEEE 802.15.4 is a collection of standards for low-rate wireless personal area networks (LR-WPANs). These standards form the basis of specifications for high level communication protocols such as ZigBee. LR-WPAN standards provide data rates from 40 Kb/s 250 Kb/s. These standards provide low-cost and low-speed communication for power constrained devices.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+IoT Protocols Cont’d
+## slide6.xml
+Link Layer
+2G/ 3G/ 4G - Mobile Communication : There are different generations of mobile communication standards including second generation (2G including GSM and CDMA), third generation (3G - including UMTS and CDMA2000) and fourth generation (4G - including LTE). IoT devices based on these standards can communicate over cellular networks. Data rates for these standards range from 9.6 Kb/s (for 2G) to upto 100 Mb/s (for 4G)
+5G - Mobile Communication (5G NR): 5G New Radio (NR) is the fifth-generation global standard for cellular communications developed by 3GPP (starting from Release 15 onwards). It operates across two main frequency ranges: FR1 (Sub-6 GHz, ranging from 410 MHz to 7.125 GHz for wide-area coverage) and FR2 (mmWave, from 24.25 GHz to 71 GHz for high-density, ultra-fast transfers). 5G provides peak data rates from 1 Gbps up to 20 Gbps with latency as low as 1 ms, supporting key IoT service pillars including Enhanced Mobile Broadband (eMBB), Ultra-Reliable Low-Latency Communications (URLLC), and Massive Machine-Type Communications (mMTC).
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+IoT Protocols Cont’d
+## slide7.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+IoT Protocols Cont’d
+## slide8.xml
+The network layers are responsible for sending of IP datagrams from the source network to the destination network. This layer performs the host addressing and packet routing. The datagrams contain the source and destination addresses which are used to route them from the source to destination across multiple networks. Host identification is done using hierarchical IP addressing schemes such as IPv4 or IPv6.
+IPv4 : Internet Protocol version 4 (IPv4) is the most deployed Internet protocol that is used to identify the devices on a network using a hierarchical addressing scheme. IPv4 uses a 32-bit address scheme that allows total of 232 or 4,294,967,296 addresses. As more and more devices got connected to the Internet, these addresses got exhausted in the year 2011. IPv4 has been succeeded by IPv6. The IP protocols establish connections on packet networks, but do not guarantee delivery of packets. Guaranteed delivery and data integrity are handled by the upper layer protocols (such as TCP). IPv4 is formally described in RFC 791
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Network / Internet Layer
+## slide9.xml
+IPv6 : Internet Protocol version 6 (IPv6) is the newest version of Internet protocol and successor to IPv4. IPv6 uses 128-bit address scheme that allows total of 2128or 3.4 x 1038 addresses. IPv6 is formally described in RFC 2460.
+6LoWPAN : 6LoWPAN (IPv6 over Low power Wireless Personal Area Networks) brings IP protocol to the low-power devices which have limited processing capability. 6LoWPAN operates in the 2.4 GHz frequency range and provides data transfer rates of 250 Kb/s. 6LoWPAN works with the 802.15.4 link layer protocol and defines compression mechanisms for IPv6 datagrams over IEEE 802.15.4-based networks
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Network / Internet Layer Cont’d
+## slide10.xml
+The transport layer protocols provide end-to-end message transfer capability independent of the underlying network. The message transfer capability can be set up on connections, either using handshakes (as in TCP) or without handshakes/acknowledgements (as in UDP). The transport layer provides functions such as error control, segmentation, flow control and congestion control.
+TCP : Transmission Control Protocol (TCP) is the most widely used transport layer protocol, that is used by web browsers (along with HTTP, HTTPS application layer protocols), email programs (SMTP application layer protocol) and file transfer (FTP). TCP is a connection oriented and stateful protocol. While IP protocol deals with sending packets, TCP ensures reliable transmission of packets in-order. TCP also provides error detection capability so that duplicate packets can be discarded and lost packets are retransmitted. The flow control capability of TCP ensures that rate at which the sender sends the data is not too high for the receiver to process. The congestion control capability of TCP helps in avoiding network congestion and congestion collapse which can lead to degradation of network performance.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Transport Layer
+## slide11.xml
+UDP : Unlike TCP, which requires carrying out an initial setup procedure, UDP is a connectionless protocol. UDP is useful for time-sensitive applications that have very small data units to exchange and do not want the overhead of connection setup. UDP is a transaction oriented and stateless protocol. UDP does not provide guaranteed delivery, ordering of messages and duplicate elimination. Higher levels of protocols can ensure reliable delivery or ensuring connections created are reliable.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Transport Layer Cont’d
+## slide12.xml
+Application layer protocols define how the applications interface with the lower layer protocols to send the data over the network. The application data, typically in files, is encoded by the application layer protocol and encapsulated in the transport layer protocol which provides connection or transaction oriented communication over the network. Port numbers are used for application addressing (for example port 80 for HTTP, port 22 for SSH, etc.). Application layer protocols enable process-to-process connections using ports.
+HTTP : Hypertext Transfer Protocol (HTTP) is the application layer protocol that forms the foundation of the World Wide Web (WWW). HTTP includes commands such as GET, PUT, POST, DELETE, HEAD, TRACE, OPTIONS, etc. The protocol follows a request-response model where a client sends requests to a server using the HTTP commands. HTTP is a stateless protocol and each HTTP request is independent of the other requests. An HTTP client can be a browser or an application running on the client (e.g., an application running on an IoT device, a mobile application or other software). HTTP protocol uses Universal Resource Identifiers (URIs) to identify HTTP resources.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Application Layer
+## slide13.xml
+CoAP : Constrained Application Protocol (CoAP) is an application layer protocol for machine-to-machine (M2M) applications, meant for constrained environments with constrained devices and constrained networks. Like HTTP, CoAP is a web transfer protocol and uses a request-response model, however it runs on top of UDP instead of TCP. CoAP uses a client-server architecture where clients communicate with servers using connectionless datagrams. CoAP is designed to easily interface with HTTP. Like HTTP, CoAP supports methods such as GET, PUT, POST, and DELETE.
+WebSocket : WebSocket protocol allows full-duplex communication over a single socket connection for sending messages between client and server. WebSocket is based on TCP and allows streams of messages to be sent back and forth between the client and server while keeping the TCP connection open. The client can be a browser, a mobile application or an IoT device.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Application Layer Cont’d
+## slide14.xml
+MQTT : Message Queue Telemetry Transport (MQTT) is a light-weight messaging protocol based on the publish-subscribe model. MQTT uses a client-server architecture where the client (such as an IoT device) connects to the server (also called MQTT Broker) and publishes messages to topics on the server. The broker forwards the messages to the clients subscribed to topics. MQTT is well suited for constrained environments where the devices have limited processing and memory resources and the network bandwidth is low.
+XMPP : Extensible Messaging and Presence Protocol (XMPP) is a protocol for real-time communication and streaming XML data between network entities. XMPP powers wide range of applications including messaging, presence, data syndication, gaming, multi-party chat and voice/video calls. XMPP allows sending small chunks of XML data from one network entity to another in near real-time. XMPP is a decentralized protocol and uses a client-server architecture. XMPP supports both client-to-server and server-to-server communication paths. In the context of IoT, XMPP allows real-time communication between IoT devices.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Application Layer Cont’d
+## slide15.xml
+The logical design of an IoT system focuses on abstracting its underlying entities and processes without getting bogged down in low-level implementation mechanics. It outlines the core operational components and communication interfaces essential to building a cohesive architecture.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Logical Design of IoT
+## slide16.xml
+IoT Functional Blocks
+An IoT system relies on key functional building blocks to handle device interaction, data transport, system governance, and user engagement:
+Device: Hardware units responsible for sensing, actuation, monitoring, and direct control operations within the environment.
+Communication: Handles data transfer across the system using appropriate network standards and communication protocols.
+Services: Provides foundational utilities, including device discovery, real-time monitoring, control pipelines, and data publishing mechanisms.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Logical Design of IoT
+## slide17.xml
+IoT Functional Blocks Cont’d
+Management: Offers governance features to manage, configure, and maintain the overall IoT infrastructure.
+Security: Ensures system integrity through mechanisms such as user authentication, access authorization, message validation, and data encryption.
+Application: Delivers the user interface, enabling end-users to monitor system status, view analytics, and control devices remotely.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Logical Design of IoT
+## slide18.xml
+IoT Communication Models
+Request-Response : Request-Response is a communication model in which the client sends requests to the server and the server responds to the requests. When the server receives a request, it decides how to respond, fetches the data, retrieves resource representations, prepares the response, and then sends the response to the client. Request-Response model is a stateless communication model and each request-response pair is independent of others.
+Publish-Subscribe : Publish-Subscribe is a communication model that involves publishers, brokers and consumers. Publishers are the source of data. Publishers send the data to the topics which are managed by the broker. Publishers are not aware of the consumers. Consumers subscribe to the topics which are managed by the broker. When the broker receives data for a topic from the publisher, it sends the data to all the subscribed consumers.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Logical Design of IoT
+## slide19.xml
+IoT Communication Models Cont’d
+Push-Pull : Push-Pull is a communication model in which the data producers push the data to queues and the consumers pull the data from the queues. Producers do not need to be aware of the consumers. Queues help in decoupling the messaging between the producers and consumers. Queues also act as a buffer which helps in situations when there is a mismatch between the rate at which the producers push data and the rate at which the consumers pull data.
+Exclusive Pair: Exclusive pair is a bi-directional, fully duplex communication model that uses a persistent connection between the client and server. Once the connection is setup, it remains open until the client sends a request to close the connection. Client and Server can send messages to each other after connection setup. Exclusive pair is a stateful communication model and the server is aware of all the open connections.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Logical Design of IoT
+## slide20.xml
+1.  REST-based Communication APIs
+Representational State Transfer (REST) is a set of architectural principles by which you can design web services and web APIs that focus on a system's resources and how resource states are addressed and transferred. REST APIs follow the request-response communication model. The REST architectural constraints apply to the components, connectors, and data elements, within a distributed hypermedia system. The REST architectural constraints are as follows:
+Client-Server : The principle behind the client-server constraint is the separation of concerns. For example, clients should not be concerned with the storage of data which is a concern of the server. Similarly, the server should not be concerned about the user interface, which is a concern of the client. Separation allows client and server to be independently developed and updated.
+Stateless : Each request from client to server must contain all the information necessary to understand the request, and cannot take advantage of any stored context on the server. The session state is kept entirely on the client.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+IoT Communication APIs
+## slide21.xml
+Cache-able : Cache constraint requires that the data within a response to a request be implicitly or explicitly labeled as cache-able or non-cache-able. If a response is cache-able, then a client cache is given the right to reuse that response data for later, equivalent requests. Caching can partially or completely eliminate some interactions and improve efficiency and scalability.
+Layered System : Layered system constraint, constrains the behavior of components such that each component cannot see beyond the immediate layer with which they are interacting. For example, a client cannot tell whether it is connected directly to the end server, or to an intermediary along the way. System scalability can be improved by allowing intermediaries to respond ti request instead of the end server without the client having to do anything different.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+REST-based Communication APIs Cont’d
+## slide22.xml
+REST-based Communication APIs Cont’d
+Uniform Interface: Uniform Interface constraint requires that the method of communication between a client and a server must be uniform. Resources are identified in the requests (by URIs in web based systems) and are themselves separate from the representations of the resources that are returned to the client. When a client holds a representation of a resource it has all the information required to update or delete the resource (provided the client has required permissions). Each message includes enough information to describe how to process the message.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+## slide23.xml
+2.  WebSocket-based Communication APIs
+WebSocket APIs allow bi-directional, full duplex communication between clients and servers. WebSocket APIs follow the exclusive pair communication model.
+Unlike request-response APIs such as REST, the WebSocket APIs allow full duplex communication and do not require a new connection to be setup for each message to be sent.
+WebSocket communication begins with a connection setup request sent by the client to the server. This request (called a WebSocket handshake) is sent over HTTP and the server interprets it as an upgrade request. If the server supports WebSocket protocol, the server responds to the WebSocket handshake response.
+After the connection is setup, the client and server can send data/messages to each other in full-duplex mode. WebSocket APIs reduce the network traffic and latency as there is no overhead for connection setup and termination requests for each message. WebSocket is suitable for IoT applications that have low latency or high throughput requirements.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+IoT Communication APIs
+## slide24.xml
+IoT and M2M
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+## slide25.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+What is Machine-to-Machine Communication?
+## slide26.xml
+Another term which is often used synonymously with IoT is Machine-to-Machine (M2M). Though IoT and M2M are often used interchangeably, these terms have evolved from different backgrounds.
+Machine-to-Machine (M2M) refers to networking of machines (or devices) for the purpose of remote monitoring, control and data exchange.
+An M2M area network comprises of machines (or M2M nodes) which have embedded hardware modules for sensing, actuation and communication.
+Various communication protocols can be used for M2M local area networks such as Bluetooth, ModBus, M-Bus, Wireless M-Bus, Power Line Communication (PLC), 6LoWPAN, IEEE 802.15.4, etc. These communication protocols provide connectivity between M2M nodes within an M2M area network. The communication network provides connectivity to remote M2M area networks. The communication network can use either wired or wireless networks (IP-based). While the M2M area networks use either proprietary or non-IP based communication protocols, the communication network uses IP-based networks.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+M2M Communication
+## slide27.xml
+Closing Remarks
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University

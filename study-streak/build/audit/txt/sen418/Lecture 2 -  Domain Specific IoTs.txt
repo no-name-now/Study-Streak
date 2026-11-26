@@ -1,0 +1,133 @@
+## slide1.xml
+Domain Specific IoTs
+Lino Isawhe
+School: SEN/CSC
+Pan-Atlantic University, Epe
+PAU-CSC 418
+## slide2.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+## slide3.xml
+The Internet of Things (IoT) applications span a wide range of domains including (but not limited to) homes, cities, environment, energy systems, retail, logistics, industry, agriculture and health.
+This is an overview of various types of IoT applications for each of these domains. In the later chapters the reader is guided through detailed implementations of several of these applications.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Introduction
+## slide4.xml
+Home Automation
+Smart lighting for homes helps in saving energy by adapting the lighting to the ambient conditions and switching on/off or dimming the lights when needed.
+Key enabling technologies for smart lighting include solid state lighting (such as LED lights) and IP-enabled lights.
+For solid state lighting solutions both spectral and temporal characteristics can be configured to adapt illumination to various needs.
+Smart lighting solutions for home achieve energy savings by sensing the human movements and their environments and controlling the lights accordingly. Wireless-enabled and Internet connected lights can be controlled remotely from IoT applications such as a mobile or web application.
+Smart lights with sensors for occupancy, temperature, etc., can be configured to adapt the lighting (by changing the light intensity, color, etc.) based on the ambient conditions sensed, in order to provide a good ambiance.
+Smart Lighting
+## slide5.xml
+Home Automation Cont’d
+Modern homes have a number of appliances such as TVs, refrigerators, music systems, washer/dryers, etc.
+Managing and controlling these appliances can be cumbersome, with each appliance having its own controls or remote controls. Smart appliances make the management easier and also provide status information to the users remotely.
+For example, smart washer/dryers that can be controlled remotely and notify when the washing/drying cycle is complete.
+Smart thermostats allow controlling the temperature remotely and can learn the user preferences. Smart refrigerators can keep track of the items stored (using RFID tags) and send updates to the users when an item is low on stock.
+Smart Appliances
+## slide6.xml
+Home Automation Cont’d
+Home intrusion detection systems use security cameras and sensors (such as PIR sensors and door sensors) to detect intrusions and raise alerts. Alerts can be in the form of an SMS or an email sent to the user.
+Advanced systems can even send detailed alerts such as an image grab or a short video clip sent as an email attachment.
+For example, a cloud controlled intrusion detection system can use location-aware services, where the geo-location of each node of a home automation system is independently detected and stored in the cloud.  In the event of an intrusion, the cloud services alert the occupants, security post, or some times local police. An intrusion detection system based on UPnP technology can use image processing to recognize the intrusion and generate an instant message for alerts.
+Intrusion Detection
+## slide7.xml
+Home Automation Cont’d
+Smoke detectors are installed in homes and buildings to detect smoke that is typically an early sign of fire. Smoke detectors use optical detection, ionization or air sampling techniques to detect smoke. Alerts raised by smoke detectors can be in the form of signals to a fire alarm system.
+Gas detectors can detect the presence of harmful gases such as carbon monoxide (CO), liquid petroleum gas (LPG), etc. A smart smoke/gas detector can raise alerts in human voice describing where the problem is, send or an SMS or email to the user or the local fire safety department.
+Smoke/Gas Detectors
+## slide8.xml
+Smart Cities
+Finding a parking space during rush hours in crowded cities can be time consuming and frustrating. Furthermore, drivers blindly searching for parking spaces create additional traffic congestion. Smart parking make the search for parking space easier and convenient for drivers.
+Smart parking are powered by IoT systems that detect the number of empty parking slots and send the information over the Internet to smart parking application back-ends.
+These applications can be accessed by the drivers from smart-phones, tablets and in-car navigation systems. In smart parking, sensors are used for each parking slot, to detect whether the slot is empty or occupied. This information is aggregated by a local controller and then sent over the Internet to the database.
+Smart Parking
+## slide9.xml
+Smart Cities
+Smart lighting systems for roads, parks can help in saving energy. According to reports, roading lighting is responsible for 19% of global electricity use and around 6% of global greenhouse gas emissions.
+Smart lighting allows lighting to be dynamically controlled and also adaptive to the ambient conditions. Smart lights connected to the Internet can be controlled remotely to configure lighting schedules and lighting intensity.
+Custom lighting configurations can be set for different situations such as a foggy day, a festival, etc.
+Some smart lights are equipped with sensors that can communicate with other lights and exchange information on the sensed ambient conditions to adapt the lighting.
+Smart Lighting for Roads
+## slide10.xml
+Smart Cities
+Smart roads equipped with sensors can provide information on road conditions, travel time estimates and alerts in case of poor driving conditions, traffic congestions and accidents. Such information can help in making the roads safer and help in reducing traffic jams.
+Information sensed from the roads can be communicated via Internet to cloud-based applications and social media and disseminated to the drivers who subscribe to such applications.
+A distributed and autonomous system of sensor network nodes for improving driving safety on public roads can provide drivers and passengers with a consistent view of the road situation a few hundred meters ahead of them or a few dozen miles away, so that they can react to potential dangers early enough.
+Smart Roads
+## slide11.xml
+Smart Cities
+Structural Health Monitoring systems use a network of sensors to monitor the vibration levels in the structures such as bridges and buildings. The data collected from these sensors is analyzed to assess the health of the structures. By analyzing the data it is possible to detect cracks and mechanical breakdowns, locate the damages to a structure and also calculate the remaining life of the structure. Using such systems, advance warnings can be given in the case of imminent failure of the structure.
+Structural Health Monitoring
+## slide12.xml
+Environment
+IoT-based weather monitoring systems can collect data from a number of sensors attached (such as temperature, humidity, pressure, etc.) and send the data to cloud-based applications and storage back-ends. The data collected in the cloud can then be analyzed and visualized by cloud-based applications. Weather alerts can be sent to the subscribed users from such applications.
+Weather Monitoring
+## slide13.xml
+Environment
+IoT based air pollution monitoring systems can monitor emission of harmful gases (CO2, CO, NO, NO2, etc.) by factories and automobiles using gaseous and meteorological sensors. The collected data can be analyzed to make informed decisions on pollutions control approaches.
+A real-time air quality monitoring system can comprise of several distributed monitoring stations that communicate via wireless with a back-end server using machine-to-machine communication.
+Air Pollution Monitoring
+## slide14.xml
+Environment
+With respect to the growing urban development, noise levels in cities have increased and even become alarmingly high in some cities. Noise pollution can cause health hazards for humans due to sleep disruption and stress.
+Noise pollution monitoring can help in generating noise maps for cities. Urban noise maps can help the policy makers in urban planning and making policies to control noise levels near residential areas, schools and parks.
+IoT based noise pollution monitoring systems use a number of noise monitoring sensors that are deployed at different places in a city. The data on noise levels from the sensors are collected on servers or in the cloud. The collected data is then aggregated to generate noise maps.
+Noise Pollution Monitoring
+## slide15.xml
+Environment
+River floods can cause extensive damage to cities, human resources and human life. River floods occur due to continuous rainfall which cause the river levels to rise and flow rates to increase rapidly. Early warnings of floods can be given by monitoring the water level and flow rate. IoT based river flood monitoring system use a number of sensor nodes that monitor the water level (using ultrasonic sensors) and flow rate (using the flow velocity sensors).
+Data from a number of such sensor nodes is aggregated in a server or in the cloud. Monitoring applications raise alerts when rapid increase in water level and flow rate is detected.
+River Floods Detection
+## slide16.xml
+Environment
+Forest fires can cause damage to natural resources, property and human life. There can be different causes of forest fires including lightening, human negligence, volcanic eruptions and sparks from rock falls. Early detection of forest fires can help in minimizing the damage. IoT based forest fire detection systems use a number of monitoring nodes deployed at different locations in a forest. Each monitoring node collects measurements on ambient conditions including temperature, humidity, light levels, etc.
+Forest Fire Detection
+## slide17.xml
+Retail
+IoT systems using Radio Frequency Identification (RFID) tags can help in inventory management and maintaining the right inventory levels. RFID tags attached to the products allow them to be tracked in real-time so that the inventory levels can be determined accurately and products which are low on stock can be replenished. Tracking can be done using RFID readers attached to the retail store shelves or in the warehouse. IoT systems enable remote monitoring of inventory using the data collected by the RFID readers.
+Inventory Management
+## slide18.xml
+Retail
+Smart payment solutions make use of technologies such as contact-less payments. Contatct-less payments are powered by technologies such as Near field communication (NFC) and Bluetooh. Near field communication (NFC) is a set of standards for smart-phones and other devices to communicate with each other by bringing them into proximity or by touching them.
+Customers can store the credit card information in their NFC-enabled smart-phones and make payments by bringing the smart-phones near the point of sale terminals. NFC maybe used in combination with Bluetooh, where NFC (which offers low speeds) initiates initial pairing of devices to establish a Bluetooh connection while the actual data transfer takes place over Bluetooh.
+Smart Payment
+## slide19.xml
+Logistics
+Fleet Tracking
+Vehicle fleet tracking systems use GPS technology to track the locations of the vehicles in real-time. Cloud-based fleet tracking systems can be scaled up on demand to handle large number of vehicles.
+Alerts can be generated in case of deviations in planned routes. The vehicle locations and routes data can be aggregated and analyzed for detecting bottlenecks in the supply chain such as traffic congestions on routes, assignments and generation of alternative routes, and supply chain optimization.
+## slide20.xml
+Logistics
+Shipment Monitoring
+Shipment monitoring solutions for transportation systems allow monitoring the conditions inside containers. For example, containers carrying fresh food produce can be monitored to prevent spoilage of food.
+IoT based shipment monitoring systems use sensors, such as temperature, pressure, humidity, for instance, to monitor the conditions inside the containers and send the data to the cloud, where it can be analyzed to detect food spoilage. The analysis and interpretation of data on the environmental conditions in the container and food truck positioning can enable more effective routing decisions in real time it is therefore possible to take remedial measures.
+For example, the food that has a limited time budget before it gets rotten can be re-routed to a closer destinations, alerts can be raised to the driver and the distributor about the transit conditions, such as container temperature exceeding the allowed limit, humidity levels going out of the allowed limit, for instance, and corrective actions can be taken before the food gets damaged.
+## slide21.xml
+Agriculture
+Green House Control
+Green houses are structures with glass or plastic roofs that provide conducive environment for growth of plants. The climatological conditions inside a green house can be monitored and controlled to provide the best conditions for growth of plants.
+The temperature, humidity, soil moisture, light and carbon dioxide levels are monitored using sensors and the climatological conditions are controlled automatically using actuation devices (such as valves for releasing water and switches for controlling fans).
+IoT systems play an important role in green house control and help in improving productivity. The data collected from various sensors is stored on centralized servers or in the cloud where analysis is performed to optimize the control strategies and also correlate the productivity with different control strategies.
+## slide22.xml
+Agriculture
+Smart Irrigation
+Smart irrigation systems can improve crop yields while saving water. Smart irrigation systems use IoT devices with soil moisture sensors to determine the amount of moisture in the soil and release the flow of water through the irrigation pipes only when the moisture levels go below a predefined threshold.
+Smart irrigation systems also collect moisture level measurements on a server or in the cloud where the collected data can be analyzed to plan watering schedules.
+## slide23.xml
+Health
+Wearable Electronics
+Wearable electronics such as wearable gadgets (smart watches, smart glasses, wristbands, etc.) and fashion electronics (with electronics integrated in clothing and accessories, e.g., Google Glass or Moto 360 smart watch) provide various functions and features to assist us in our daily activities and making us lead healthy lifestyles.
+Smart watches that run mobile operating systems (such as Android) provide enhanced functionality beyond just timekeeping. With smart watches, the users can search the Internet, play audio/video files, make calls (with or without paired mobile phones), play games and use various kinds of mobile applications, check for calories burnt based on physical activities, heart beat rates, and so on.
+## slide24.xml
+Closing Remarks
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University

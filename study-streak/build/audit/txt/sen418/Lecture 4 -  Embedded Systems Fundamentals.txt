@@ -1,0 +1,233 @@
+## slide1.xml
+Embedded Systems Fundamentals
+Lino Isawhe
+School: SEN/CSC
+Pan-Atlantic University, Epe
+PAU-CSC 418
+## slide2.xml
+What is an Embedded System?
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Introduction to Embedded Systems
+## slide3.xml
+An embedded system is a computer based system that entails both hardware and software, designed and integrated into a larger device or product to perform a specific task / function or set of closely related functions.
+In contrast to general purpose computers or personal computers (PCs) which can perform various types of tasks, embedded systems are designed to perform a specific set of tasks.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Introduction to Embedded Systems
+## slide4.xml
+A useful way to understand embedded systems is to compare them with general purpose computers.
+General Purpose Computer: Designed to perform many different tasks; user can install many applications; usually has considerable processing and memory resources; examples include desktop and laptop computers.
+Embedded System: Designed around specific functions; software is normally designed for the device; resources are selected according to the application; examples include washing machine controllers and car controllers.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+General Purpose Computer vs Embedded System
+## slide5.xml
+An embedded system, just like every other computing system is divided it into three major functional stages:
+INPUT  >> PROCESSING >> OUTPUT
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The Basic Embedded System Model
+## slide6.xml
+INPUT  >>
+The input may be:
+Physical: temperature, pressure, motion, light, sound
+Electrical: voltage or current from a sensor
+Digital: data received from another device
+User generated: button presses, keypad entries, touchscreen input
+Communication data: information received through UART, SPI, I²C, Ethernet, Wi-Fi, Bluetooth, etc.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The Basic Embedded System Model Cont’d
+## slide7.xml
+>>  PROCESSING  >>
+The processing stage is the "decision making" part of the embedded system. The system receives the input and determines what should happen next.
+Processing is usually performed by a:
+Microcontroller (MCU)
+Microprocessor (MPU)
+Digital Signal Processor (DSP)
+FPGA
+Other programmable or dedicated processing hardware
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The Basic Embedded System Model Cont’d
+## slide8.xml
+>>  OUTPUT
+The output is the response produced by the embedded system after processing the input.
+The output can be used to:
+Control a physical device
+Display information
+Produce an audible signal
+Send data to another system
+Store information
+Activate an actuator
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The Basic Embedded System Model Cont’d
+## slide9.xml
+Microprocessor or Microcontroller: Core processing unit responsible for executing system logic.
+Memory: RAM, ROM, and cache used for volatile and non-volatile storage requirements during operation.
+Networking Units: Interfaces such as Ethernet or WiFi adapters that enable communication capability.
+Input/Output Units: Peripherals including displays, keyboards, and sensor interfaces to facilitate interaction with users or external environments.
+Storage: Non-volatile memory solutions such as flash memory.
+Sensors:  Collect information from the physical environment.
+Some embedded systems incorporate specialized processors such as digital signal processors (DSPs), graphics processors, and application-specific processors.
+They frequently execute embedded operating systems, such as real-time operating systems (RTOS). Embedded systems range from low-cost miniaturized devices such as digital watches to complex systems like digital cameras, point of sale terminals, vending machines, and household appliances (such as washing machines).
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Key components of an embedded system
+## slide10.xml
+The core is the computational center of an embedded system.
+There are four broad categories:
+General purpose and domain specific processors
+Application Specific Integrated Circuits (ASIC)
+Programmable Logic Devices (PLD)
+Commercial Off the Shelf components (CoS)
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+The Core of an Embedded System
+## slide11.xml
+Microprocessor?
+Microcontroller?
+Where does raspberry pi 5 fall into?
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Microprocessor vs Microcontroller
+## slide12.xml
+Microprocessor
+A microprocessor is a processor implemented primarily as an integrated circuit that performs computation but normally requires external components such as memory and I/O interfaces to form a complete system.
+Typical applications include calculators, accounting systems, games machines, complex industrial controllers, data acquisition systems, military applications and communication systems.
+Microcontroller
+A microcontroller is an integrated circuit that combines a processor core with memory and peripheral interfaces, typically on a single chip, for controlling a specific application or embedded function.
+Common families include ARM Cortex M based microcontrollers, STM32, ESP32, AVR, PIC and 8051.
+Applications include washing machines, cameras, security alarms, microwave ovens and consumer electronics.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Microprocessor and Microcontroller
+## slide13.xml
+A Digital Signal Processor (DSP) is a processor optimized for performing mathematical operations on digital signals efficiently.
+DSPs are particularly useful for audio, video and communication signals.
+A typical DSP contains program memory, data memory, computational engine and I/O unit.
+DSPs are useful for computationally intensive signal processing.
+Examples include audio processing, video processing and telecommunications.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Digital Signal Processor - DSP
+## slide14.xml
+An Application Specific Integrated Circuit (ASIC) is an integrated circuit designed for a particular application or function.
+Advantages include high performance and optimization; limitations include high development cost and less flexibility after fabrication.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Application Specific Integrated Circuit -  ASIC
+## slide15.xml
+A Programmable Logic Device (PLD) is an integrated circuit whose logic functionality can be configured or programmed by the designer.
+Examples include CPLD and FPGA.
+An FPGA is a programmable digital logic device containing configurable logic resources and interconnections that can be programmed to implement specific digital hardware functions.
+FPGAs are useful for hardware acceleration, parallel processing, specialized digital logic, high speed processing and reconfigurable hardware.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Programmable Logic Devices - PLD
+## slide16.xml
+Embedded systems frequently need to communicate with sensors, other controllers, computers, mobile devices, industrial equipment, cloud systems and IoT platforms.
+Chip Level Interfaces
+Chip level communication interfaces include I²C, SPI, UART, 1 Wire and parallel bus.
+I²C, or Inter Integrated Circuit communication, is a serial communication interface designed for communication between integrated circuits.
+SPI or Serial Peripheral Interface, is a synchronous serial communication interface commonly used for relatively fast communication between a controller and peripheral devices. SPI is commonly used with displays, sensors, flash memory and ADC/DAC devices.
+UART stands for Universal Asynchronous Receiver Transmitter. UART provides serial communication without requiring a shared clock signal.
+External Interfaces
+External wired interfaces include RS 232C, RS 485, parallel port, USB and IEEE 1394.
+External wireless interfaces include Infrared / IrDA, Bluetooth, Wi Fi, ZigBee and GPRS.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Communication Interfaces
+## slide17.xml
+Classification Based on Triggering:
+These are classified into two types
+1. Event Triggered : Activities within the system (e.g., task run-times) are dynamic and
+depend upon occurrence of different events .
+2. Time triggered: Activities within the system follow a statically computed schedule (i.e.,
+they are allocated time slots during which they can take place) and thus by nature are
+predictable.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Embedded Systems Classification
+## slide18.xml
+Classification Based on deterministic behavior:
+It is applicable for Real Time systems. The application/task execution behavior for an embedded system can be either deterministic or non-deterministic
+These are classified in to two types
+1. Soft Real time Systems: Missing a deadline or errors within the metrics may not be critical and can be tolerated to a certain degree
+2. Hard Real time systems: Missing a program/task execution time deadline can have
+catastrophic consequences (financial, human loss of life, etc.)
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Embedded Systems Classification
+## slide19.xml
+Classification Based on deterministic behavior:
+It is applicable for Real Time systems. The application/task execution behavior for an embedded system can be either deterministic or non-deterministic
+These are classified in to two types
+1. Soft Real time Systems: Missing a deadline or errors within the metrics may not be critical and can be tolerated to a certain degree
+2. Hard Real time systems: Missing a program/task execution time deadline can have
+catastrophic consequences (financial, human loss of life, etc.)
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Embedded Systems Classification
+## slide20.xml
+Classification based on Complexity & Performance
+Small Scale: The embedded systems built around low performance and low cost 8 or 16
+bit microprocessors/ microcontrollers. It is suitable for simple applications and where
+performance is not time critical. It may or may not contain OS.
+Medium Scale: Embedded Systems built around medium performance, low cost 16 or 32
+bit microprocessors / microcontrollers or DSPs. These are slightly complex in hardware
+and firmware. It may contain GPOS/RTOS.
+Large Scale/Complex: Embedded Systems built around high performance 32 or 64 bit
+RISC processors/controllers, RSoC or multi-core processors and PLD. It requires
+complex hardware and software. These system may contain multiple
+processors/controllers and co-units/hardware accelerators for offloading the processing
+requirements from the main processor.
+and management.
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Embedded Systems Classification
+## slide21.xml
+Closing Remarks
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University

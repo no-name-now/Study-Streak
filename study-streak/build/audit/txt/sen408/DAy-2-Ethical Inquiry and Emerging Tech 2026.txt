@@ -1,0 +1,220 @@
+
+--- page 1 ---
+Ethical Inquiry 
+and 
+Emerging Technologies
+--- page 2 ---
+Last week and today
+Pre-course survey
+Introduction
+Definitions of ethics
+Approaches to ethics
+Case discussions: Megan
+2
+--- page 3 ---
+4
+A branch of philosophy that seeks to 
+understand and determine how human 
+actions can be judged as right or wrong.
+
+--- page 4 ---
+What is computing ethics 
+“On my view, computer ethics is the analysis of the 
+nature and social impact of computer technology and 
+the corresponding formulation and justification of 
+policies for the ethical use of such technology. I use the 
+phrase "computer technology" because I take the 
+subject matter of the field broadly to include computers 
+and associated technology. For instance, I include 
+concerns about software as well as hardware and 
+concerns about networks connecting computers as well 
+as computers themselves.
+What other aspects should be included in computing 
+ethics?
+5
+--- page 5 ---
+
+--- page 6 ---
+Approaches to ethics
+Descriptive vs Normative
+Ethical frameworks or theories
+• Consequences, duties, laws etc…
+• Virtues, Values and Value congruence
+• Character based approaches to ethics is key
+• Consider domains of human flourishing
+--- page 7 ---
+Group exploration of ethical issues: 
+Instructions 
+What ethical issues do you see in your assigned 
+case? 
+What are your first thoughts about the case?
+What is your final response?
+How did you arrive at your response?
+What ethical questions arise regarding the case
+How can you connect your previous discussions 
+in general ethics with the case and its 
+resolutions
+10
+--- page 8 ---
+Explore the following in groups
+Case 1: A major tech company develops an AI system 
+to screen job applicants. After deployment, data shows 
+the system consistently ranks male candidates higher 
+than equally qualified female candidates.
+Case 2: A health startup collects data from wearable 
+devices to predict disease outbreaks. During an 
+epidemic, the company is asked to share users’ private 
+health data with government agencies.
+Case 3: An autonomous car must decide between 
+swerving to avoid pedestrians (risking the passenger’s 
+life) or staying its course (harming the pedestrians).
+11
+--- page 9 ---
+Explore these cases in groups
+Case 4: A social media company uses algorithms to 
+maximize user engagement, knowing that this keeps 
+people online longer but also increases anxiety and 
+polarization.
+Case 5: A company installs AI-driven monitoring software 
+to track employee productivity—recording keystrokes, 
+screen time, and even webcam images. Productivity rises, 
+but staff feel anxious and violated.
+Case 6: A cloud service provider expands data centres 
+worldwide, consuming enormous energy and water 
+resources. The company offsets emissions through carbon 
+credits but continues unsustainable growth.
+12
+--- page 10 ---
+Today’s discussion themes
+• What the different dimensions of ethics and 
+ethical inquiry? 
+– Descriptive vs. Prescriptive/Normative Inquiry
+– Codes of Ethics vs Law vs Moral Principles
+– Ethical Questions at Different Levels of Social 
+Organization
+• Group work / Discussion 
+--- page 11 ---
+Descriptive Ethics vs Normative Ethics
+
+--- page 12 ---
+Descriptive Ethics
+• Examples of Descriptive Ethical Inquiry
+– What do companies believe is ethical to use 
+client’s data for?
+– What are the established norms that companies 
+follow in research and development of AI 
+technologies?
+– What do engineers think is permissible to do to 
+get more people to use their products? 
+– Does the public view AI as being used largely 
+ethically or unethically?
+--- page 13 ---
+Normative Ethics
+• Examples of Normative Ethical Inquiry
+– Should we have laws that specify who should have 
+access to people’s digital medical data? 
+– Should we regulate the creation and access to 
+online data about people’s medical visits?
+– Is using AI to predict whether an individual is likely 
+to recommit crimes just or fair?
+– Should programmers refuse to develop 
+autonomous weapon systems? 
+– Should a programmer be held responsible for the 
+harm caused by an app they made?
+--- page 14 ---
+Laws vs Codes of Conduct vs Moral Principles
+• Laws
+– Anti-discrimination law
+– Privacy laws
+• Codes of Conduct
+– ACM Code of Ethics and Professional Conduct
+– Code of Ethics for Engineers
+• Moral Principles
+– It is wrong to develop applications that exacerbate 
+social inequality. 
+--- page 15 ---
+Ethical Questions at Different Levels of Social Organization
+• General/Abstract
+– What is rightness?
+– What is fairness or justice?
+• Political
+– What laws should govern the use of (specific) AI 
+technologies/applications and data collection and use?
+• Interpersonal
+– Which decisions should we turn over to algorithmic 
+decision-making? 
+• Individual
+– How should I interact with algorithmic decision-making 
+tools? 
+--- page 16 ---
+Ethical Questions at Different Levels of Social Organization
+• These are all distinct questions and their 
+relationships non-obvious:
+– Should the state prohibit companies from using 
+consumer data to personalize news feeds?
+– Should companies use consumer data to 
+personalize news feeds?
+– Should I get my news from a website that 
+personalizes my news feed based on consumer 
+data?
+– Should I work to prevent others from getting news 
+from a website that personalizes my news feed 
+based on consumer data?
+--- page 17 ---
+
+--- page 18 ---
+Ethical Inquiry in computing & AI
+Ethics 
+of AI
+Policy 
+Makers
+Practitioners
+CitizensBusiness 
+Leaders
+Individuals
+--- page 19 ---
+Examples of Topics and Technologies
+AI Ethics
+Near Term AI
+Autonomous 
+System
+Recommendation 
+Engines
+Big Data
+Far Term AI
+Superintelligent 
+AI
+Conscious AI
+--- page 20 ---
+Examples of specific Topics and Technologies
+Big Data Healthcare 
+Applications Privacy
+--- page 21 ---
+Other Topics and Technologies of General Interest
+Far Term AI 
+Ethics
+Superintelligent 
+AI Weighing Risks
+Conscious AI
+Moral Status
+Intelligence and 
+Consciousness
+--- page 22 ---
+Takeaways
+• There are important differences between 
+normative and descriptive ethical inquiry.
+• Ethical norms are not solely or purely a 
+function of what is mandated by law or 
+embedded in codes of conduct.
+• Careful normative inquiry requires 
+distinguishing between various subjects of 
+assessment. 
+--- page 23 ---
+Take home exercise/discussion
+1. Why is ethics important?
+2. Think of a tech project that you find 
+fascinating and make a list of stakeholders
+3. Think of ways in which your project can have 
+positive or negative impact on those people? 
+4. Who is responsible for ensuring that no one 
+is harmed by the products of the project? 

@@ -1,0 +1,248 @@
+
+--- page 1 ---
+Overview of next topics
+Specific ethical issues
+--- page 2 ---
+• Introduction
+• Dimensions of ethical inquiry
+– Descriptive approaches to ethical inquiry
+– Normative approaches to ethical inquiry
+• Laws, codes vs principles
+• Ethical Questions at Different Levels of Social Organization
+• Various sources of norms & Why we need to reflect on the 
+approaches to ethics and the sources of ethical norms.
+• Dilemmas
+• Ethical frameworks and fundamental ethical principles.
+• Design ethics
+• Codes of ethics 
+• Check online for Readings on the specific topics e.g. 
+recommendation engines (echo chambers etc) , privacy, surveillance 
+So far…
+--- page 3 ---
+– Big data and privacy
+– Recommendation engines
+– Algorithmic filtering (focus on newsfeeds and 
+searches)
+– Big data and healthcare
+• Cybersecurity and some cyber related crimes
+• Social issues and computer science (digital 
+misinformation etc.)
+• Digital divides, democracy and work
+• Intellectual property etc.
+Specific topics and technologies
+--- page 4 ---
+What is AI?
+➢ Big data is the fuel on 
+which artificial 
+intelligence runs.
+➢ The more data available 
+to the AI, the more it can 
+learn and improve its 
+pattern recognition 
+capabilities.
+--- page 5 ---
+Some Topics and Technologies
+AI Ethics
+Near Term AI
+Autonomous 
+Systems
+Recommendation 
+Engines
+Big Data
+Far Term AI
+Superintelligent 
+AI
+Conscious AI
+--- page 6 ---
+Topics and Technologies
+Big Data Privacy Health care
+--- page 7 ---
+Topics and Technologies
+Autonomous 
+Systems
+Autonomous 
+Vehicles
+Applying 
+Philosophical 
+Tools
+Broad Scope and 
+Value-Sensitive 
+Design
+Autonomous 
+Weapons
+Moral 
+Responsibility
+--- page 8 ---
+Topics and Technologies
+Far Term AI 
+Ethics
+Superintelligent 
+AI Weighing Risks
+Conscious AI
+Moral Status
+Intelligence and 
+Consciousness
+--- page 9 ---
+Privacy
+Big data
+--- page 10 ---
+Did a university use facial 
+recognition techniques to identify 
+student protesters? 
+
+--- page 11 ---
+Lecture overview
+• Big Data Analytics and Privacy
+• The Value Of and Right to Privacy
+• The Current Privacy Protection Regime
+– Notice and Consent
+– Anonymization
+• Big Data and The Current Regime
+• The Key Privacy Questions
+--- page 12 ---
+Big Data and Privacy
+Applications
+Surveillance
+Intimate 
+Inference
+--- page 13 ---
+Value of Privacy
+• Rights protect interests
+• What is the interest that privacy protects?
+Privacy 
+Interest
+Control 
+Accounts
+I have an interest 
+in controlling 
+which 
+information 
+people have 
+about me. 
+Secrecy 
+Accounts
+I have an interest 
+in preserving 
+some information 
+as secret. 
+--- page 14 ---
+The Current Regime
+• Notice and Consent
+– Provide information about how a system 
+works and how the user will participate in 
+the system.
+– Require consent for user participation.
+• Anonymization
+– Remove or hide “personal identifiers”
+• Name
+• SSN/NIN/BVN
+• Birth date
+--- page 15 ---
+Big Data and the Current Regime
+Challenges
+Notice and 
+Consent
+Disclosure and 
+Understanding in 
+Tension
+Problem of 
+Unanticipated 
+Uses
+Inferences About 
+Non-Consenters
+Anonymization
+Big Data enables 
+intimate inferences 
+without personal 
+identifiers
+--- page 16 ---
+Target case
+
+--- page 17 ---
+Barocas and Nissenbaum reading…
+• On the e-learning portal
+• Nissenbaum's proposal for resolving privacy 
+issues is to focus on contextual integrity.
+• Answer the following questions;
+• What are the central claims for Nissenbaum? 
+• What is Big data exceptionalism? 
+• Is BDE compatible with contextual integrity?
+--- page 18 ---
+The Key Privacy Questions
+• Can we protect privacy and maintain the benefits and 
+technologies enabled by big data analytics?
+• What would a new privacy regime look like? 
+Privacy 
+Interest
+Control 
+Accounts
+I have an interest in 
+controlling which 
+information people 
+have about me.
+Secrecy 
+Accounts
+I have an interest in 
+preserving some 
+information as secret. 
+Contextual 
+Integrity 
+Account
+I have an interest in the 
+appropriate flow of my 
+information (certain 
+contextual norms are 
+respected)
+--- page 19 ---
+In Nigeria…
+• The right to privacy is one of the fundamental 
+human rights entrenched in the Nigerian 
+Constitution. 
+• Section 37 of the 1999 Constitution provides that: 
+“The privacy of citizens, their homes, 
+correspondence, telephone conversations and 
+telegraphic communications is hereby guaranteed 
+and protected.”
+• Read up the Nigeria Data Protection Act (NDPA) 
+2023 and compare with the EU’s General Data 
+Protection Regulation (GDPR)
+• Find/add more info on privacy laws in Nigeria…
+--- page 20 ---
+Group discussions on uses of big data
+1. Facial recognition in university of Miami
+2. Amazon, Tiktok, Facebook etc
+What ethical issues do you find in the cases? 
+• What solutions do you propose?
+• Answer  other questions in the documents
+--- page 21 ---
+Privacy
+Facial recognition on campus Amazon, Facebook, TikTok
+
+--- page 22 ---
+Amazon, Facebook, TikTok
+1. Do you think users, especially young users, would 
+trade their highly tailored recommender systems 
+and social media experiences for data privacy?
+2. How much does transparency of tech monopolies 
+help if people are not fluent in the concept of 
+how algorithms work?
+3. Should social media companies release the 
+abstractions of the users that it forms using data?
+4. Can you suggest ways of resolving ethical issues 
+raised in this case?
+--- page 23 ---
+Facial recognition… Miami
+• How can facial recognition algorithms interfere with 
+people’s right to protest?
+• When it comes to facial recognition databases, are 
+larger photo repositories better or worse?
+• Does facial recognition and video surveillance have a 
+place on university campuses or not?
+• How does facial recognition and video surveillance 
+embolden people in power in general?
+• What can you do to prevent occurrence of unethical 
+use of facial recognition technology?
+• Are there ways that you can intervene to promote the 
+ethical use of data in facial recognition technology?
+--- page 24 ---
+Tim Cook may just have ended Facebook

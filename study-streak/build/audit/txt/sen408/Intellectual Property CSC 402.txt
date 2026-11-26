@@ -1,0 +1,264 @@
+
+--- page 1 ---
+Intellectual property
+
+--- page 2 ---
+Two main questions: 
+What, exactly, is 
+intellectual property? 
+How should it be 
+protected in cyberspace?
+--- page 3 ---
+Property
+When discussing issues involving property, we tend to think 
+of tangible items. Originally, property referred to land; 
+however, it now also includes objects that an individual can 
+own, such as an automobile, articles of clothing, or a stamp 
+collection.
+--- page 4 ---
+Property rights 
+Please revise JM Elegido’s book Introduction to ethics. 
+The chapter on the ethics of property ownership.
+2 questions: 
+1. What does it mean for something to be my property?
+2. Do I have absolute rights for any property that I own?
+--- page 5 ---
+Why protect property?
+One theory is based on the rationale that a property right is a type 
+of “natural right” that should be granted to individuals for the 
+products that result from the labour expended in producing a 
+creative work or a practical invention. 
+The other theory is based on the notion that property rights 
+themselves are not natural rights but rather social constructs 
+designed to encourage creators and inventors to better serve 
+society in general by bringing forth their creative works and 
+practical inventions into the marketplace. 
+--- page 6 ---
+Some questions….
+1. Should computer software be protected by copyright law as 
+well as by patent law?
+2. How does the principle of fair use apply to proprietary 
+information in digital format?
+3. What kinds of philosophical and legal arguments are used to 
+justify protecting intellectual property?
+4. Do current intellectual property laws sufficiently balance the 
+interests of the public good against those of individuals and 
+corporations who own copyrights and hold patents?
+
+--- page 7 ---
+Challenges
+Is computer software a special kind of intellectual 
+object that deserves both copyright and patent 
+protection? 
+Software, which consists of lines of programming 
+code (or codified thought), is not exactly expressed, 
+or “fixed,” in a tangible medium as literary works are.
+--- page 8 ---
+Some ideas…
+Current debates: From ownership of software programs to arguments about who 
+has the right to distribute (or even make available for use) proprietary information 
+on the Internet
+Some philosophers use the expression intellectual objects when referring to forms 
+of intellectual property. They are 
+◦ Not tangible
+◦ Non-exclusionary
+Legal protection is given only to the tangible expression of an idea that is creative 
+or original.
+It must be expressed (or “fixed”) in some tangible medium such as a physical book or machine 
+or process  (see the The Nigerian Copyright Act 2022)
+--- page 9 ---
+Questions: Philosophical arguments
+Why, exactly, is the unauthorized copying of proprietary 
+software morally wrong?
+
+--- page 10 ---
+Decrypting Security on an e-Book Reader
+Dimitri Sklyarov, a Russian citizen, was arrested by U.S. federal agents 
+in 2001 while attending a computer security conference in Las Vegas. 
+Sklyarov had in his possession a copy of a program he had written to 
+decrypt the code for the book-reading software developed by Adobe. 
+(At that time, Adobe’s Acrobat e-Book Reader software enabled 
+computer users to read digital books, available online for a fee.) 
+Adobe was concerned that with Sklyarov’s program, users would be 
+able to read e-books for free. However, the U.S. government seemed 
+more interested in arresting Sklyarov in order to test the controversial 
+anticircumvention clause of the Digital Millennium Copyright Act 
+(DMCA) which had been enacted in 1998 but was not enforceable 
+until 2000. 
+--- page 11 ---
+The Fair-Use and First-Sale Provisions of 
+Copyright Law
+To balance the exclusive controls given to copyright holders against the broader 
+interests of society, two provisions have been developed: fair use and first sale.
+According to the fair-use principle, every author or publisher may make limited use 
+of another person’s copyrighted work for purposes such as criticism, comment, 
+news, reporting, teaching, scholarship, and research. This principle is important to 
+the computer industry in particular, and to engineering in general, because it 
+supports the practice of “reverse engineering,” which allows someone to buy a 
+product for the purpose of taking it apart to see how it works.
+First-sale provision: applies once the original work has been sold for the first time. 
+At this point, the original owner loses rights over the previously protected work.
+--- page 12 ---
+WIPO convention…
+The WIPO Convention, the constituent instrument of the 
+World Intellectual Property Organization (WIPO), was signed 
+at Stockholm on July 14, 1967, entered into force in 1970 
+and was amended in 1979. 
+WIPO is an intergovernmental organization which in 1974 
+became one of the specialized agencies of the United 
+Nations system.
+https://www.wipo.int/treaties/en/convention/
+--- page 13 ---
+What is Intellectual Property?
+Intellectual property (IP) refers to creations of the mind, such as 
+inventions; literary and artistic works; designs; and symbols, names and 
+images used in commerce.
+IP is protected in law by, for example, patents, copyright and 
+trademarks, which enable people to earn recognition or financial benefit 
+from what they invent or create. 
+By striking the right balance between the interests of innovators and the 
+wider public interest, the IP system aims to foster an environment in 
+which creativity and innovation can flourish.
+--- page 14 ---
+Types of intellectual property protection
+✓Patents
+✓Copyright 
+✓Trademarks
+✓Trade secrets
+✓Industrial designs
+✓Geographic indications
+
+--- page 15 ---
+Patents
+What is a patent?
+A patent is an exclusive right granted for an invention, which is 
+a product or a process that provides, in general, a new way of 
+doing something, or offers a new technical solution to a 
+problem. To get a patent, technical information about the 
+invention must be disclosed to the public in a patent 
+application.
+The patent owner has the exclusive right to prevent or stop 
+others from commercially exploiting the patented invention.
+Valid for 20 years
+--- page 16 ---
+Examples: 2023 Patent Picks
+Weird and Wonderful
+If ever proof were needed that 
+innovation knows no bounds, look 
+no further than our list of out-of-
+the-ordinary patents.
+
+--- page 17 ---
+Copyright
+What is copyright?
+Copyright (or author’s right) is a legal term used to describe the rights that 
+creators have over their literary and artistic works. Works covered by 
+copyright range from books, music, paintings, sculpture, and films, to 
+computer programs, databases, advertisements, maps, and technical 
+drawings.
+Two aspects: 
+▪Economic rights, which allow the rights owner to derive financial reward 
+from the use of their works by others; and
+▪Moral rights, which protect the non-economic interests of the author.
+--- page 18 ---
+What can be protected by copyright?
+Exhaustive lists of works covered by copyright are usually not to be found in legislation. 
+Nonetheless, broadly speaking, works commonly protected by copyright throughout the 
+world include:
+➢literary works such as novels, poems, plays, reference works, newspaper articles;
+➢computer programs, databases;
+➢films, musical compositions, and choreography;
+➢artistic works such as paintings, drawings, photographs, and sculpture;
+➢architecture; and
+➢advertisements, maps, and technical drawings.
+--- page 19 ---
+Highlights in the evolution…
+Interesting dates: 1790, 1909, 1960s, 1978… etc.
+The Copyright Act was amended in 1980 to address the status of software 
+programs, and the concept of a literary work was extended to include programs, 
+computers, and “databases that exhibit authorship.” 
+The amendment defined a computer program as “a set of statements or 
+instructions to be used directly in a computer in order to bring about certain 
+results.”
+To obtain a copyright for a computer program, however, its author had to show 
+that the program contained an original expression (or arrangement) of ideas and 
+not simply the ideas themselves
+--- page 20 ---
+Trademarks
+What is a trademark?
+A trademark is a sign capable of distinguishing the goods or services of one 
+enterprise from those of other enterprises. Trademarks are protected by 
+intellectual property rights.
+At the national/regional level, trademark protection can be obtained 
+through registration, by filing an application for registration with the 
+national/regional trademark office and paying the required fees.
+A trademark registration will confer an exclusive right to the use of the 
+registered trademark 
+Duration 10years but renewable
+--- page 21 ---
+
+--- page 22 ---
+Examples of 
+trademarks
+A word or a combination of 
+words, letters, and numerals can 
+perfectly constitute a trademark.
+Drawings, symbols, three-
+dimensional features such as the 
+shape and packaging of goods, 
+Non-visible signs such as sounds 
+or fragrances, or colour shades 
+used as distinguishing features –
+the possibilities are almost 
+limitless.
+--- page 23 ---
+Trade secrets
+Trade secrets are intellectual property (IP) rights on confidential information which may be 
+sold or licensed.
+What qualifies as a trade secret? In general, the information must be:
+❑commercially valuable because it is secret,
+❑be known only to a limited group of persons, and
+❑be subject to reasonable steps taken by the rightful holder of the information to keep it 
+secret, including the use of confidentiality agreements for business partners and employees.
+The unauthorized acquisition, use or disclosure of such secret information in a manner 
+contrary to honest commercial practices by others is regarded as an unfair practice and a 
+violation of the trade secret protection.
+--- page 24 ---
+Trade secrets encompass both technical information, such as 
+information concerning manufacturing processes, pharmaceutical 
+test data, designs and drawings of computer programs, and 
+commercial information, such as distribution methods, list of 
+suppliers and clients, and advertising strategies.
+A trade secret may be also made up of a combination of elements, 
+each of which by itself is in the public domain, but where the 
+combination, which is kept secret, provides a competitive advantage.
+--- page 25 ---
+Is computer software a special kind of intellectual object 
+that deserves both copyright and patent protection?
+Challenge 1: Software, which consists of lines of programming code (or codified 
+thought), is not exactly expressed, or “fixed,” in a tangible medium as literary 
+works are.
+Challenge 2: a program’s code takes many forms: source code, object code, and 
+the final executable code. 
+Initially: not protected
+In the late 1960s, IBM adopted a new marketing policy that separated software 
+(and services) from hardware, which also suggested the need for “closed 
+source software” so that its programming division could be profitable.
+--- page 26 ---
+Test your knowledge about IP
+✓Patents
+✓Copyright 
+✓Trademarks
+✓Trade secrets
+✓Industrial designs
+✓Geographic indications
+
+--- page 27 ---
+Summary
+A patent protects new inventions, processes, or 
+scientific creations
+A trademark protects brands, logos, and slogans, and 
+A copyright protects original works of authorship.
+--- page 28 ---
+
+--- page 29 ---

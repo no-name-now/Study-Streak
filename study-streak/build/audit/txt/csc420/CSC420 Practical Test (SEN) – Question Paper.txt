@@ -1,0 +1,117 @@
+
+--- page 1 ---
+PAN-ATLANTIC UNIVERSITY 
+SCHOOL OF SCIENCE AND TECHNOLOGY 
+CSC420 Practical Test (SEN) – Question Paper 
+Instructions 
+Answer all questions. Time allowed: 1 hour. Total: 30 marks. 
+1. Create an empty PostgreSQL database named business_db, open a Query Tool on it, 
+and run the script business_db_setup.sql provided. It takes a few seconds. Re -
+running it resets every table and index to its original state. 
+2. Submit one Word document named <MatricNo>_CSC420_Test.docx. 
+3. For every question, write the question number, then paste your SQL as text  (not as a 
+picture). Where a question is marked [Screenshot], also paste a screenshot of the 
+output showing the query and its result. 
+4. Where a question asks for a short explanation, type it under your SQL in one to three 
+sentences. 
+5. If a query will not run, paste it anyway: partly correct SQL can still earn marks. 
+6. Run the questions in order. Questions 3 and 6 change data; follow their steps exactly as 
+written. 
+7. Do not drop or alter any table. 
+The business_db schema 
+The database belongs to a wholesale and retail distributor with six branches. The setup script 
+creates five tables. Array columns are marked [array]. 
+Table Rows Columns 
+branches 6 branch_id (PK), branch_code (e.g. LAG, ABJ), 
+branch_name, region 
+employees 24 employee_id (PK), staff_no, full_name, branch_id 
+(FK), job_title, salary, certifications [array, TEXT[]] 
+products 48 product_id (PK), product_code (e.g. ELC001), name, 
+category, unit_price, manager_id (FK to employees), 
+tags [array, TEXT[]] 
+customers 50,000 customer_id (PK), account_no, first_name, 
+last_name, email, customer_type (Retail or Wholesale), 
+branch_id (FK), join_year, credit_limit, 
+phone_numbers [array, TEXT[]], interests [array, TEXT[]] 
+orders 225,289 order_id (PK), customer_id (FK), product_id (FK), 
+--- page 2 ---
+PAN-ATLANTIC UNIVERSITY 
+SCHOOL OF SCIENCE AND TECHNOLOGY 
+Table Rows Columns 
+branch_id (FK), order_year, quantity_ordered, 
+deliveries [array, INTEGER[]] 
+Useful facts about the data: 
+• An order may be delivered in several shipments. Each element of deliveries is the 
+quantity delivered in one shipment. 
+• Total delivered = sum of all elements in deliveries. An order is short-delivered if its 
+total delivered is less than quantity_ordered. 
+• Orders from 2026 are still open: only their first shipment has been recorded. 
+• manager_id in products is the employee who manages that product. 
+Question One (2 marks) [Screenshot] 
+Run business_db_setup.sql. Then write two queries: 
+1. Display the first five records of customers, ordered by customer_id. 
+2. Display the first five records of products, ordered by product_id. 
+Paste both queries and a screenshot of each result. 
+Question Two (3 marks) [Screenshot] 
+List every Wholesale customer of the Lagos Island branch (branch_id = 1 ) who has 'Solar 
+Panels' among their interests. Show: 
+• account_no 
+• full_name (first name and last name in one column, separated by a space) 
+• first_phone (the first element of phone_numbers) 
+• num_interests (the number of elements in interests) 
+Order the result by account_no. State how many rows your query returns. 
+Question Three (4 marks) [Screenshot] 
+Carry out the following steps in order, running each statement separately: 
+1. Start a transaction. 
+2. Increase the salary of every employee in branch_id = 1 by 10%. 
+3. Display staff_no, full_name and salary for those employees, ordered by 
+staff_no. 
+4. Undo the transaction. 
+5. Run the query from step 3 again. 
+ 
+--- page 3 ---
+PAN-ATLANTIC UNIVERSITY 
+SCHOOL OF SCIENCE AND TECHNOLOGY 
+ 
+Paste all the SQL, a screenshot of the results of steps 3 and 5, and explain in one sentence why 
+the two results differ. 
+Question Four (3 marks) [Screenshot] 
+The customer portal looks customers up by email. Use this query: 
+SELECT * FROM customers WHERE email = 
+'chiamaka.ogundipe31415@mail.example.com'; 
+1. Show its execution plan with actual run time before any index exists. Record the scan 
+type and the execution time. 
+2. Create a B-tree index named idx_customers_email that will speed up this query. 
+3. Show the execution plan again. Record the new scan type and execution time, and 
+explain in one or two sentences why it changed. 
+Question Five (4 marks) [Screenshot] 
+The portal now lets customers type their email in any mix of capital and small letters, so it 
+searches like this: 
+SELECT * FROM customers WHERE lower(email) = 
+'chiamaka.ogundipe31415@mail.example.com'; 
+1. Show the execution plan with actual run time for this query. 
+2. Create an index named idx_q5 that will speed up this query, then show the execution 
+plan again. 
+3. The index you created in Question Four is on the email column. Explain in one or two 
+sentences why PostgreSQL did not use it in part 1. 
+Question Six (6 marks) [Screenshot] 
+1. Customer CUS/2023/00002 is no longer interested in Groceries and is now interested 
+in Laptops. Write one UPDATE statement that removes 'Groceries' from their 
+interests and adds 'Laptops' to the end. Show the customer's interests after 
+the update. 
+2. List the five most common interests  among Wholesale customers, with the number of 
+customers who have each interest, highest first. 
+Question Seven (8 marks) [Screenshot] 
+Produce a report for every Electronics product ordered through the Lagos Island  branch 
+(branch code 'LAG') in 2025. Show: 
+• product_code and name 
+• the product manager's full_name 
+--- page 4 ---
+PAN-ATLANTIC UNIVERSITY 
+SCHOOL OF SCIENCE AND TECHNOLOGY 
+• num_orders (number of orders) 
+ 
+• avg_delivered (average total delivered per order, rounded to 2 decimal places) 
+• num_short (number of orders whose total delivered is less than quantity_ordered) 
+Remember that total delivered is the sum of every element in deliveries. Filter by branch 
+code, not by branch_id. Order the report by avg_delivered, highest first. 

@@ -1,0 +1,760 @@
+
+--- page 1 ---
+PAU-CSC420 – Database 
+Management II
+Lecture 1: Transactions & Indexing
+--- page 2 ---
+OUTLINE
+Transactions
+▪ ACID, transaction states & a live demo
+Indexing
+▪ B+-trees, PostgreSQL index types & EXPLAIN
+Practical Session: Indexing with the IMDb Database
+▪ Nine hands-on index-creation exercises on a real dataset
+Bitmap Indexes
+Assignment
+Summary & References
+2
+Dr. Stephen A. Adubi
+--- page 3 ---
+TRANSACTIONS
+From ACID guarantees to concurrent access
+3Dr. Stephen A. Adubi
+--- page 4 ---
+Set
+-
+Up: Sample Database Schema
+Today's transaction examples run against a small 
+university database with the following tables:
+▪ classroom(building, roomnumber, capacity)
+▪ course(coursecode, title, deptname, credits)
+▪ department(dept_name, building, budget)
+▪ instructor(id, name, dept_name, salary)
+▪ section(course_id, sec_id, semester, year, building, 
+room_number, time_slot_id)
+▪ student(id, name, dept_name, tot_cred)
+▪ takes(id, coursecode, sec_id, semester, year, grade)
+▪ teaches(id, coursecode, sec_id, semester, year)
+We'll use it to demonstrate simple transactions.
+Dr. Stephen A. Adubi
+4
+--- page 5 ---
+What Is a Transaction?
+A transaction is a unit of program execution that 
+accesses — and possibly updates — various data 
+items in the database.
+Example: transferring funds between two 
+accounts, or registering a student for a course.
+To preserve the integrity of the data, the database 
+system must guarantee four properties — known 
+by the acronym ACID: Atomicity, Consistency, 
+Isolation, and Durability
+5
+Dr. Stephen A. Adubi
+--- page 6 ---
+ACID: Atomicity & Consistency
+Atomicity. Either all operations of the transaction 
+are properly reflected in the database, or none 
+are.
+Consistency. Executing a transaction in isolation 
+(with no other transaction running concurrently) 
+preserves the consistency of the database.
+▪ If a transaction violates a consistency constraint 
+partway through, the whole transaction is rolled back; 
+that is, nothing is left half-done.
+6
+Dr. Stephen A. Adubi
+--- page 7 ---
+ACID: Isolation & Durability
+Isolation. Although multiple transactions may 
+execute concurrently, each must be unaware of the 
+others — intermediate results stay hidden from 
+concurrently executing transactions.
+Durability. After a transaction completes successfully, 
+its changes persist even if the system subsequently 
+fails.
+PostgreSQL enforces isolation with its concurrency-
+control mechanisms, and durability with write-ahead
+logging (WAL).
+7
+Dr. Stephen A. Adubi
+--- page 8 ---
+Transaction States
+Active — the initial state; the transaction stays here while it 
+is executing.
+Partially committed — after the final statement has 
+executed.
+Failed — after the system discovers that normal execution 
+can no longer proceed.
+Aborted — after the transaction has been rolled back and 
+the database restored to its prior state. Two options follow:
+▪ Restart the transaction — only if there was no internal logical 
+error.
+▪ Kill the transaction.
+Committed — after successful completion.
+8
+Dr. Stephen A. Adubi
+--- page 9 ---
+Transaction State Diagram
+9
+Dr. Stephen A. Adubi
+
+--- page 10 ---
+A Simple Example: Fund Transfer
+A transaction that transfers funds from one 
+account to another:
+  BEGIN; -- Start transaction
+ UPDATE account SET balance = balance - 
+100 WHERE account_id = 123;
+ UPDATE account SET balance = balance + 
+100 WHERE account_id = 456;
+  COMMIT; -- End transaction (make changes permanent)
+Dr. Stephen A. Adubi
+10
+--- page 11 ---
+Demo 
+—
+ 
+Atomicity: A Query With an 
+Error
+Consider the transaction below:
+BEGIN;
+DELETE FROM takes WHERE id = '98988' AND coursecode = 
+'BIO-301';
+UPDATE student SET tot_cred = tot_cred – (select credits
+fromcourse WHERE coursecode = 'BIO-301') WHERE id = 
+'98988';
+COMMIT;
+Dr. Stephen A. Adubi
+11
+
+--- page 12 ---
+Demo 
+—
+ 
+Atomicity: The Same Query, 
+Corrected
+Consider the transaction below:
+BEGIN;
+DELETE FROM takes WHERE id = '98988' AND coursecode = 
+'BIO-301';
+UPDATE student SET tot_cred = tot_cred – (SELECT credits 
+FROM course WHERE coursecode = 'BIO-301') WHERE id = 
+'98988';
+COMMIT;
+Dr. Stephen A. Adubi
+12
+
+--- page 13 ---
+Demo 
+—
+ 
+Consistency: A Constraint 
+Violation
+Consider trying to add a new student with a failed 
+constraint check on the tot_cred attribute:
+BEGIN;
+INSERT INTO department VALUES('Biochemistry', 'Watson', 
+90000); -- New department
+INSERT INTO student VALUES('11778', 'Jude', '2000-12-18', 
+'Zoology', 20); -- New student in the new department
+COMMIT;
+Dr. Stephen A. Adubi
+13
+
+--- page 14 ---
+Demo 
+—
+ 
+Consistency (Cont’d)
+The transaction on the previous slide failed due to 
+a data consistency issue that will be caused if a 
+new entry of a student has a “Zoology” value for 
+the department field.
+Even though there was an insert message “INSERT 
+0 1” for the new department entry.
+▪ If you check the department table, “Biochemistry” will 
+not exist there because the transaction was rolled 
+back upon failure.
+Dr. Stephen A. Adubi
+14
+--- page 15 ---
+Demo 
+—
+ 
+Isolation: Two Concurrent 
+Sessions
+ Two transactions are running in two different 
+sessions.
+▪ The DBMS gives the user the illusion that only the 
+session s/he is involved in matters.
+▪ The first user updated the credits value of CS-347, but 
+the second user cannot see it yet because the first 
+user hasn’t committed the transaction.
+15
+Dr. Stephen A. Adubi
+
+--- page 16 ---
+Demo 
+—
+ 
+Isolation: Two Concurrent 
+Sessions (User 1)
+Open two separate psql sessions against the same 
+database; call them User 1 and User 2.
+▪ Postgres gives each session the illusion that it is the 
+only one using the database.
+Activities of User 1: The commands must be 
+between the BEGIN and COMMIT keywords. 
+▪ UPDATE course SET credits = 4 WHERE coursecode = 
+'CS-347'; — but does not COMMIT yet.
+▪ SELECT * FROM course WHERE deptname = 'Comp. 
+Sci.';
+16
+Dr. Stephen A. Adubi
+--- page 17 ---
+Demo 
+—
+ 
+Isolation: Two Concurrent 
+Sessions (User 2)
+Activities of User 2:
+▪ SELECT * FROM course WHERE deptname = 'Comp. 
+Sci.'; — and still sees the old credit value.
+User 2 cannot see User 1's change until User 1 
+commits (or rolls back).
+▪ Try it yourself in two terminals.
+17
+Dr. Stephen A. Adubi
+--- page 18 ---
+Demo 
+—
+ 
+Isolation: A Conflicting 
+Update
+What do you notice if user 2 tries to execute the 
+command below?
+UPDATE course SET credits = 3 WHERE coursecode = 'CS-
+347';
+Nothing happens since the first user has a lock on 
+the database object.
+▪ The transaction of user 2 will have to wait for 
+transaction to complete (commit or rollback).
+Dr. Stephen A. Adubi
+18
+--- page 19 ---
+Durability & Write
+-
+Ahead Logging
+Durability guarantees that once a transaction 
+commits, its changes survive even a subsequent 
+crash.
+PostgreSQL implements durability with write-ahead 
+logging (WAL): every change is recorded in the log 
+before it is applied to the actual data files.
+If Postgres crashes immediately after a COMMIT, WAL 
+replay on restart guarantees the committed changes 
+are recovered.
+This is why COMMIT is the point of no return — once 
+it returns successfully, the data is safe.
+19
+Dr. Stephen A. Adubi
+--- page 20 ---
+INDEXING
+Speeding up data access
+20Dr. Stephen A. Adubi
+
+--- page 21 ---
+Why Are Indexes So Popular?
+A sequential scan of a table with N rows has a complexity of 
+O(N) — Postgres may inspect every row to find a match.
+An index is a data structure that stores indexed values in 
+sorted order for faster access.
+▪ Postgres's default, general-purpose index type is the B-tree (a 
+B+- tree variation).
+Searching a B-tree index costs O(logᵇN), where b is the 
+branching factor — far fewer lookups than a full scan, and 
+the gap widens as the table grows.
+▪ Example, branching factor 10: 100 rows → 2 lookups; 1,000 
+rows → 3; 1,000,000 rows → 6; 1,000,000,000 rows → 9.
+21
+Dr. Stephen A. Adubi
+--- page 22 ---
+Dr. Stephen A. Adubi 22
+
+--- page 23 ---
+B
++
+-
+Tree Index Files: Advantages & 
+Trade
+-
+offs
+Advantage: a B+-tree index file automatically 
+reorganises itself with small, local changes as rows 
+are inserted and deleted.
+▪  Reorganising the entire file is not required to maintain 
+performance.
+(Minor) disadvantage: extra insertion/deletion 
+overhead, plus some storage overhead.
+In practice, the advantages of B+-trees far outweigh 
+the disadvantages — which is why they are used so 
+extensively, and why PostgreSQL uses them as its 
+default index.
+23
+Dr. Stephen A. Adubi
+--- page 24 ---
+B
++
+-
+Tree Node Structure
+Each node holds up to 𝑛 − 1 keys and 𝑛 pointers:
+▪ The various 𝐾𝑖 values represent the search-key values 
+▪ 𝑃𝑖 are pointers to children (for non-leaf nodes) or pointers 
+to records or buckets of records (for leaf nodes).
+The search keys in a node are ordered. 
+  𝐾1 < 𝐾2 < 𝐾3 < . . . < 𝐾𝑛−1
+▪ Initially assume no duplicate keys, address duplicates later.
+Dr. Stephen A. Adubi
+24
+
+--- page 25 ---
+Non
+-
+Leaf Nodes in B+
+-
+Trees
+Non-leaf (internal) nodes form the multilevel, 
+sparse index on top of the leaf nodes.
+A non-leaf node with m pointers holds m−1 
+search keys, 𝐾₁ <  𝐾₂ <  …  <  𝐾ₘ₋₁.
+All keys in the subtree under P₁ are < K₁; keys 
+under 𝑃𝑖 (for 1 < 𝑖 < 𝑚) satisfy 𝐾ᵢ₋₁ ≤  𝑘𝑒𝑦 <
+ 𝐾ᵢ; keys under 𝑃ₘ are ≥ 𝐾ₘ₋₁.
+25
+Dr. Stephen A. Adubi
+--- page 26 ---
+Leaf Nodes in B
++
+-
+Trees
+A leaf node can hold up to 𝑛 − 1 values (n = the order 
+of the tree).
+For each key 𝐾𝑖 in a leaf, pointer Pᵢ points either 
+directly to the record with that key, or to a bucket of 
+pointers when duplicate keys exist.
+Leaf nodes are chained together left-to-right, so a 
+range query can walk the leaves in sorted order 
+without climbing back up the tree.
+The last pointer in a leaf, 𝑃𝑛, links to the next leaf 
+node in sequence.
+26
+Dr. Stephen A. Adubi
+--- page 27 ---
+Leaf Nodes in B+
+-
+Trees to Data Pages 
+—
+ 
+Illustration
+27
+Dr. Stephen A. Adubi
+
+--- page 28 ---
+Worked Example: Building a B
++
+-
+Tree
+Inserting the following names into a B+ tree in the 
+specified order produces the tree below:
+▪ ‘Ade’, ‘John’, ‘Koza’, ‘Dele’, ‘Caro’, ‘Dayo’, ‘Jim’, ‘Ovia’, 
+‘Tami’, ‘Blum’, ‘Ajer’.
+Dr. Stephen A. Adubi
+28
+
+--- page 29 ---
+Available Index Types in PostgreSQL
+Postgres has several index access methods, each suited to 
+different kinds of queries:
+▪ B-tree — the default; equality and range queries, sorting.
+▪ Hash — equality (=) lookups only.
+▪ GiST — generalised search tree; geometric types, ranges, nearest-
+neighbour search.
+▪ SP-GiST — space-partitioned trees; non-balanced data such as quad-
+trees and tries.
+▪ GIN — generalised inverted index; full-text search, arrays, JSONB 
+containment.
+▪ BRIN — block range index; very large, naturally-ordered tables.
+By default, CREATE INDEX builds a B-tree, which fits the 
+majority of situations.
+29
+Dr. Stephen A. Adubi
+--- page 30 ---
+Categorizing Indexes: What vs. How
+What we index — the scope or purpose: single-
+column, composite, covering, partial, or 
+functional/expression. We always make this 
+choice.
+How we index — the underlying data structure: 
+B-tree, Hash, GIN, GiST, SP-GiST, or BRIN. This 
+choice is optional — Postgres defaults to B-tree.
+▪ CREATE INDEX idx ON t(col);  -- What: single-column · How: B-
+tree (default)
+▪ CREATE INDEX idx ON t USING GIN (col);  -- What: single-column 
+· How: GIN
+30
+Dr. Stephen A. Adubi
+--- page 31 ---
+The EXPLAIN Statement
+EXPLAIN shows the execution plan Postgres would use for a 
+query, without running it.
+EXPLAIN (ANALYZE, …) actually runs the query and reports 
+real timings alongside the plan.
+Seq Scan — a full, sequential scan of the table.
+Index Scan — Postgres walks an index, then fetches 
+matching rows from the table.
+Bitmap Index / Heap Scan — a two-phase scan for 
+medium-selectivity queries (more in the Bitmap Indexes 
+section).
+Index Only Scan — the index alone has everything the 
+query needs; the table is never touched (Heap Fetches: 0).
+31
+Dr. Stephen A. Adubi
+--- page 32 ---
+Reading an Execution Plan
+explain analyze select * from people where name 
+= 'Leonardo DiCaprio';
+Dr. Stephen A. Adubi
+32
+
+--- page 33 ---
+PRACTICAL SESSION: INDEXING 
+WITH THE IMDB DATABASE
+Putting every index type to work on a real, sizeable dataset
+33Dr. Stephen A. Adubi
+--- page 34 ---
+The IMDb Sample Database
+For hands-on practice, we use a limited version of 
+the IMDb database compiled for the Join Order 
+Benchmark (JOB) — a widely used, real-world 
+movie dataset for teaching query optimisation 
+and indexing.
+It is derived from an IMDb data snapshot and 
+ships as a ready-to-load PostgreSQL schema with 
+roughly 2.5 million titles across 21 related tables.
+34
+Dr. Stephen A. Adubi
+--- page 35 ---
+Our Mini IMDb Schema
+How the core tables relate to one another:
+▪ It is a sketchy (not detailed!) ER Diagram
+Dr. Stephen A. Adubi
+35
+
+--- page 36 ---
+Setting Up the IMDb Database
+In pgAdmin, right-click Databases → Create → 
+Database, and give it a name (e.g. course_db).
+▪ Leave it empty.
+Right-click the new empty database → Restore...
+Set Format to "Custom or tar" and browse to the
+.backup file you downloaded.
+Click Restore.
+▪ pgAdmin recreates every table, index, function, view, 
+and row of data automatically.
+36
+Dr. Stephen A. Adubi
+--- page 37 ---
+Practical 1 
+—
+ 
+Baseline: A Slow Query
+Before creating any index, measure the baseline.
+Fetch the record of a popular artist.
+EXPLAIN ANALYZE 
+SELECT * FROM people WHERE name = 'Leonardo 
+DiCaprio';
+Dr. Stephen A. Adubi
+37
+--- page 38 ---
+Fix: PostgreSQL B
+-
+Tree Index
+B-Tree is PostgreSQL's default and most general-
+purpose index.
+It keeps keys in sorted order, so it supports the 
+following:
+▪ equality,
+▪ ranges (<, <=, >, >=, BETWEEN),
+▪ ORDER BY , and
+▪ prefix pattern matching (LIKE 'abc%')?
+With no index on the name column, every row in 
+people had to be checked — a full Seq Scan.
+Dr. Stephen A. Adubi
+38
+--- page 39 ---
+Practical 2: Single
+-
+Column B
+-
+Tree Index
+We therefore create an index on the name column of 
+the people table (if this is a common query pattern in 
+YOUR database).
+CREATE INDEX idx_name ON people (name);
+Now, try this command (below) again and compare 
+the previous plan with the plan generated now.
+EXPLAIN ANALYZE 
+SELECT * FROM people WHERE name = 'Leonardo DiCaprio';
+Dr. Stephen A. Adubi
+39
+--- page 40 ---
+Hash Index
+Hash indexes in Postgres work similarly to hash tables 
+or hash maps found in most programming languages.
+The index computes a hash for the column value and 
+uses it to map the value to a specific bucket.
+▪ The algorithmic complexity of hash calculations and 
+lookups is O(1), or constant time.
+Hash indexes can only be used with the equality (=) 
+operator.
+▪ Range queries cannot take advantage of hash indexes and 
+must use B-tree indexes instead 
+Dr. Stephen A. Adubi
+40
+--- page 41 ---
+Practical 3: Single
+-
+Column Hash Index
+Let’s create a hash index on the name column of 
+the people table.
+CREATE INDEX idx_name_hash ON people USING
+hash(name); -- Hash Map
+▪ Now, the column has two index structures!
+▪ Postgres prefers it over the previous B-tree index 
+because it is better for the query on the Practical 2 
+slide.
+▪ Run the same EXPLAIN ANALYZE query yourself!
+Dr. Stephen A. Adubi
+41
+--- page 42 ---
+Reading: Composite (Multi
+-
+Column) Index
+Composite indexes in Postgres are created over
+multiple columns of a table, as opposed to single-
+column indexes, which cover only one column.
+Composite indexes in Postgres are also referred to 
+as multicolumn indexes.
+Provide answers to the following in your study:
+▪ How are they created?
+▪ Can you create and apply a composite index to any of 
+the tables in our IMDb database?
+Dr. Stephen A. Adubi
+42
+--- page 43 ---
+Practical 4: The Query
+Try out this query.
+EXPLAIN ANALYZE SELECT movie_id, votes FROM ratings 
+WHERE rating > 8.0;
+A plain index on rating would find the matching 
+rows fast, but Postgres would still have to visit the 
+heap (the actual table) to fetch movie_id and 
+votes, since they aren't part of the index. 
+Dr. Stephen A. Adubi
+43
+--- page 44 ---
+Practical 4: Covering Index
+A covering index is an index that stores additional 
+columns from the table, enabling the database to 
+retrieve column values directly from the index 
+without accessing the table rows.
+The additional columns are added to the index 
+using the INCLUDE clause:
+CREATE INDEX idx_rating_incl ON ratings (rating)
+INCLUDE (movie_id, votes);
+Dr. Stephen A. Adubi
+44
+--- page 45 ---
+Practical 4: Before & After Index
+Stephen A. Adubi
+45
+1
+2
+Before the Index
+After the Index
+--- page 46 ---
+Practical 5: Partial Index
+Try out this query.
+EXPLAIN ANALYZE SELECT id, movie_id, votes FROM 
+ratings WHERE votes > 100000;
+A partial index, also known as a filtered index, is 
+an index created over a subset of a table that 
+satisfies a specific condition.
+The partial index is created as follows:
+CREATE INDEX idx_ratings_blockbuster ON ratings 
+(votes) WHERE votes > 100000;
+Dr. Stephen A. Adubi
+46
+--- page 47 ---
+Reading: Functional/Expression Index
+Functional indexes, also known as expression
+indexes, allow us to index the result of a function 
+or expression applied to one or more columns of a 
+table.
+Provide answers to the following in your study:
+▪ How are they created?
+▪ Can you create and apply a functional index to any of 
+the tables in our IMDb database?
+Dr. Stephen A. Adubi
+47
+--- page 48 ---
+Bitmap Indexes: The Concept
+A bitmap scan is not a separate index type in 
+Postgres — it's an access method Postgres chooses 
+when scanning an existing B-tree, hash, or other 
+index for a moderately selective query.
+The idea, in general: for each distinct value, a bitmap 
+of one bit per table row marks whether that row 
+matches.
+▪ 1 = the row matches the condition; 0 = it does not.
+Bitmaps for several conditions can be combined with 
+bitwise AND / OR before ever touching the table — 
+efficient when a plain index scan would otherwise 
+revisit the table too many times.
+48
+Dr. Stephen A. Adubi
+--- page 49 ---
+How Postgres Executes a Bitmap Scan
+Bitmap Index Scan — walks the index and builds an in-memory 
+bitmap of every matching row, instead of fetching rows one at a 
+time.
+Bitmap Heap Scan — visits the table pages named in the bitmap 
+and reads the actual rows, in physical (not index) order.
+The Heap Blocks line in the plan tells you how precise the 
+bitmap was:
+▪ exact=N — N pages visited, with exact row locations known.
+▪ lossy=N — N pages visited, but Postgres must recheck every row on 
+the page, because the bitmap only tracked the page, not the row.
+This two-phase approach reduces random table lookups 
+compared to fetching one row per index match.
+49
+Dr. Stephen A. Adubi
+--- page 50 ---
+Practical 6: Bitmap Scans in Action
+We create an index on the year column of the 
+movies table (if this is a common query pattern in 
+YOUR database).
+CREATE INDEX idx_movies_year ON movies (year);
+See the query plan after creating an index on the 
+year column on the next slide.
+▪ Compare the execution times with this
+Dr. Stephen A. Adubi
+50
+
+--- page 51 ---
+Query Plan indicating Bitmap Index 
+Usage
+Stephen A. Adubi
+51
+
+--- page 52 ---
+SUMMARY
+Final Thoughts on Transactions & Indexing
+52Dr. Stephen A. Adubi
+--- page 53 ---
+Choosing the Right Index Type
+Equality only, few distinct values → Hash (or a 
+plain B-tree, which also does equality well).
+Range queries, sorting, general purpose → B-tree 
+— Postgres's default for good reason.
+Several columns filtered together → Composite 
+index, most selective / most frequently-filtered 
+column leading.
+Query needs the indexed columns plus a few 
+extras → Covering index (INCLUDE).
+53
+Dr. Stephen A. Adubi
+--- page 54 ---
+Choosing the Right Index Type
+Only a small, well-defined slice of the table is 
+queried often → Partial index.
+Searching on a transformed value → Functional / 
+expression index.
+Full-text search, arrays, JSONB containment → 
+GIN.
+Huge, naturally ordered tables (timestamps, 
+sequential IDs) → BRIN.
+54
+Dr. Stephen A. Adubi
+--- page 55 ---
+Over
+-
+Indexing: A Word of Caution
+Every index Postgres maintains adds write cost: each 
+INSERT, UPDATE, or DELETE must keep every affected 
+index consistent, inside the same transaction.
+More indexes also mean more work for the query 
+planner while it decides which one to use.
+Not every query needs to be blazing fast — weigh 
+each candidate index against the query's actual 
+latency requirements before creating it.
+Rule of thumb: index for the queries you actually run, 
+and periodically review pg_stat_user_indexes for 
+indexes that are never used.
+55
+Dr. Stephen A. Adubi
+--- page 56 ---
+Wrap
+-
+Up: Key Takeaways
+A transaction is a unit of work that Postgres guarantees is 
+Atomic, Consistent, Isolated, and Durable (ACID) — all four, or 
+the transaction rolls back entirely.
+Transaction states — Active, Partially Committed, Failed, 
+Aborted, Committed — describe exactly what stage of that 
+guarantee a transaction is in.
+Indexes trade write cost and storage for dramatically faster 
+reads: O(logᵇ N) instead of O(N) for a well-chosen index.
+Postgres offers a type for nearly every access pattern — B-tree, 
+Hash, composite, covering, partial, functional, GIN, and more — 
+and EXPLAIN is how you decide which one, if any, a query 
+actually needs.
+The imdb practicals showed each of these on a single, realistic 
+dataset — keep experimenting with your own queries.
+56
+Dr. Stephen A. Adubi
+--- page 57 ---
+Lecture References (Page 1)
+Silberschatz, A., Korth, H. F., & Sudarshan, S. (2020). Database 
+System Concepts (7th ed.). McGraw-Hill Education.
+Trummer, I. Introductory concepts: Transactions [Lecture 
+notes]. https://www.databaselecture.com/transactions.html
+PostgreSQL Global Development Group. PostgreSQL 
+Documentation. 
+https://www.postgresql.org/docs/current/index.html
+Gillenson, M. L. (2023). Fundamentals of Database 
+Management Systems (3rd ed.). Wiley.
+Magda, D. (2025). Just Use Postgres! Manning Publications. 
+Ch. 4, "Indexes," pp. 89–125.
+Fontaine, D. (2022). The Art of PostgreSQL. Ch. 8, "Indexing 
+Strategy." https://theartofpostgresql.com
+57
+Dr. Stephen A. Adubi
+--- page 58 ---
+Lecture References (Page 2)
+PostgreSQL Global Development Group. Documentation — Indexes. 
+https://www.postgresql.org/docs/current/indexes.html
+PostgreSQL Global Development Group. Documentation — CREATE INDEX. 
+https://www.postgresql.org/docs/current/sql-createindex.html
+PostgreSQL Global Development Group. Documentation — Using EXPLAIN. 
+https://www.postgresql.org/docs/current/using-explain.html
+Leis, V., Gubichev, A., Mirchev, A., Boncz, P., Kemper, A., & Neumann, T. (2015). 
+How good are query optimizers, really? Proceedings of the VLDB Endowment, 
+9(3), 204–215.
+Rahn, G. join-order-benchmark [schema & setup for the imdb practical 
+database]. GitHub. https://github.com/gregrahn/join-order-benchmark
+Galles, D. B+-tree visualization tool. 
+https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html
+58
+Dr. Stephen A. Adubi

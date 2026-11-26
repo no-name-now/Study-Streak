@@ -1,0 +1,74 @@
+
+--- page 1 ---
+Ethical and legal 
+issues in 
+computing
+AI in Health care
+--- page 2 ---
+Lecture Outline
+AI Technologies in Healthcare
+Levels of Impact
+Issues Associated with Integrating AI in 
+Healthcare
+Class Discussion
+--- page 3 ---
+AI Technologies in Healthcare
+Applications
+Drug Discovery
+Diagnostics
+Outcome Prediction
+Health Monitoring
+Disease Modeling
+??????
+--- page 4 ---
+Levels of Impact
+Levels of 
+Impact
+Individual
+Primary Care 
+Providers and 
+Researchers
+Patients and Family
+Institutions Healthcare 
+Providers
+Insurers
+Societal
+--- page 5 ---
+Issues
+Issues
+Epistemic
+Integrating Information
+Epistemic Debt
+Ethical
+Defensive Medicine
+Privacy and 
+Deanonymization
+Patient Autonomy and 
+Medical Paternalism
+Responsibility and Liability
+Bias and Systemic Injustice
+--- page 6 ---
+Takeaways
+• AI will be integrated into healthcare in a 
+variety of ways. 
+• AI stands to impact healthcare at all levels, 
+from the individual, to the institutional, to the 
+societal. 
+• Ethical assessment requires understanding the 
+way AI raises epistemic challenges and the 
+potential impacts at all organizational levels. 
+--- page 7 ---
+CEN narratives -Healthcare
+• https://www.computingnarratives.com/narrative
+s/?s=health
+
+--- page 8 ---
+Exercise
+Search the news for feeds on ethical issues in 
+use of AI in healthcare (note the URL).
+Explore 2 positives and 2 negative impacts of AI 
+in healthcare
+Based on the cases you discover, propose 
+guidelines for use of a chosen type of AI in 
+Healthcare (keeping mind the ethical 
+frameworks discussed earlier)

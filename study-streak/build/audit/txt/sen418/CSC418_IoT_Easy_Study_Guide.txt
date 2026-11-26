@@ -1,0 +1,1244 @@
+
+--- page 1 ---
+CSC418 IoT Easy Study Guide
+Page 1
+IoT & Edge Computing: Easy Study
+Guide
+PAU CSC 418, Lectures 1 to 4. Every tricky term is broken down with simple words and
+everyday examples.
+Contents: Lecture 1 Intro to IoT & Edge · Lecture 2 Domain-Specific IoT · Lecture 3 Evolution &
+Architecture of IoT · Lecture 4 Embedded Systems · Jargon buster · Self-test questions.
+How to read this: the normal text follows your lecture slides. The green "In plain English" boxes
+are simple explanations and analogies. Picture-only slides were skipped (e.g. the IoT protocol-stack
+diagram in Lecture 3). Examples and answers marked (my addition) are not on the slides, so check them
+against your lecturer's notes.
+The whole course in 30 seconds
+In plain English: Think of your body. Skin and eyes sense things (sensors). Nerves carry the signal
+(network and gateways). Reflexes react instantly without waiting for the brain (edge computing). The
+brain thinks deeply and remembers (cloud). IoT is the whole body working together, and embedded
+systems are the tiny "mini-brains" inside each device.
+LECTURE 1: Introduction to IoT and Edge Computing
+1. The body analogy
+Touch something hot: skin senses heat, nerves transmit the signal, a reflex jerks your hand away
+instantly, and your brain stores the experience for later.
+Human body
+Computing system
+Job
+Eyes / skin
+Sensors
+Detect physical stimuli
+Nervous system
+Network gateways
+Carry information
+Local reflexes
+Edge computing
+Immediate local reaction
+Central brain
+Cloud infrastructure
+Complex thought and storage
+•
+IoT is about connecting things.
+•
+Edge computing is about processing information close to where it is produced.
+•
+Cloud computing is about providing large-scale computing and storage.
+•
+Core insight: IoT produces the data, the edge processes time-critical events locally, and the cloud
+stores, analyses, and provides large-scale computing.
+2. What is the Internet of Things (IoT)?
+Definition: a network of physical objects ("things") embedded with sensors, software, processing
+capability, and communication technology that lets them collect and exchange data over a network.
+In plain English: Ordinary objects (a fridge, a car, a watch) that have been given a "sense" (sensor), a
+"voice" (internet connection), and a bit of "brain" (software), so they can share information and act on it
+without you doing anything.
+Simple formula: Physical things + Sensors + Connectivity + Data + Action = IoT
+Examples of "things": vehicles, farm equipment, medical devices, wearables, home appliances, security
+systems, environmental sensors.
+Thermometer vs IoT temperature sensor
+Traditional thermometer:  Temperature → Display → Human reads it
+IoT temperature sensor:   Temperature → Sensor → Processing → Network
+
+--- page 2 ---
+CSC418 IoT Easy Study Guide
+Page 2
+                          → Edge/Cloud → Application → Action
+The key difference: an IoT system collects data automatically, transmits it, processes it, triggers an
+action, and talks to other systems. A plain thermometer needs a human to read it and decide.
+3. Five key characteristics of IoT
+Characteristic
+Slide meaning
+Plain English
+Interconnectivity
+Devices communicate with each other or other
+systems through networks
+Everything can "talk" to everything else
+Dynamic nature
+State and environment keep changing
+Conditions are never fixed (temperature,
+location, device on/off), so the system
+must keep up
+Scale
+Very large number of devices, which makes
+device management and data processing hard
+Thousands or millions of devices, like
+managing a huge crowd
+Heterogeneity
+Different hardware, operating systems,
+protocols, and capabilities can work together
+Different brands and types, like a group of
+people speaking different languages who
+still cooperate
+Self-adapting
+behaviour
+Responds automatically to changing conditions
+If the room gets too hot, the fan switches
+on by itself
+Check: is a smartwatch an IoT device? Yes. It has sensors (heart rate, activity), it connects to your
+phone, and it collects, exchanges, and acts on data (notifications). A normal wristwatch only shows the
+time. (my answer)
+4. The IoT ecosystem: four layers
+An IoT system is rarely one device. It is an ecosystem of devices, networks, processing systems,
+applications, and users.
+1. Sensors & Actuators → 2. Gateways → 3. Cloud / Server → 4. Applications
+   (sense and act)         (bridge)       (store, analyse)     (users see it)
+Layer
+What it does
+Examples
+1. Sensors & Actuators
+Sensors detect. Actuators perform physical
+actions
+Temperature, motion, light, cameras,
+GPS. Relays, motors, valves, locks
+2. IoT Gateways
+Communication bridge between local devices
+and remote networks
+Raspberry Pi, industrial smart routers
+3. Cloud / Server
+Central historical storage, heavy databases,
+AI training, global analytics
+Cloud data centres
+4. Applications
+User dashboards, mobile interfaces, alert
+systems, decision-support systems
+Phone apps, web dashboards
+Sensors, the "eyes and ears"
+Sensor
+Detects
+Temperature sensor
+Temperature
+Humidity sensor
+Humidity
+Motion sensor
+Movement
+Light sensor
+Light intensity
+Camera
+Images / video
+GPS
+Location
+Pressure sensor
+Pressure
+Actuators, the "muscles"
+
+--- page 3 ---
+CSC418 IoT Easy Study Guide
+Page 3
+An actuator is a component that moves or controls part of the system. The sensor senses the
+environment, then control signals are generated for the actuator to perform the needed action.
+Type
+How it works (slide)
+Plain English
+Electric
+Electrical current drives motors for precise, clean
+movement
+A motor, like a fan or a door lock
+Hydraulic
+Pressurised liquid lifts or moves heavy loads
+Like a car jack or a digger arm: liquid gives
+huge force
+Pneumatic
+Compressed air operates fast-acting industrial
+valves and switches
+Like an air-powered tool: quick and snappy
+In plain English: Sensor = input (it notices). Actuator = output (it does something). A smoke
+sensor notices fire; the sprinkler valve (actuator) sprays water.
+Gateways
+A gateway is a physical device or software program that acts as a secure bridge between local smart
+devices and the cloud. It translates different communication "languages" and routes data.
+In plain English: A gateway is like a receptionist who also speaks every language: devices tell it things
+in their own way, and it passes the message on to the outside world in a way the cloud understands.
+5. Cloud computing
+Definition: delivery of computing resources (processing power, storage, databases, networking,
+software, applications) over a network, usually the Internet.
+In plain English: Instead of buying and maintaining a powerful computer, you rent one from a
+provider, like renting a car instead of buying one. You pay for what you use.
+•
+Why we need it: access to massive computing resources without owning them; ability to scale up
+and down very quickly; high availability (it is nearly always up).
+•
+Scaling vertically = make one machine more powerful (a bigger truck).
+•
+Scaling horizontally = add more machines (more trucks). (my analogy)
+6. The two big problems with the cloud: latency and bandwidth
+Latency, the delay
+Latency is the delay between sending information and receiving a response.
+In plain English: The time you wait for an answer. Like shouting to a friend across a field: the further
+away, the longer before you hear back.
+Example: a self-driving car spots an obstacle. If it must send data to a faraway cloud, wait, and receive a
+reply, it could be too late:
+Car → Internet → Cloud → Processing → Internet → Car → Brake
+Some apps tolerate a few seconds. For others, milliseconds are critical.
+Bandwidth, the pipe width
+Bandwidth is the maximum rate at which data can be sent over a network connection, usually
+measured in bits per second (bps).
+In plain English: Think of a water pipe. Bandwidth is how wide the pipe is. Thousands of cameras
+sending raw video is like pushing a flood through a garden hose: it jams up (network congestion), costs
+more, and sends lots of useless data.
+•
+Problems: high bandwidth use, increased costs, network congestion, unnecessary data transmission.
+•
+The big question: do we really need to send everything to the cloud?
+
+--- page 4 ---
+CSC418 IoT Easy Study Guide
+Page 4
+7. Edge computing
+Definition: a distributed computing model where data processing happens closer to the source of
+the data (sensors, devices, local gateways) rather than relying entirely on centralised cloud servers.
+In plain English: Do the thinking nearby instead of far away. Like a shop manager who handles small
+problems on the spot rather than phoning head office every time.
+Traditional cloud: CCTV Camera → Local Network → Internet → Cloud Data Center → Processing
+Edge computing:    CCTV Camera → Local Network → Edge Computer → Processing
+•
+Edge handles immediate processing. Cloud handles long-term storage, analytics, dashboards, and
+large-scale processing.
+•
+The edge is not one specific device. It means computing resources located near the data source:
+Raspberry Pi, industrial computer, smart gateway, local server, intelligent camera, vehicle computer.
+•
+Why it became necessary: data is increasingly produced far from cloud servers, and some apps
+need faster, more local processing. Many sensors feed the edge, which analyses locally, detects
+problems, and sends only useful information to the cloud.
+Three benefits of edge computing
+Benefit
+Meaning
+Example
+Low latency
+Processing nearby makes decisions faster. Critical
+for autonomous vehicles, industrial control,
+robotics, security systems, real-time monitoring
+Data → Edge → Decision (short) vs Data →
+Internet → Cloud → Internet → Decision
+(long)
+Bandwidth
+savings
+Edge can filter, summarise, compress, or analyse
+data before sending
+Camera makes 100 GB raw → Edge → 2
+GB useful → Cloud
+Privacy
+Sensitive data (medical info, camera footage,
+conversations, location) need not all be sent to a
+remote cloud
+Process locally and send only results
+Important warning from the slide: edge computing does not automatically make a system private
+or secure. Security and privacy must still be designed in.
+8. The Trifecta: IoT + Edge + Cloud
+Part
+Role
+Slogan
+IoT
+Connects the physical world
+Connect
+Edge
+Processes information close to the physical world
+Respond
+Cloud
+Large-scale computing, storage, and applications
+Scale
+Learning objectives and "architecture myths"
+The objectives slide says the lecture also covers use cases (autonomous vehicles, smart farming,
+healthcare: decide the best place to process) and debunks three misconceptions. My plain-English reading
+of them (my addition, check with your notes):
+•
+Myth: everything must go to the cloud. Truth: time-critical decisions are made at the edge.
+•
+Myth: edge works completely alone. Truth: edge and cloud work together (edge reacts, cloud stores
+and analyses).
+•
+Myth: all raw data must be sent. Truth: the edge can filter and send only useful data.
+Where to process? Self-driving car: edge (instant braking). Smart farm: mostly cloud analysis plus local
+control (watering). Healthcare: edge for urgent alerts and privacy, cloud for long-term records. (my
+addition)
+
+--- page 5 ---
+CSC418 IoT Easy Study Guide
+Page 5
+LECTURE 2: Domain-Specific IoT
+IoT is used in homes, cities, the environment, energy, retail, logistics, industry, agriculture, and health.
+In plain English: Nearly every IoT application follows the same 4 steps: sense something, send the
+data, analyse it, then alert or act. Keep this pattern in mind and every example below becomes easy.
+1. Home automation
+Application
+How it works
+Plain English
+Smart lighting
+Saves energy by adapting lighting to conditions,
+switching or dimming when needed. Uses solid-state
+lighting (LED) and IP-enabled lights. Sensors for
+occupancy, temperature, etc. adjust intensity and colour.
+Controllable remotely by mobile or web app
+Lights that turn off when the room
+is empty and dim when it is bright
+Smart appliances
+Easier management and remote status info. Smart
+washer/dryer notifies when the cycle finishes. Smart
+thermostat is remotely controlled and learns your
+preferences. Smart fridge tracks items using RFID tags
+and updates you when stock is low
+One app instead of many remotes
+Intrusion
+detection
+Cameras and sensors (PIR sensors, door sensors) detect
+intrusion and send alerts by SMS or email, even an image
+grab or short video clip. Cloud systems can use
+location-aware services and alert occupants, a security
+post, or police
+A burglar alarm that texts you a
+photo
+Smoke / gas
+detectors
+Smoke detection by optical, ionization, or air-sampling
+methods. Gas detectors sense harmful gases such as
+carbon monoxide (CO) and LPG. Smart versions give
+voice alerts saying where the problem is and send SMS or
+email to the user or fire department
+An alarm that tells you which room
+is on fire
+In plain English: PIR sensor (Passive Infrared) = detects body heat movement. RFID (Radio
+Frequency Identification) = a tiny tag that a reader can detect with radio waves, like a contactless price
+tag.
+2. Smart cities
+Application
+How it works
+Plain English
+Smart parking
+A sensor in each slot detects empty or occupied. A local
+controller aggregates the data and sends it over the
+Internet to a database. Drivers check phones, tablets, or
+in-car navigation. Reduces extra traffic from drivers
+circling for a space
+An app that shows free parking
+spaces
+Smart road
+lighting
+Road lighting is responsible for about 19% of global
+electricity use and about 6% of global greenhouse gas
+emissions (per the slide). Lights are controlled remotely,
+set to schedules and intensity (e.g. foggy day, festival),
+and some sensor-equipped lights talk to each other
+Street lights that brighten only
+when needed
+Smart roads
+Sensors give road conditions, travel-time estimates, and
+alerts about poor conditions, congestion, and accidents,
+sent to cloud apps and social media for subscribed
+drivers. Lets drivers see danger hundreds of metres or a
+few dozen miles ahead
+Roads that warn you about jams
+and accidents
+Structural health
+monitoring
+A network of sensors monitors vibration in bridges and
+buildings. Analysis detects cracks and breakdowns,
+locates damage, calculates remaining life, and gives
+advance warning of imminent failure
+A check-up for bridges, like a doctor
+monitoring heartbeat
+3. Environment
+
+--- page 6 ---
+CSC418 IoT Easy Study Guide
+Page 6
+Application
+How it works
+Plain English
+Weather
+monitoring
+Sensors (temperature, humidity, pressure, etc.) send
+data to cloud apps, which analyse, visualise, and send
+weather alerts to subscribers
+A mini weather station that texts
+forecasts
+Air pollution
+Gas and meteorological sensors monitor harmful gases
+(CO2, CO, NO, NO2) from factories and vehicles. Several
+distributed monitoring stations talk wirelessly to a
+back-end server using machine-to-machine
+communication
+Sniffers that measure how dirty the
+air is
+Noise pollution
+Noise sensors across a city send data to servers or the
+cloud. Aggregated data makes noise maps that help
+planners and policy makers protect homes, schools, and
+parks. Noise causes sleep disruption and stress
+A map showing where the city is too
+loud
+River flood
+detection
+Sensor nodes monitor water level (ultrasonic sensors)
+and flow rate (flow velocity sensors). Data is
+aggregated in a server or cloud, and alerts are raised
+when level and flow rise rapidly. Floods come from
+continuous rainfall
+An early-warning system for floods
+Forest fire
+detection
+Monitoring nodes at many forest locations measure
+temperature, humidity, light levels, etc. Early detection
+minimises damage. Causes include lightning, human
+negligence, volcanic eruptions, and sparks from rock falls
+Spotting a fire before it spreads
+4. Retail
+Application
+How it works
+Plain English
+Inventory
+management
+RFID tags on products allow real-time tracking, so stock
+levels are accurate and low items are replenished. RFID
+readers on shelves or in the warehouse feed data for
+remote monitoring
+The shop always knows what is on
+the shelf
+Smart payment
+Contactless payment using NFC (Near Field
+Communication) and Bluetooth. NFC lets devices
+communicate by touching or being very close. Card
+details are stored in an NFC-enabled phone. NFC (low
+speed) starts the initial pairing, then Bluetooth carries
+the actual data
+Tap your phone to pay
+In plain English: NFC is like a quick handshake (short range, slow). Bluetooth then does the real talking
+(faster).
+5. Logistics
+Application
+How it works
+Plain English
+Fleet tracking
+GPS tracks vehicles in real time. Cloud systems scale on
+demand for many vehicles. Alerts when routes deviate.
+Data is analysed to find supply-chain bottlenecks (e.g.
+traffic congestion), assign vehicles, and generate
+alternative routes
+Seeing every delivery truck on a
+map
+Shipment
+monitoring
+Temperature, pressure, and humidity sensors in
+containers (e.g. fresh food) send data to the cloud to
+detect spoilage. Food with a limited time budget can be
+re-routed to a closer destination. Alerts go to the driver
+and distributor if limits are exceeded
+A sensor inside the truck that warns
+before food spoils
+6. Agriculture
+
+--- page 7 ---
+CSC418 IoT Easy Study Guide
+Page 7
+Application
+How it works
+Plain English
+Greenhouse
+control
+Greenhouses have glass or plastic roofs. Sensors monitor
+temperature, humidity, soil moisture, light, and CO2.
+Actuators (valves for water, switches for fans) control
+conditions automatically. Data in the cloud is analysed to
+optimise control and link productivity to strategies
+A greenhouse that looks after itself
+Smart irrigation
+Soil moisture sensors detect dryness. Water flows
+through pipes only when moisture drops below a set
+threshold. Data is analysed on a server to plan watering
+schedules. Improves yield while saving water
+Water the crops only when they are
+thirsty
+7. Health
+Wearable electronics include wearable gadgets (smart watches, smart glasses, wristbands) and fashion
+electronics (electronics built into clothing and accessories, e.g. Google Glass, Moto 360). Smart watches
+running mobile operating systems such as Android can search the Internet, play audio/video, make calls
+(with or without a paired phone), play games, run apps, and track calories burnt and heart rate.
+
+--- page 8 ---
+CSC418 IoT Easy Study Guide
+Page 8
+LECTURE 3: Evolution and Architecture of IoT
+1. The "Things" in IoT
+•
+"Things" are devices with unique identities that can do remote sensing, actuating, and
+monitoring.
+•
+They can exchange data with other devices and apps, directly or indirectly, or collect data from other
+devices. They can process data locally, send it to servers or the cloud, or split the work. The choice
+depends on constraints: memory, processing power, communication delays and speed, and deadlines.
+•
+An IoT device may have several interfaces, wired and wireless: (i) I/O interfaces for sensors, (ii)
+Internet connectivity, (iii) memory and storage, (iv) audio/video.
+•
+Devices can be wearable sensors, smart watches, LED lights, automobiles, and industrial machines.
+Almost all generate data which, when analysed, gives useful information to guide actions locally or
+remotely.
+2. IoT protocols: the big idea
+In plain English: A protocol is just an agreed set of rules for communicating, like etiquette for a phone
+call. Sending data across a network is like sending a parcel: several jobs happen in order, and each job
+has its own "layer" with its own rules.
+Layer
+Job
+Parcel analogy
+Link layer
+How bits physically travel over the local connection
+(wire or radio)
+The road or vehicle the parcel travels
+on
+Network / Internet
+layer
+Addressing and routing across networks (IP)
+The address on the parcel
+Transport layer
+End-to-end delivery (TCP or UDP)
+Tracked delivery vs just posting it
+Application layer
+How apps format and exchange messages (HTTP,
+MQTT, CoAP...)
+The language and contents of the
+letter
+3. Link layer protocols
+Link layer protocols decide how data is physically sent over the medium (copper wire, coaxial cable, radio
+waves). Their scope is the local network connection that the host is attached to.
+Protocol
+What it is
+Speed
+Plain English
+802.3
+Ethernet
+Wired standards; medium can be coaxial cable,
+twisted pair, or fibre. (e.g. 802.3i = 10BASE-T
+over copper; 802.3ae = 10 Gbit/s over fibre)
+10 Mb/s up to 40 Gb/s
+and higher
+Network cable
+802.11 WiFi
+Wireless LAN standards. 802.11a = 5 GHz; b/g
+= 2.4 GHz; n = 2.4/5 GHz; ac = 5 GHz; ad = 60
+GHz
+1 Mb/s up to 6.75
+Gb/s
+Wireless internet at
+home
+802.16 WiMax
+Wireless broadband standards. 802.16m: 100
+Mbit/s for mobile stations, 1 Gbit/s for fixed
+1.5 Mb/s to 1 Gb/s
+Long-range wireless
+broadband
+802.15.4
+LR-WPAN
+Low-rate wireless personal area networks. Basis
+of higher protocols such as ZigBee. Low cost,
+low speed, for power-constrained devices
+40 Kb/s to 250 Kb/s
+Slow but super
+battery-friendly: ideal for
+tiny sensors
+2G / 3G / 4G
+Cellular. 2G (GSM, CDMA), 3G (UMTS,
+CDMA2000), 4G (LTE)
+9.6 Kb/s (2G) up to
+100 Mb/s (4G)
+Mobile network
+5G NR
+5th-generation cellular from 3GPP. Two
+frequency ranges: FR1 (sub-6 GHz, 410 MHz to
+7.125 GHz, wide coverage) and FR2 (mmWave,
+24.25 to 71 GHz, dense and ultra-fast)
+1 to 20 Gbps peak,
+latency as low as 1
+ms
+Fastest, most responsive
+mobile network
+The three 5G "service pillars"
+
+--- page 9 ---
+CSC418 IoT Easy Study Guide
+Page 9
+Pillar
+Meaning
+Plain English
+eMBB Enhanced Mobile Broadband
+Very fast data
+Streaming and downloads
+URLLC Ultra-Reliable Low-Latency
+Communications
+Extremely dependable, very
+small delay
+For cars, robots, and remote
+surgery where delay is dangerous
+mMTC Massive Machine-Type
+Communications
+Huge numbers of devices
+connected at once
+Millions of tiny sensors
+In plain English: GHz = radio frequency band. Mb/s, Gb/s = speed (megabits or gigabits per second).
+Higher numbers = faster data. ms = millisecond (a thousandth of a second).
+4. Network / Internet layer
+Responsible for sending IP datagrams (packets) from the source network to the destination network. It
+does host addressing and packet routing. Each datagram carries source and destination addresses.
+Protocol
+Facts
+Plain English
+IPv4
+Most deployed. 32-bit addresses, giving 232 =
+4,294,967,296 addresses. These ran out in 2011. IP does
+not guarantee delivery (higher layers such as TCP do).
+Described in RFC 791
+Like phone numbers that ran out
+IPv6
+Newest version. 128-bit addresses, giving 2128 = about 3.4
+× 1038 addresses. Described in RFC 2460
+Practically unlimited addresses,
+enough for every IoT device
+6LoWPAN
+"IPv6 over Low-power Wireless Personal Area Networks".
+Brings IP to low-power devices with limited processing. 2.4
+GHz, 250 Kb/s, works with 802.15.4, and compresses IPv6
+datagrams
+A "zip file" version of IPv6 so tiny
+battery devices can join the internet
+5. Transport layer: TCP vs UDP
+Provides end-to-end message transfer independent of the underlying network, with error control,
+segmentation, flow control, and congestion control.
+TCP
+UDP
+Full name
+Transmission Control Protocol
+User Datagram Protocol
+Connection
+Connection-oriented, uses a handshake, stateful
+Connectionless, no setup, stateless
+(transaction-oriented)
+Reliability
+Reliable, in-order delivery. Detects errors,
+discards duplicates, retransmits lost packets
+No guaranteed delivery, no ordering, no
+duplicate removal
+Extras
+Flow control (sender does not overwhelm
+receiver) and congestion control (avoids network
+jams)
+Low overhead. Higher layers can add reliability
+Best for
+Web (HTTP/HTTPS), email (SMTP), file transfer
+(FTP)
+Time-sensitive apps with very small data units
+Analogy
+A phone call or tracked, signed-for delivery:
+confirm everything arrived, in order
+A postcard or shouting a message: fast, but no
+confirmation it arrived
+6. Application layer
+Defines how apps use the lower layers to send data. Ports address applications (port 80 = HTTP, port 22
+= SSH) and enable process-to-process connections.
+Protocol
+What it is
+Plain English
+HTTP
+Foundation of the World Wide Web. Request-response
+model; commands include GET, PUT, POST, DELETE,
+HEAD, TRACE, OPTIONS. Stateless (each request
+independent). Uses URIs to identify resources. Client can
+be a browser, IoT device, or mobile app
+Ask a question, get an answer, no
+memory of earlier questions
+
+--- page 10 ---
+CSC418 IoT Easy Study Guide
+Page 10
+Protocol
+What it is
+Plain English
+CoAP (Constrained
+Application Protocol)
+For machine-to-machine (M2M) apps in constrained
+environments (limited devices and networks).
+Request-response like HTTP but runs over UDP.
+Client-server with connectionless datagrams. Easily
+interfaces with HTTP. Supports GET, PUT, POST, DELETE
+"HTTP-lite" for tiny devices
+WebSocket
+Full-duplex communication over a single socket
+connection. Based on TCP. Keeps the connection open so
+messages stream both ways. Client can be a browser,
+mobile app, or IoT device
+A phone line left open: both sides
+talk any time
+MQTT (Message
+Queue Telemetry
+Transport)
+Lightweight, publish-subscribe. Clients (e.g. IoT
+devices) connect to an MQTT broker and publish
+messages to topics. The broker forwards messages to
+clients subscribed to those topics. Suited to limited
+processing, memory, and low bandwidth
+A noticeboard: devices pin notes
+on topics, and subscribers get
+copies
+XMPP (Extensible
+Messaging and
+Presence Protocol)
+Real-time streaming of small chunks of XML data. Powers
+messaging, presence, gaming, multi-party chat, and
+voice/video calls. Decentralised, client-server, supports
+client-to-server and server-to-server. For IoT it enables
+real-time device-to-device communication
+Like instant chat, but between
+devices
+In plain English: Stateless = the server forgets you after each request (like a cashier who treats
+every customer as brand new, so you must say your full order each time). Stateful = it remembers the
+ongoing conversation. Full-duplex = both sides can talk at the same time, like a phone call (a
+walkie-talkie is half-duplex). XML = a text format for structuring data.
+7. Logical design of IoT
+The logical design abstracts the system's entities and processes without worrying about low-level
+implementation details. It outlines the core components and communication interfaces.
+In plain English: Logical design is the architect's floor plan: it shows the rooms and how they connect,
+not which bricks or wires are used.
+Six IoT functional blocks
+Block
+Job
+Device
+Hardware for sensing, actuation, monitoring, and direct control
+Communication
+Moves data using suitable network standards and protocols
+Services
+Basic utilities: device discovery, real-time monitoring, control, data publishing
+Management
+Governance features to manage, configure, and maintain the infrastructure
+Security
+Keeps the system safe: user authentication, access authorisation, message validation, data
+encryption
+Application
+User interface to monitor status, view analytics, and control devices remotely
+In plain English: Authentication = prove who you are (login). Authorisation = what you are allowed
+to do. Encryption = scramble data so only the right person can read it.
+8. Four IoT communication models
+Model
+How it works
+Key points
+Analogy
+Request-Respon
+se
+Client sends a request, the server decides
+how to respond, fetches the data, and
+sends back a response
+Stateless: each pair is
+independent
+Ordering at a
+restaurant counter
+Publish-Subscri
+be
+Publishers send data to topics managed
+by a broker. Consumers subscribe to
+topics. The broker forwards data to all
+subscribers
+Publishers do not know the
+consumers
+A YouTube channel:
+the creator posts,
+subscribers get
+notified
+
+--- page 11 ---
+CSC418 IoT Easy Study Guide
+Page 11
+Model
+How it works
+Key points
+Analogy
+Push-Pull
+Producers push data into queues.
+Consumers pull data from the queues
+Producers need not know
+consumers. Queues
+decouple them and act as a
+buffer when push rate and
+pull rate differ
+A conveyor belt or a
+waiting line
+Exclusive Pair
+Bi-directional, full-duplex, persistent
+connection. Stays open until the client asks
+to close it
+Stateful: the server knows
+about all open connections
+A phone call that
+stays connected
+9. IoT communication APIs
+In plain English: An API (Application Programming Interface) is a menu of requests one program can
+make to another. REST and WebSocket are two styles of building that menu.
+REST (Representational State Transfer)
+A set of design principles for web services/APIs focused on resources and how their states are addressed
+and transferred. REST APIs use the request-response model. The five constraints:
+Constraint
+Meaning
+Plain English
+Client-Server
+Separation of concerns: the client does not care about data
+storage, and the server does not care about the user
+interface. They can be developed and updated
+independently
+Waiter and kitchen have separate
+jobs
+Stateless
+Each request has all the info needed, with no stored context
+on the server. Session state is kept on the client
+Say your full order every time
+Cache-able
+Responses are labelled cache-able or not. If cache-able, the
+client can reuse the data for equivalent later requests,
+which improves efficiency and scalability
+Keep a copy so you do not ask
+again
+Layered system
+Each component only sees the layer it talks to. A client
+cannot tell whether it is connected to the end server or an
+intermediary. Intermediaries can answer requests,
+improving scalability
+Calling a call-centre without
+knowing which agent or office
+answers
+Uniform
+interface
+Communication is uniform. Resources are identified in
+requests (by URIs) and are separate from their
+representations. A client holding a representation has
+enough information to update or delete it (with permission).
+Each message says how to process it
+Every request follows the same
+standard format
+WebSocket APIs
+•
+Allow bi-directional, full-duplex communication. They follow the exclusive pair model.
+•
+Unlike REST, no new connection is needed for each message.
+•
+It starts with a WebSocket handshake: the client sends a connection-setup request over HTTP, which
+the server treats as an upgrade request. If supported, the server replies, and then both can send
+messages freely.
+•
+This reduces network traffic and latency (no setup and teardown per message), so it suits IoT apps
+needing low latency or high throughput.
+10. IoT vs M2M
+M2M (Machine-to-Machine) = networking machines or devices for remote monitoring, control,
+and data exchange.
+•
+Often used interchangeably with IoT, but the two terms evolved from different backgrounds.
+•
+An M2M area network is made of M2M nodes with embedded hardware for sensing, actuation, and
+communication.
+
+--- page 12 ---
+CSC418 IoT Easy Study Guide
+Page 12
+•
+Local M2M protocols include Bluetooth, ModBus, M-Bus, Wireless M-Bus, Power Line Communication
+(PLC), 6LoWPAN, and IEEE 802.15.4.
+•
+M2M area networks usually use proprietary or non-IP protocols, while the communication
+network that links remote M2M area networks uses IP-based networks (wired or wireless).
+In plain English: M2M is machines talking directly to machines, often over specialised, private links.
+IoT is the bigger picture: it adds the internet, cloud, apps, and analytics around those connected things.
+
+--- page 13 ---
+CSC418 IoT Easy Study Guide
+Page 13
+LECTURE 4: Embedded Systems Fundamentals
+1. What is an embedded system?
+Definition: a computer-based system (hardware + software) designed and built into a larger device
+or product to perform a specific task or set of closely related tasks.
+In plain English: A tiny computer hidden inside a device with one main job: the chip in your microwave,
+washing machine, or car. You never "use it as a computer"; it just makes the device work.
+General-purpose computer
+Embedded system
+Purpose
+Many different tasks
+Specific functions
+Software
+User installs many applications
+Normally designed for that device
+Resources
+Usually considerable processing and memory
+Chosen to fit the application
+Examples
+Desktop and laptop computers
+Washing machine controller, car controllers
+2. The basic model: Input → Processing → Output
+Stage
+Meaning
+Details
+INPUT
+What goes in
+Physical (temperature, pressure, motion, light, sound);
+Electrical (voltage/current from a sensor); Digital (data
+from another device); User-generated (buttons, keypad,
+touchscreen); Communication data (UART, SPI, I2C,
+Ethernet, Wi-Fi, Bluetooth)
+PROCESSING
+The "decision-making" part. It
+receives input and decides what
+happens next
+Done by a Microcontroller (MCU), Microprocessor (MPU),
+Digital Signal Processor (DSP), FPGA, or other
+programmable/dedicated hardware
+OUTPUT
+The response after processing
+Control a physical device, display information, produce a
+sound, send data to another system, store information,
+activate an actuator
+In plain English: Microwave: you press a button and set a time (input), the chip counts and decides
+(processing), and the magnetron turns on and the display counts down (output).
+3. Key components
+•
+Microprocessor or microcontroller: the core that runs the system logic.
+•
+Memory: RAM, ROM, and cache for volatile (lost when power is off) and non-volatile (kept) storage.
+•
+Networking units: Ethernet or WiFi adapters for communication.
+•
+Input/Output units: displays, keyboards, sensor interfaces.
+•
+Storage: non-volatile memory such as flash.
+•
+Sensors: collect information from the physical environment.
+•
+Some include specialised processors (DSPs, graphics processors, application-specific processors) and
+often run an embedded OS such as an RTOS (Real-Time Operating System).
+•
+Range: from cheap digital watches to digital cameras, point-of-sale terminals, vending machines, and
+washing machines.
+In plain English: RAM = short-term workspace (forgets when powered off). ROM / flash = long-term
+storage (remembers). Cache = very fast small memory near the processor. RTOS = an operating
+system that guarantees tasks happen on time, which matters for things like brakes and pacemakers.
+4. The core of an embedded system: four categories
+•
+General-purpose and domain-specific processors
+•
+Application Specific Integrated Circuits (ASIC)
+
+--- page 14 ---
+CSC418 IoT Easy Study Guide
+Page 14
+•
+Programmable Logic Devices (PLD)
+•
+Commercial Off-the-Shelf components (COTS)
+Microprocessor (MPU) vs Microcontroller (MCU)
+Microprocessor
+Microcontroller
+Slide definition
+A processor implemented as an integrated
+circuit that does computation but normally
+needs external memory and I/O to form a
+complete system
+An integrated circuit combining a processor
+core with memory and peripheral
+interfaces, typically on a single chip, for a
+specific application
+Plain English
+Just the brain. You must add memory and
+connections around it
+A whole mini-computer on one chip: brain +
+memory + connections
+Applications
+Calculators, accounting systems, games
+machines, complex industrial controllers, data
+acquisition, military, communication systems
+Washing machines, cameras, security alarms,
+microwave ovens, consumer electronics
+Families
+ARM Cortex-M based MCUs, STM32, ESP32,
+AVR, PIC, 8051
+Where does the Raspberry Pi 5 fall? It is closest to a microprocessor-based system: its main chip is
+a powerful processor, it uses separate RAM, and it runs a full operating system (Linux), so it behaves like a
+small general-purpose computer. Boards like the ESP32 or Arduino are the true microcontrollers. (my
+answer, check with your lecturer)
+5. Special-purpose processing chips
+Chip
+Slide definition
+Plain English
+DSP Digital Signal
+Processor
+A processor optimised for mathematical operations on
+digital signals. Useful for audio, video, and
+communication signals. Contains program memory, data
+memory, computational engine, and I/O unit. Examples:
+audio processing, video processing, telecommunications
+A specialist at fast maths on
+sound and video, like the chip
+that cleans up your phone call
+audio
+ASIC Application
+Specific Integrated
+Circuit
+An IC designed for one particular application.
+Advantages: high performance and optimisation.
+Limitations: high development cost and less flexibility
+after fabrication
+A custom-tailored suit: fits
+perfectly and is fast, but
+expensive and cannot be altered
+PLD Programmable
+Logic Device
+An IC whose logic can be configured by the designer.
+Examples: CPLD and FPGA
+A chip you can "rewire" with
+software
+FPGA
+Field-Programmable
+Gate Array
+A programmable digital device with configurable logic
+resources and interconnections that can implement
+specific digital hardware functions. Useful for hardware
+acceleration, parallel processing, specialised digital logic,
+high-speed processing, and reconfigurable hardware
+Like a box of LEGO logic blocks
+you can rebuild into different
+circuits, and many parts work at
+the same time
+6. Communication interfaces
+Embedded systems talk to sensors, other controllers, computers, mobile devices, industrial equipment,
+cloud systems, and IoT platforms.
+Chip-level interfaces
+Interface
+Slide meaning
+Plain English
+I2C Inter-Integrated Circuit
+Serial interface for communication between
+integrated circuits
+A shared two-wire "group chat"
+between chips
+SPI Serial Peripheral Interface
+Synchronous serial interface, commonly used
+for relatively fast communication between a
+controller and peripherals (displays, sensors,
+flash memory, ADC/DAC devices)
+A faster, dedicated link with a
+shared clock beat
+
+--- page 15 ---
+CSC418 IoT Easy Study Guide
+Page 15
+Interface
+Slide meaning
+Plain English
+UART Universal Asynchronous
+Receiver Transmitter
+Serial communication without a shared clock
+signal
+Two devices agree on a speed
+and just talk, with no shared
+timer
+1-Wire, parallel bus
+Also listed as chip-level interfaces
+1-Wire uses one data wire.
+Parallel sends many bits at once
+External interfaces
+•
+Wired: RS-232C, RS-485, parallel port, USB, IEEE 1394.
+•
+Wireless: Infrared/IrDA, Bluetooth, Wi-Fi, ZigBee, GPRS.
+7. Classification of embedded systems
+a) By triggering
+Type
+Meaning
+Plain English
+Event-triggered
+Activities are dynamic and depend on events occurring
+Acts only when something
+happens, e.g. a doorbell
+Time-triggered
+Activities follow a statically computed schedule with
+allocated time slots, so they are by nature predictable
+Acts on a fixed timetable, like a
+school bell schedule
+b) By deterministic behaviour (real-time systems)
+Type
+Meaning
+Examples (my addition)
+Soft real-time
+Missing a deadline or small errors can be tolerated
+to a degree
+Video streaming (a glitch is annoying,
+not dangerous)
+Hard real-time
+Missing a deadline can have catastrophic
+consequences (financial loss, loss of life)
+Car airbag, pacemaker, aircraft control
+c) By complexity and performance
+Scale
+Built around
+Notes
+Small
+Low-performance, low-cost 8- or 16-bit
+processors/controllers
+Simple applications, not time-critical. May
+or may not have an OS
+Medium
+Medium-performance, low-cost 16- or 32-bit
+processors/controllers or DSPs
+Slightly complex hardware and firmware.
+May contain a GPOS or RTOS
+Large / complex
+High-performance 32- or 64-bit RISC
+processors/controllers, RSoC, multi-core processors,
+and PLD
+Complex hardware and software. May have
+multiple processors and co-units/hardware
+accelerators that offload work from the
+main processor
+In plain English: Firmware = the software permanently stored inside a device's hardware. GPOS =
+General-Purpose Operating System (like Linux or Windows). RISC = a processor design with simple,
+quick instructions. RSoC = Reconfigurable System-on-Chip. 8/16/32/64-bit = how much data the
+processor handles at once: bigger = more powerful.
+
+--- page 16 ---
+CSC418 IoT Easy Study Guide
+Page 16
+Jargon Buster (A to Z) and Self-Test
+Jargon buster
+Term
+Simple meaning
+Actuator
+Part that does something physical (motor, valve, lock). The "muscle"
+API
+A menu of requests one program can make to another
+Bandwidth
+How much data a connection can carry per second (pipe width)
+Broker (MQTT)
+The middleman that receives published messages and forwards them to subscribers
+Cache
+A saved copy kept for quick reuse
+Cloud computing
+Renting computing power, storage, and software over the internet
+CoAP
+A lightweight "HTTP-lite" for tiny devices, runs over UDP
+Edge computing
+Processing data close to where it is created
+Embedded system
+A small computer built into a device to do one job
+Encryption
+Scrambling data so only authorised people can read it
+FPGA
+A chip you can reconfigure to act like different hardware circuits
+Full-duplex
+Both sides can send at the same time
+Gateway
+The bridge and translator between local devices and the cloud
+Heterogeneity
+Many different kinds of devices working together
+HTTP
+The request-response language of the web
+IPv4 / IPv6
+Internet address systems (about 4.3 billion vs about 3.4 × 1038 addresses)
+Latency
+The delay before a response arrives
+M2M
+Machines talking directly to machines for monitoring and control
+MCU / MPU
+MCU: processor + memory + I/O on one chip. MPU: processor that needs external
+memory and I/O
+MQTT
+Publish-subscribe messaging for small devices and low bandwidth
+NFC / RFID / PIR
+Short-range tap technology / radio tags / body-heat motion sensor
+Protocol
+An agreed set of communication rules
+REST
+Rules for designing web APIs around resources, using request-response
+RTOS
+An operating system that guarantees tasks finish on time
+Sensor
+Part that detects something from the environment. The "eyes and ears"
+Stateless / Stateful
+Server forgets you each time / server remembers the ongoing conversation
+TCP / UDP
+Reliable, ordered delivery / fast, no-guarantee delivery
+WebSocket
+A connection left open so both sides can message any time
+ZigBee
+Low-power wireless protocol built on 802.15.4
+Self-test: questions and short answers
+Question
+Answer
+What is IoT?
+A network of physical objects with sensors, software, and connectivity that
+collect and exchange data. Things + sensors + connectivity + data +
+action.
+Sensor vs actuator?
+A sensor detects (input). An actuator acts (output).
+Name the four layers of an IoT
+ecosystem.
+Sensors & actuators, gateways, cloud/server, applications.
+Latency vs bandwidth?
+Latency is delay. Bandwidth is the maximum data rate (bps).
+
+--- page 17 ---
+CSC418 IoT Easy Study Guide
+Page 17
+Question
+Answer
+Why is cloud-only a problem for a
+self-driving car?
+The round trip (car → cloud → car) adds delay, and milliseconds matter for
+braking.
+What does edge computing give
+you?
+Low latency, bandwidth savings, and privacy benefits. It does not
+automatically make a system secure.
+Who does what in the Trifecta?
+IoT connects, edge responds, cloud scales.
+TCP vs UDP?
+TCP is reliable, ordered, and connection-based. UDP is connectionless,
+faster, with no delivery guarantee.
+Why was IPv6 needed?
+IPv4's 232 addresses ran out in 2011. IPv6 has 2128.
+What is 6LoWPAN for?
+Running IPv6 on low-power, low-processing devices over 802.15.4.
+Why is MQTT popular in IoT?
+It is lightweight and publish-subscribe, good for devices with little
+memory, processing, and bandwidth.
+Name the 4 IoT communication
+models.
+Request-Response, Publish-Subscribe, Push-Pull, Exclusive Pair.
+Name the 5 REST constraints.
+Client-Server, Stateless, Cache-able, Layered System, Uniform Interface.
+Difference between IoT and M2M?
+M2M links machines for remote monitoring and control, often with non-IP
+local protocols. IoT is broader and internet-centred. They are often used
+interchangeably.
+What is an embedded system?
+A computer system built into a larger product to do a specific task or
+closely related tasks.
+MCU vs MPU?
+MCU has processor + memory + peripherals on one chip. MPU is the
+processor and needs external memory and I/O.
+ASIC vs FPGA?
+ASIC is custom-made for one job: fast, but costly and fixed. FPGA is
+reconfigurable hardware.
+Soft vs hard real-time?
+Soft tolerates missed deadlines. Hard can cause catastrophic
+consequences if a deadline is missed.
+Event-triggered vs time-triggered?
+Event-triggered reacts to events. Time-triggered follows a fixed schedule
+and is predictable.

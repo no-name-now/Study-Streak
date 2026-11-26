@@ -1,0 +1,68 @@
+
+--- page 1 ---
+PAN-ATLANTIC UNIVERSITY 
+School of Science and Technology (SST) 
+ 
+Department: Computer and Information Sciences 
+Course Lecturer: Dr. Stephen A. Adubi  
+Course Code: PAU-CSC420 
+Course Title: Data Management II  
+Units: 2 
+Semester: First 
+ 
+a) Course Overview  
+Database Management II extends Database Management I, assuming proficiency in basic SQL, 
+relational database concepts, and ER modelling. The course covers three parts: advanced SQL 
+topics (indexing, transactions, complex types, functions, procedures, triggers, NoSQL intro), 
+document databases (MongoDB), graph databases (Neo4j), and Vector Databases . It emphasises 
+practical, industry -relevant skills through a project -based curriculum, particularly for NoSQL. 
+Students will work on a project to design a data-intensive system that uses  relational, document, 
+and graph databases.  
+b) Course Objectives 
+• To master advanced SQL techniques for advanced data management tasks and to aid query 
+optimisation. 
+• To learn MongoDB for flexible, semi-structured data management. 
+• To understand Neo4j for graph-based applications (e.g., recommendations). 
+• To apply concepts via a project encompassing the practical applications of these concepts 
+in the real world.  
+c) Methods of Lecture Delivery/Teaching Aids 
+- Lecture Delivery Methods: Lectures, Tutorials, In-class Practical Demonstrations  
+- Teaching Aids: Lecture Slides, PowerPoint presentations with Multimedia support, 
+PostgreSQL DBMS, MongoDB Server, Neo4j Software, & Python coding 
+environments. 
+ 
+d) Course Outline  
+Lecture 1 – Transactions & Database Indexing : B-tree, B+ -tree, hashing, bitmap indexing; 
+basic transaction concepts (ACID, commit/rollback, basic concurrency). Industry relevance:  
+Optimising query performance and ensuring data integrity in e-commerce. 
+Lecture 2 – Complex Types: Array, JSON/JSONB; use cases for semi-structured data. Industry 
+relevance: Storing flexible data like product attributes in retail. 
+Lecture 3 – Functions, Procedures, and Triggers : User-defined functions, stored procedures 
+(PL/pgSQL), triggers for automation (e.g., audit logs). Industry relevance: Automating business 
+rules in enterprise systems. 
+Lecture 4 – Introduction to NoSQL Data Models: NoSQL types (key-value, document, column-
+family, graph), understand NoSQL paradigms and their use cases, NoSQL vs. RDBMS. Industry 
+relevance: Scalability for big data applications (e.g., social media). 
+--- page 2 ---
+Lecture 5 – MongoDB Basics: MongoDB architecture, setup (local/Atlas), CRUD operations ; 
+basic insertion/querying operations, schema design (embedded vs. referenced). Industry relevance: 
+Flexible storage for e-commerce product catalogues. 
+Lecture 6 – MongoDB Query Language: Creating, Updating, and Deleting Documents , Query 
+Criteria: Query Conditionals, OR Queries, $not, Operators. 
+Lecture 7 – Advanced Querying and Aggregation: MongoDB query language – Part II: Arrays 
+and Nested Structures , filters, projections, aggregation pipeline (match, group, sort). Industry 
+relevance: Analytics for sales or user data. 
+Lecture 8 – Vector Databases : Introduction to vector embedding, Vector space models, 
+Similarity measures (Cosine, Euclidean distance), Embedding techniques (Word embeddings and 
+Sentence embeddings), Applications of vector embedding, Vector search and retrieval, Vector 
+database management systems and use cases. 
+ 
+Method of Grading: Continuous Assessment (Assignments, Coding Tests, and In-class 
+participation), End of Semester Examination. 
+ 
+e) Recommended Reading/Text 
+A. Silberschatz, H. F. Korth, and S. Sudarshan, Database System Concepts, 7th ed. McGraw-Hill 
+Education, 2020. doi: 10.1145/253671.253760. 
+S. Bradshaw, E. Brazil, and K. Chodorow, MongoDB: The Definitive Guide , 3rd ed. O’Reilly 
+Media, Inc., 2020. 
+D. Magda, Just Use Postgres!, 1st ed. Manning, 2026. 

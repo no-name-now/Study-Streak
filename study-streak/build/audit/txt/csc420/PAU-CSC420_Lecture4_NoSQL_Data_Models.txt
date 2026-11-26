@@ -1,0 +1,632 @@
+
+--- page 1 ---
+PAU-CSC420 – Database 
+Management II
+Lecture 4: Introduction to NoSQL Data Models
+--- page 2 ---
+OUTLINE
+Why NoSQL?
+▪ Beyond tables for big, varied data
+Four NoSQL Data Models
+▪ Key-value, document, column-family & graph
+NoSQL vs RDBMS
+▪ Schemas, consistency & scaling
+Industry Relevance
+▪ Scaling for social media
+Self-Check & Summary
+Appendix & References
+▪ Case study: university_db as a graph
+Dr. Stephen A. Adubi
+2
+--- page 3 ---
+WHY NOSQL?
+Beyond tables for big, varied data
+Dr. Stephen A. Adubi 3
+--- page 4 ---
+What Is NoSQL?
+NoSQL ("Not only SQL") is a family of databases that 
+store data in models other than relational tables.
+Each NoSQL type is built around one data model and 
+the ways that data is usually read and written.
+Common traits: flexible schemas, scaling out across 
+many servers, and fast, simple access paths. NoSQL 
+does not replace relational databases: many 
+applications use both.
+The name began as a Twitter hashtag for a 2009 
+meetup on distributed, non-relational databases, and 
+was later read as "Not only SQL".
+Dr. Stephen A. Adubi
+4
+--- page 5 ---
+Big Data: The 3 Vs
+Big Data is data whose characteristics make it hard 
+for a relational DBMS to manage:
+▪ Volume: the quantity of data to be stored;
+▪ Velocity: the speed at which data enters the system;
+▪ Variety: variations in the structure of the data.
+Social media and the Internet of Things (IoT) drive all 
+three, e.g. millions of posts, likes and sensor readings 
+every minute.
+Any one of the Vs, not necessarily all three, can push 
+data beyond what a single relational server handles 
+well.
+Dr. Stephen A. Adubi
+5
+--- page 6 ---
+Why NoSQL Emerged
+Scalability: very large datasets and very high write 
+rates, beyond what relational databases scale to 
+easily.
+Flexibility: frustration with rigid schemas, as data 
+shapes vary from record to record, like Lecture 2's 
+product details.
+Specialised queries the relational model handles 
+poorly, e.g., following chains of relationships.
+Large web companies built their own systems: 
+Google's Bigtable, Amazon's Dynamo and Facebook's
+Cassandra (open-sourced in 2008).
+Dr. Stephen A. Adubi
+6
+--- page 7 ---
+FOUR NOSQL DATA MODELS
+Key-value, document, column-family & graph
+Dr. Stephen A. Adubi 7
+--- page 8 ---
+1. Key
+-
+Value Stores
+Data is a set of unique keys, each mapped to a 
+value, like a giant dictionary.
+The database does not look inside the value: you 
+only get, put or delete by key.
+Very fast, and easy to spread across many servers.
+Use Cases: caching, session stores, shopping 
+carts, leaderboards.
+Examples: Redis, Amazon DynamoDB.
+Dr. Stephen A. Adubi
+8
+--- page 9 ---
+Querying a Key
+-
+Value Store: Redis
+Language: Redis has no formally named query language; 
+you send it commands, e.g., GET, SET, HSET.
+Halima's cart (key cart:3) is a hash of product:variation → 
+quantity. 
+▪ HINCRBY adds one more Indomie carton, 
+▪ HGETALL reads the whole cart, and 
+▪ EXPIRE deletes it after 24 hours.
+HSET cart:3 7:2 2
+HINCRBY cart:3 7:2 1
+HGETALL cart:3
+EXPIRE cart:3 86400
+Dr. Stephen A. Adubi
+9
+--- page 10 ---
+2. Document Databases
+Data is stored as self-describing documents (JSON-
+like), grouped into collections.
+▪ A document can hold nested objects and arrays, and 
+documents in one collection may have different fields.
+Like a key-value store whose values the database 
+understands: it can query and index fields inside
+documents.
+Use cases: product catalogues, content management, 
+user profiles.
+Examples: MongoDB (Lecture 5), Amazon 
+DocumentDB.
+Dr. Stephen A. Adubi
+10
+--- page 11 ---
+Example 
+—
+ 
+A Product as a Document
+The whole product, variations included, is one record. 
+Lecture 2's JSONB column held part of a row this way; 
+a document database stores every record like this.
+{ _id: 1,
+  name: "Baygon Multi-Insect Killer Aerosol",
+  tags: ["insecticide", "household", "bestseller"],
+variations: [
+    { variation_no: 1, price: 2600, qty_on_hand: 120 },
+    { variation_no: 2, price: 3500, qty_on_hand: 85 } ] }
+Dr. Stephen A. Adubi
+11
+--- page 12 ---
+Querying a Document Database: 
+MongoDB
+Language: the MongoDB Query Language (MQL); a 
+query is itself a JSON-like document.
+Find products with at least one variation priced under 
+₦3,000, returning only their names. The filter reaches 
+inside the embedded variations array: Baygon 
+aerosol, Baygon coil, sugar and Indomie.
+db.products.find(
+  { "variations.price": { $lt: 3000 } },
+  { name: 1, _id: 0 })
+Dr. Stephen A. Adubi
+12
+--- page 13 ---
+3. Column
+-
+Family (Wide
+-
+Column) 
+Stores
+Data is stored in rows, each identified by a row key 
+and holding many columns (name-value pairs), 
+grouped into column families.
+Rows can have different columns, and a row can grow 
+to hold many of them. The model began with 
+Google's Bigtable.
+Data is spread across servers by key; built for very 
+high write volumes, with no joins.
+Use cases: activity logs, messaging, time-series data. 
+Example: Apache Cassandra.
+Dr. Stephen A. Adubi
+13
+--- page 14 ---
+Example 
+—
+ 
+Order History in a 
+Column
+-
+Family Store
+Each customer is one row; each order is a column 
+holding its total. Rows differ in size, and one row 
+read returns a customer's whole history.
+row user:1    orders:20260112093015_1 = 422000
+              orders:20260611200130_1 = 20800
+row user:7    orders:20260419095512_7 = 11000
+Dr. Stephen A. Adubi
+14
+--- page 15 ---
+Querying a Column
+-
+Family Store: 
+Cassandra (1)
+Language: the Cassandra Query Language (CQL): 
+it looks like SQL but has no joins.
+user_id is the partition key, so all of a customer's 
+orders are stored together; order_id sorts them 
+within it.
+CREATE TABLE orders_by_user (
+  user_id int, order_id text, total int,
+PRIMARY KEY ((user_id), order_id));
+Dr. Stephen A. Adubi
+15
+--- page 16 ---
+Querying a Column
+-
+Family Store: 
+Cassandra (2)
+Read user 1's orders and their totals in one fast 
+lookup.
+A query must give the partition key with “=“. 
+Filtering on total alone is rejected unless ALLOW 
+FILTERING forces a slow full scan.
+SELECT order_id, total FROM orders_by_user
+WHERE user_id = 1;
+Dr. Stephen A. Adubi
+16
+--- page 17 ---
+4. Graph Databases
+Data is stored as nodes (entities) and relationships 
+(connections between them); both can have 
+properties.
+Every relationship has a type and a direction, e.g., a 
+User BOUGHT a Product.
+Queries traverse relationships, visiting only the 
+connected part of the graph instead of joining whole 
+tables.
+Use cases: social networks, recommendations, fraud 
+detection.
+Examples: Neo4j, Amazon Neptune.
+Dr. Stephen A. Adubi
+17
+--- page 18 ---
+Example 
+—
+ 
+Who Bought What
+User
+Adaeze
+User
+Oluwaseun
+Ankara Print Shirt
+Tecno Camon 30 5G
+Kaspersky Standard
+BOUGHT
+BOUGHT
+BOUGHT
+BOUGHT
+Ovals and boxes are nodes; arrows are BOUGHT relationships.
+Recommend Kaspersky to Adaeze: Adaeze → Camon 30 ← Oluwaseun → Kaspersky
+Dr. Stephen A. Adubi
+18
+--- page 19 ---
+Querying a Graph Database: Neo4j
+Language: Cypher. GQL, the ISO standard graph query 
+language (2024), is based on it. Patterns are drawn as:
+(node)-[:RELATIONSHIP]->(node). 
+This finds what other buyers of Adaeze's products bought 
+that she has not, on the previous slide's graph: Kaspersky 
+Standard.
+MATCH (a:User {name: "Adaeze"})-[:BOUGHT]->(:Product)
+      <-[:BOUGHT]-(:User)-[:BOUGHT]->(rec:Product)
+WHERE NOT EXISTS { MATCH (a)-[:BOUGHT]->(rec) }
+RETURN DISTINCT rec.name
+Dr. Stephen A. Adubi
+19
+--- page 20 ---
+The Four Models in Brief
+Key-value: key → value. Best for fast lookups by key, 
+e.g., carts, sessions, caches.
+Document: JSON-like documents. Best for varied, 
+nested records, e.g., product catalogues.
+Column-family: rows of many columns, spread by 
+key. Best for huge write volumes, e.g., logs and 
+messages.
+Graph: nodes and relationships. Best for highly 
+connected data, e.g., social networks and 
+recommendations.
+Dr. Stephen A. Adubi
+20
+--- page 21 ---
+NOSQL VS RDBMS
+Schemas, consistency & scaling
+Dr. Stephen A. Adubi 21
+--- page 22 ---
+NoSQL vs RDBMS
+Schema: schema-on-write (declared and enforced) vs.
+schema-on-read (implied; interpreted by the code that 
+reads it).
+Relationships: joins and foreign keys vs. embedding, 
+references or graph relationships; mostly no joins.
+Querying: SQL vs. each product's own commands or 
+language, e.g., MQL, CQL, Cypher.
+Consistency: ACID transactions vs. often eventual 
+consistency, though some, e.g., MongoDB, now support 
+transactions.
+Scaling: traditionally up, onto a bigger server vs. out, across 
+more servers.
+Dr. Stephen A. Adubi
+22
+--- page 23 ---
+ACID vs BASE
+ACID (Lecture 1): every transaction is atomic, 
+consistent, isolated and durable.
+BASE: Basically Available, Soft state, Eventually
+consistent.
+▪ basically available: a failure affects only part of the data, 
+not the whole system;
+▪ eventually consistent: copies of the data may briefly 
+disagree but catch up.
+BASE trades immediate consistency for availability 
+and scale: fine for a social media feed or a catalogue 
+update, not for a payment.
+Dr. Stephen A. Adubi
+23
+--- page 24 ---
+The CAP Theorem
+A database spread over many servers would like 
+three properties:
+▪ Consistency: every read sees the latest write;
+▪ Availability: every request gets a response;
+▪ Partition tolerance: it keeps working when the 
+network splits the servers into groups.
+During a partition, it cannot have both 
+consistency and availability: it must refuse some 
+requests or risk stale answers.
+Dr. Stephen A. Adubi
+24
+--- page 25 ---
+When to Use Which?
+RDBMS: structured data, complex queries and 
+joins, strict consistency, e.g., Splendid Stores' 
+orders and payments.
+NoSQL: very large scale, varied data shapes, or 
+one main way of reading the data.
+Polyglot persistence: one application can use 
+several databases, e.g., orders in PostgreSQL, 
+carts in a key-value store, the catalogue in a 
+document database, and recommendations in a 
+graph database.
+Dr. Stephen A. Adubi
+25
+--- page 26 ---
+The Line Is Blurring
+PostgreSQL's JSONB (Lecture 2) brings document features 
+into a relational database.
+Many NoSQL systems have added SQL-like languages and 
+transactions, e.g., Cassandra's CQL and MongoDB's 
+transactions.
+NewSQL systems, such as Google Spanner and 
+CockroachDB, aim to keep SQL and ACID transactions while 
+scaling out.
+Not everyone agrees NoSQL is faster: Stonebraker (2010) 
+argued that speed comes from removing overheads such as 
+logging and locking, not from dropping SQL.
+Dr. Stephen A. Adubi
+26
+--- page 27 ---
+INDUSTRY RELEVANCE
+Scaling for big data
+Dr. Stephen A. Adubi 27
+--- page 28 ---
+Scaling Up vs Scaling Out
+Scaling up (vertical): a bigger server. Simple, but 
+limited and costly.
+Scaling out (horizontal): more servers sharing the 
+work.
+▪ sharding: each server holds part of the data, chosen by a 
+key such as the user ID, using key ranges or a hash of the 
+key;
+▪ replication: copies on several servers keep data available 
+when one fails.
+Data that is never joined across servers is far easier to 
+scale out: a key reason NoSQL models avoid joins.
+Dr. Stephen A. Adubi
+28
+--- page 29 ---
+Industry Relevance: Social Media
+Social platforms serve hundreds of millions of users, 
+writing huge volumes of posts, likes and messages.
+Facebook built Apache Cassandra to power inbox 
+search, and open-sourced it in 2008.
+Instagram uses Cassandra heavily as a key-value 
+store, for its Feed, Direct inbox and fraud detection, 
+and calls its deployment one of the world's largest.
+Each model has a natural role: graphs for who follows 
+whom, column-family stores for feeds and messages,
+key-value stores for caches.
+Dr. Stephen A. Adubi
+29
+--- page 30 ---
+SELF-CHECK
+Test your understanding
+Dr. Stephen A. Adubi 30
+--- page 31 ---
+Self
+-
+Check Questions
+1. Which model suits shopping carts, and why?
+2. Why can't a key-value store find carts holding Indomie?
+3. How does a column-family store speed up order 
+history?
+4. Which model suits "customers also bought…"? How?
+5. What is eventual consistency? When is it acceptable?
+6. What does CAP force during a network partition?
+7. Why do document stores scale out more easily than 
+graphs?
+Dr. Stephen A. Adubi
+31
+--- page 32 ---
+Self
+-
+Check: Suggested Answers (1)
+1. Key-value: each cart is read and written whole, 
+by the customer's key, e.g., cart:3.
+2. Values are found by key only: answering it 
+means reading every cart in the store.
+3. All customer's orders sit in one row, stored 
+together under one key, so one read returns 
+them all.
+Dr. Stephen A. Adubi
+32
+--- page 33 ---
+Self
+-
+Check: Suggested Answers (2)
+4. Graph: follow BOUGHT relationships from a product 
+to its buyers, then on to their other purchases.
+5. Copies may briefly disagree but catch up; fine for 
+likes or view counts, not for payments.
+6. Consistency or availability: refuse some requests or 
+answer them and risk stale data.
+7. Documents are independent aggregates that can sit 
+on any server; graphs are highly connected, so 
+traversals cross servers.
+Dr. Stephen A. Adubi
+33
+--- page 34 ---
+SUMMARY
+Final Thoughts on NoSQL Data Models
+Dr. Stephen A. Adubi 34
+--- page 35 ---
+Other NoSQL Models
+The four models in this lecture are the main ones, but not
+the only ones. Others include:
+▪ Time-series: readings stamped with time, e.g., sensor data and 
+server metrics (InfluxDB, Prometheus);
+▪ Search engines: fast full-text search across documents 
+(Elasticsearch);
+▪ Vector: finds the most similar items by their embeddings, used 
+in AI apps (Pinecone, Milvus);
+▪ Native XML: XML documents queried with XPath and XQuery;
+▪ Multi-model: several models in one system, e.g., ArangoDB 
+(graph, document and key-value).
+DB-Engines tracks even more, e.g., RDF and spatial stores.
+Dr. Stephen A. Adubi
+35
+--- page 36 ---
+Wrap
+-
+Up: Key Takeaways
+NoSQL databases store data in models other than 
+tables, each suited to particular access patterns.
+Key-value for fast lookups by key; document for 
+varied, nested records; column-family for huge write 
+volumes; graph for connected data. Each has its own 
+query style: Redis commands, MQL, CQL, Cypher.
+Compared with RDBMS, NoSQL usually trades joins 
+and strict consistency for flexible schemas and scaling 
+out (BASE, CAP).
+Real systems often combine several databases. Next: 
+MongoDB, a document database (Lecture 5).
+Dr. Stephen A. Adubi
+36
+--- page 37 ---
+APPENDIX
+Case study: university_db as a graph
+Dr. Stephen A. Adubi 37
+--- page 38 ---
+A.1 university_db as a Graph
+The same university database from Data Management I, stored as nodes and relationships.
+Student Section Instructor Department
+TAKES TEACHES BELONGS_TO
+Relational (Data Management I) Graph (Neo4j)
+Student, Section, Instructor, Department rows Student, Section, Instructor, Department nodes
+Takes and Teaches tables (4-column keys) TAKES and TEACHES relationships
+Instructor.DeptName foreign key BELONGS_TO relationship
+A relationship is stored as a direct link, so a query follows it instead of matching key columns.
+Dr. Stephen A. Adubi
+38
+--- page 39 ---
+A.2 The Question in SQL
+Find students taking sections taught by Comp. Sci. 
+instructors.
+A section's key has four columns, so Takes and Teaches 
+must match on all four (USING): three joins in all.
+SELECT s.Name, CourseCode, SectionID, Semester, Year
+FROM Student s
+  JOIN Takes t ON t.StudentID = s.ID
+  JOIN Teaches te USING (CourseCode, SectionID, Semester, Year)
+  JOIN Instructor i ON i.ID = te.InstructorID
+WHERE i.DeptName = 'Comp. Sci.';
+Dr. Stephen A. Adubi
+39
+--- page 40 ---
+A.3 The Same Question in Cypher
+The pattern reads like the diagram: a student TAKES a 
+section an instructor TEACHES, who BELONGS_TO a 
+department.
+Neo4j follows the stored links to find every matching 
+path; WHERE keeps those ending at Comp. Sci.
+MATCH (s:Student)-[:TAKES]->(sc:Section)
+      <-[:TEACHES]-(i:Instructor)
+      -[:BELONGS_TO]->(d:Department)
+WHERE d.deptname = 'Comp. Sci.'
+RETURN s, sc
+Dr. Stephen A. Adubi
+40
+--- page 41 ---
+A.4 The Result in Neo4j
+6 students, 7 sections: the 
+same 15 pairs as the SQL 
+query.
+The two CS-101 nodes are 
+different sections (Fall 2017, 
+Spring 2018); so are the two 
+CS-319 nodes.
+Only s and sc are returned; 
+Neo4j Browser draws the 
+TAKES links between them.
+One more step means one
+more arrow in the pattern, not 
+another join.
+Dr. Stephen A. Adubi
+41
+--- page 42 ---
+Lecture References (Page 1)
+Coronel, C., & Morris, S. (2023). Database Systems: 
+Design, Implementation, and Management (14th 
+ed.). Cengage. Ch. 14, "Big Data and NoSQL," pp. 
+640–674.
+Kleppmann, M. (2017). Designing Data-Intensive 
+Applications. O'Reilly Media. Ch. 2, "Data Models and 
+Query Languages"; Ch. 9, "Consistency and 
+Consensus."
+Silberschatz, A., Korth, H. F., & Sudarshan, S. (2020). 
+Database System Concepts (7th ed.). McGraw-Hill. 
+Ch. 10, "Big Data," §10.2, pp. 472–478; Appendix A, 
+"Detailed University Schema," pp. 1287–1298.
+Dr. Stephen A. Adubi
+42
+--- page 43 ---
+Lecture References (Page 2)
+Dritsas, E., & Trigka, M. (2025). Database Systems in 
+the Big Data Era: Architectures, Performance, and 
+Open Challenges. IEEE Access, 13, 95068–95081. 
+https://doi.org/10.1109/ACCESS.2025.3572059
+Stonebraker, M. (2010). SQL Databases v. NoSQL 
+Databases. Communications of the ACM, 53(4), 10–
+11. https://doi.org/10.1145/1721654.1721659
+Pritchett, D. (2008). BASE: An ACID Alternative. ACM 
+Queue, 6(3). 
+https://queue.acm.org/detail.cfm?id=1394128
+Dr. Stephen A. Adubi
+43
+--- page 44 ---
+Lecture References (Page 3)
+Gilbert, S., & Lynch, N. A. (2012). Perspectives on the 
+CAP Theorem. 
+https://groups.csail.mit.edu/tds/papers/Gilbert/Brew
+er2.pdf
+Amazon Web Services. Choosing an AWS NoSQL 
+Database: Types of NoSQL databases [Whitepaper]. 
+https://docs.aws.amazon.com/whitepapers/latest/ch
+oosing-an-aws-nosql-database/types-of-nosql-
+databases.html
+Redis. (2026). What is Redis?: An Overview. 
+https://redis.io/tutorials/what-is-redis/
+Dr. Stephen A. Adubi
+44
+--- page 45 ---
+Lecture References (Page 4)
+Apache Software Foundation. Cassandra 
+Documentation: Overview. 
+https://cassandra.apache.org/doc/latest/architect
+ure/overview.html
+Neo4j. Graph database concepts. 
+https://neo4j.com/docs/getting-started/graphdb-
+concepts/
+Hewitt, E. (2010). Cassandra: The Definitive 
+Guide. O'Reilly Media. Foreword.
+Dr. Stephen A. Adubi
+45
+--- page 46 ---
+Lecture References (Page 5)
+Instagram Engineering. (2018). Open-sourcing a 10x 
+reduction in Apache Cassandra tail latency. 
+https://instagram-engineering.com/open-sourcing-a-10x-
+reduction-in-apache-cassandra-tail-latency-d64f86b43589
+MongoDB, Inc. (2026). MongoDB Manual: Embedding vs. 
+References. 
+https://www.mongodb.com/docs/manual/data-
+modeling/concepts/embedding-vs-references/
+MongoDB, Inc. MongoDB Query Language (MQL) 
+Reference. 
+https://www.mongodb.com/docs/manual/reference/mql/
+Dr. Stephen A. Adubi
+46
+--- page 47 ---
+Lecture References (Page 6)
+Apache Software Foundation. Cassandra 
+Documentation: Data Manipulation (CQL). 
+https://cassandra.apache.org/doc/4.0/cassandra/cql/
+dml.html
+Neo4j, Inc. Neo4j Cypher 25 Manual. 
+https://neo4j.com/docs/cypher-manual/current/
+The New Stack. (2024). GQL: A New ISO Standard for 
+Querying Graph Databases. 
+https://thenewstack.io/gql-a-new-iso-standard-for-
+querying-graph-databases/
+Dr. Stephen A. Adubi
+47
+--- page 48 ---
+Lecture References (Page 7)
+Meier, A., & Kaufmann, M. (2019). SQL & NoSQL 
+Databases: Models, Languages, Consistency 
+Options and Architectures for Big Data 
+Management. Springer Vieweg. Ch. 7.5, "XML 
+Databases," pp. 210–215.
+DB-Engines. (2025). Ranking of Time Series DBMS. 
+https://db-
+engines.com/en/ranking/time+series+dbms
+DB-Engines. (2025). Ranking of Vector DBMS. 
+https://db-engines.com/en/ranking/vector+dbms
+Dr. Stephen A. Adubi
+48

@@ -1,0 +1,76 @@
+
+--- page 1 ---
+Codes of Ethics, Professional Associations, Laws 
+Ethical dilemmas that you might encounter in your first job, startups, software projects, or AI 
+ventures. 
+Option 1: The boss says, “Just write the code”—who is responsible when it causes harm? 
+Imagine you are a software engineer in a Nigerian fintech startup. Your manager instructs you to 
+deploy an algorithm that automatically rejects loan applications. You discover that it 
+disproportionately rejects applicants from certain low-income communities, but your manager says 
+the system is profitable and the deadline is tomorrow. 
+• Should you obey your employer, challenge the decision, or refuse to deploy the system? 
+What if refusing costs you your job? 
+• Does writing code make you responsible only for its technical performance, or also for its 
+social consequences? 
+• How would the ACM Code of Ethics and the IEEE/ACM Software Engineering Code of 
+Ethics guide your decision? 
+ 
+ 
+ 
+ 
+Option 2: If users click “I agree,” does that make the collection and use of their data ethical? 
+A Nigerian technology company develops a free campus app that helps students find accommodation 
+and share transport. The app collects location data, phone contacts, browsing behaviour, and other 
+personal information. Its terms and conditions allow the company to share data with advertisers. 
+Almost nobody reads the terms. 
+• Is the company acting ethically simply because users agreed to its terms? What if users do not 
+understand what they are agreeing to? 
+• Which information does the app genuinely need, and which information is it collecting 
+merely because it can? 
+• How would the Nigeria Data Protection Act (NDPA) 2023 and, where applicable, the GDPR 
+affect your design decisions? 
+• If you were the developer, would you challenge the business model even if the company were 
+complying with the law? 
+• Is a user's consent meaningful when refusing it means losing access to an essential service? 
+ 
+ 
+ 
+--- page 2 ---
+Option 3: If a practice is legal and profitable, can it still be professionally unethical? 
+Imagine that your software company develops facial-recognition technology for an organisation that 
+wants to monitor employees and visitors. The client insists that the system is legal and that it will 
+improve security. You discover that the system performs less accurately for some demographic 
+groups and that people may be monitored without their knowledge. 
+• Is complying with the law sufficient to fulfil your ethical responsibilities as a software 
+engineer? 
+• When should a developer challenge a client's instructions, even if the client has legal 
+authority to request the system? 
+• Should professional codes require engineers to consider the dignity, privacy, and wellbeing of 
+people affected by their products? 
+• If the system is legal in Nigeria but would face stricter restrictions elsewhere, which 
+standards should guide your decisions? 
+• Should software engineers or computer scientists be regarded as neutral technical workers 
+who simply implement decisions, or as professionals who share responsibility for the 
+consequences of their work? 
+Clue: See ACM's principles on public wellbeing, fairness, privacy, and professional responsibility, 
+alongside applicable legal requirements (check for Nigeria) 
+ 
+Option 4 
+Why belong to a professional association if your university degree and technical skills are 
+enough? 
+You graduate and receive two job offers. One company rewards you for releasing products quickly, 
+discourages employees from reporting ethical concerns, and provides little professional development. 
+The other encourages professional review, continued learning, and participation in computing 
+associations such as the Association for Computing Machinery (ACM), IEEE, or relevant Nigerian 
+professional bodies. 
+• What can membership in a professional association offer that a university degree, technical 
+certification, or work experience cannot? 
+• Can a professional association help you resist unethical instructions from an employer? How 
+might a code of ethics, peer support, professional networks, and continuing education help? 
+• If professional associations publish ethical codes but cannot prevent every violation, do those 
+codes make a real difference? 
+• What responsibilities should members accept in return for belonging to a professional 
+community? 
+Provocation: If you want society to trust software engineers with systems that affect people's money, 
+privacy, health, and opportunities, what evidence should society have that you take your professional 
+responsibilities seriously? 

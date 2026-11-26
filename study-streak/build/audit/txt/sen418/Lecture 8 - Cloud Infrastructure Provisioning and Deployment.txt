@@ -1,0 +1,182 @@
+## slide1.xml
+Cloud Infrastructure Provisioning and Deployment
+Lino Isawhe
+School: SEN/CSC
+Pan-Atlantic University, Epe
+PAU-CSC 418
+## slide2.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Cloud [Azure] Infrastructure Deployment Key Terminologies
+Term
+Meaning
+Infrastructure provisioning
+Creating and configuring resources such as virtual machines, networks, storage and access policies.
+Azure subscription
+An Azure subscription provides you with authenticated and authorized access to an azure account.
+Resource
+An individually managed Azure service instance, such as a VM or storage account.
+Resource group
+A logical container to manage and aggregate resources in a single unit.
+Region
+A geographic area containing Azure data-centers.
+Availability zone
+A physically separate location within a supported region designed to improve resilience.
+Infrastructure as Code (IaC)
+Defining infrastructure in version-controlled, repeatable files instead of relying only on manual actions.
+Telemetry
+Measurements or events produced by devices and systems, such as temperature or device status.
+ARM (Azure Resource Manager)
+This provides a management layer that enables you create, update, and delete resources in your azure subscription.
+## slide3.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Infrastructure Components
+Component
+Purpose
+Azure examples
+Compute
+Runs operating systems, application code and processing jobs.
+Azure Virtual Machines, Container Apps, AKS, Azure Functions
+Storage
+Persists files, objects, databases and telemetry.
+Azure Blob Storage, Azure Files, Azure SQL Database
+Networking
+Connects resources and controls traffic.
+Virtual Network, subnets, Network Security Groups, Load Balancer
+Identity and security
+Controls who or what can access resources.
+Microsoft Entra ID, Azure RBAC, managed identities, Key Vault
+Monitoring
+Collects logs, metrics, traces and alerts.
+Azure Monitor, Log Analytics, Application Insights
+## slide4.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Shared Responsibility
+Model
+Typical customer responsibility
+IaaS
+Operating system configuration and patching, application software, identities, data and network rules.
+PaaS
+Application code, data, identities and service configuration; Azure manages more of the platform.
+Managed containers/serverless
+Application logic, images or function code, permissions, data and deployment settings.
+Cloud security is shared between the provider and customer.
+Azure operates the underlying cloud infrastructure, while customers remain responsible for many configuration decisions, identities, data, application code and permissions.
+The exact division depends on the service model.
+## slide5.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Infrastructure Provisioning on Azure
+Gather requirements: workload, capacity, performance, region, security, availability and budget.
+Design the architecture: select compute, storage, network, identity and monitoring services.
+Organize resources using subscriptions, resource groups, naming conventions and tags.
+Define configuration including sizes, network rules, identities, data protection and scaling.
+Provision resources through the Azure portal, CLI, PowerShell, ARM templates or Bicep.
+Validate connectivity, permissions, health, performance and security.
+Operate: monitor, patch, back up, scale, review costs and remove unused resources.
+## slide6.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Manual and Automated Provisioning
+Approach
+Strengths
+Limitations
+Azure portal
+Accessible for learning and one-off tasks.
+Harder to reproduce exactly; risk of human error and configuration drift.
+Azure CLI / PowerShell
+Scriptable and useful for repeatable operations.
+Scripts require testing, versioning and secure parameter handling.
+ARM templates / Bicep
+Declarative, reviewable and repeatable infrastructure.
+Requires template design, validation and lifecycle management.
+CI/CD pipeline
+Automates checks and controlled deployments.
+Pipeline permissions and secrets must be secured.
+## slide7.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Virtual Machines
+A virtual machine (VM) is a software-defined computer that runs an operating system and applications on virtualized hardware. Azure Virtual Machines provide Infrastructure as a Service (IaaS) when an organization needs operating-system-level control, custom software or a migration path with minimal architectural change.
+VM Design Decisions
+Operating system: select a supported Windows or Linux image.
+Size: choose CPU, memory, storage throughput and network capacity based on measured workload.
+Disks: distinguish OS, temporary and persistent data disks; plan backup and recovery.
+Networking: use suitable virtual networks and subnets and restrict inbound access.
+Identity: prefer managed identities where supported; avoid embedding credentials in scripts.
+Availability: consider zones, availability sets or scale sets as appropriate.
+Operations: plan patching, monitoring, backups, recovery objectives and cost controls.
+## slide8.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Scalability and Elasticity
+Scalability is the ability to handle increased workload by adding resources or improving capacity. Elasticity is the ability to adjust resources as demand changes, including scaling down when demand falls. A system can scale without being elastic if capacity is increased manually and never reduced automatically.
+## slide9.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+When to Use a VM
+VMs are useful when software requires a specific operating system, custom system packages, administrative control or legacy compatibility. They create operational responsibilities: teams must manage OS updates, runtime configuration, security, capacity and recovery.
+VM Security Checklist
+Avoid exposing SSH or RDP broadly to the internet.
+Use controlled administrative access, strong authentication and least privilege.
+Apply operating-system and application security updates.
+Use Network Security Groups and network segmentation.
+Enable logging, monitoring, backup and alerting.
+Store secrets in a dedicated secret-management service rather than source code.
+## slide10.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Containers and Container-Based Deployment
+A container packages an application with its runtime dependencies and configuration into an image. Containers share the host operating-system kernel, making them generally lighter and faster to start than full virtual machines. A VM virtualizes a complete operating-system environment; a container isolates application processes.
+Characteristic
+Virtual machine
+Container
+Operating system
+Each VM has its own guest OS.
+Containers share the host kernel.
+Startup and footprint
+Often heavier and slower to start.
+Often lighter and faster to start.
+Isolation
+Virtualized hardware boundary; depends on configuration.
+Process-level isolation; security depends on runtime and configuration.
+Best fit
+OS control, legacy workloads, custom environments.
+Portable application packaging and repeatable releases.
+Azure examples
+Azure Virtual Machines, VM Scale Sets.
+Azure Container Apps, AKS, Azure Container Instances.
+VM vs Container
+## slide11.xml
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
+Unlocking Potential. Building Responsible Leaders
+Class Activity – Deployment of VM in Azure
+Use the link below to create a free Azure student account. Make sure to verify and get the account fully running.
+Azure for Students | Microsoft Azure
+## slide12.xml
+Closing Remarks
+www.pau.edu.ng
+pau_Nigeria
+Pan-Atlantic University
