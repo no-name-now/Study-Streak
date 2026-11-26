@@ -7,12 +7,19 @@ Open `index.html` in a browser, or `npx serve .`. To publish: push to GitHub and
 
 ## Files
 - `index.html`: the whole engine (HTML + CSS + JS in one file).
-  - Router: `render()` reads `location.hash`. Routes: `home, plan, courses, course-<cid>, lesson-<cid>-<tid>-<n>, recall-, quiz-, theory-, feyn-, past-<cid>, review, flash-<cid>, calc-<cid>, mock-<cid>, cheat-<cid>, exams, board, me`.
+  - Router: `render()` reads `location.hash`. Routes: `home, plan, courses, course-<cid>, lesson-<cid>-<tid>-<n>, recall-, quiz-, theory-, feyn-, past-<cid>, review, flash-<cid>, calc-<cid>, mock-<cid>, cheat-<cid>, exams, board, me, guides, guide-<cid>, eve-<cid>, essay-<cid>[-<tid|past>-<i>], sit-<cid>`.
+  - Features added 25 Nov: dark mode (🌓 button; `localStorage` key `pau400sen_theme`; colours are CSS variables on `:root`), Study guides page (downloads from `assets/course-guides/<cid>/`, listed in `COURSE_GUIDES`) and a printable full guide per course, topic confidence dots (`ST.conf`) feeding the exam-eve sheet, the five-part essay trainer (`ST.essays`, drafts autosave), and "Sit the real paper" (`ST.sitDraft` / `ST.sits`; timed, resumable, self-marked).
+  - A topic with `noExam:true` is kept out of mocks and the roadmap (used for SEN412 defense prep).
   - State: `localStorage` key `pau400sen_v1`. Backup/restore codes (base64 JSON) are under Me.
-  - Leaderboard: uses `window.claude.use('db')`, which exists only inside claude.ai artifacts. The code is guarded, so on GitHub Pages the live board is inert. Replacing it (e.g. Supabase/Firebase) is an open task. The WhatsApp share card works everywhere.
+  - Cloud sync (no login): Me → “Turn on sync” gives a code like `MINT-HARBOR-CANOE-1751`; typing it on any browser (or at onboarding) restores and keeps syncing. Client state for sync lives in `localStorage` key `pau400sen_sync` (not inside ST). Changes upload ~4 s after `save()`; pulls on load/focus. Conflicts (409) are merged by `mergeState()` (max XP/bests, union of ratings, badges, cards, sits). `saveNow(true)` saves without triggering a sync. Reset turns sync off first so the cloud copy survives.
+  - Leaderboard: opt-in rows from `/api/board` on the hosted site; the old claude.ai `window.claude.use('db')` path is still there but only works inside claude.ai.
 - `data/catalog.js`: exam timetable, electives, class days, formats, topic titles, `status`.
-- `data/<course>.js`: one file per course. Each needs a `<script src>` tag in index.html.
-- `build/`: one-off scripts used to assemble INS401 from an older app.
+- `data/<course>.js`: one file per course. Each needs a `<script src>` tag in index.html and an entry in `sw.js` CORE.
+- `data/*_extra.js`, `data/sen419_chain.js`: additions pushed onto existing courses (SEN412 Feb 2026 paper + defense prep, SEN401 weeks 1/12/13, SEN419 blockchain, SEN418 lectures 5–7 gap).
+- `data/past_rules.js`: per-paper `rule`, `mins`, `compulsory` used by sit mode. Questions group by the start of `h` (`Q1`, `Exam Q2`, `Section A`, `CA1`).
+- `sw.js`: network-first for app + data, cache-first for `assets/`. Bump `CACHE` when the file list changes.
+- `api/sync.js`, `api/board.js`, `api/_lib/store.js`: Vercel functions. Storage is Upstash Redis via REST (`KV_REST_API_URL`/`KV_REST_API_TOKEN` or `UPSTASH_REDIS_REST_*`). Codes are stored only as SHA-256 hashes; 90 requests/min per IP; progress kept 400 days after last write, board rows 45 days.
+- `build/` (git-ignored): one-off scripts, `routecheck.js`, and `devserver.js` (`node build/devserver.js 5180` serves the app + api with an in-memory store for local sync testing).
 
 ## Course data schema
 ```js
@@ -35,10 +42,10 @@ Mocks take 10 objective items (from `quiz`) and `mockTheory` (default 4) theory 
 | ins401 | Project Management | Wed 9 Dec 12–2pm | has past paper; quiz items added 24 Nov |
 | sen412 | Survey of PL | Thu 10 Dec 3–6pm | past paper; topic 7 is extra context |
 | sen401 | SCM & Maintenance | Fri 11 Dec 12–2pm | new course |
-| sen419 | Web/Mobile/Blockchain (elective) | Sat 12 Dec 3–6pm | no blockchain notes yet |
-| sen408 | Ethics | Mon 14 Dec 12–2pm | scenario + 5-part essays |
-| csc420 | Database II (elective) | Tue 15 Dec 12–2pm | mostly SQL queries |
-| sen418 | IoT & Edge (elective) | Wed 16 Dec 12–2pm | new course |
+| sen419 | Web/Mobile/Blockchain (elective) | Sat 12 Dec 3–6pm | Feb 2026 past paper added; no blockchain notes yet |
+| sen408 | Ethics | Mon 14 Dec 12–2pm | Feb 2026 past paper + scenario & 5-part essays |
+| csc420 | Database II (elective) | Tue 15 Dec 12–2pm | Feb 2026 past paper + CA1 practical test + SQL & MQL |
+| sen418 | IoT & Edge (elective) | Wed 16 Dec 12–2pm | Lectures 1–4, 8–9 + assignment + CA2 Azure report |
 
 ## Content rules (from Omotayo)
 - Use the lecturers' notes as the primary source. Label anything from outside the notes as additional context. Never invent exam patterns.
@@ -51,12 +58,20 @@ Mocks take 10 objective items (from `quiz`) and `mockTheory` (default 4) theory 
 120 min on class days (23–26 Nov), 210 on free days, 240 in exam week, 60 on an exam day.
 
 ## Open tasks
-1. **Coverage audit (priority).** Omotayo found notes missing from the app. Compare each course against its source notes (slides/PDFs/study guides in her "1st Semester" folder) and add missing points as cards, recall items and quiz items. Keep the existing schema. Done 24 Nov: cos409 (Lectures 0–5 + syllabus) ins401 (all 11 slide decks) and sen412 (decks 0–3, 5, 7 + class exercises 28 Oct and 17 Nov; decks 1–2 are image-only PDFs, read from extracted slide images) and sen401 (weeks 2–6, 8–11 slides + teaching plan; weeks 1, 12, 13 have no slides yet). Next: sen408, csc420, sen418, sen419.
+1. ~~**Coverage audit (priority).** Omotayo found notes missing from the app. Compare each course against its source notes (slides/PDFs/study guides in her "1st Semester" folder) and add missing points as cards, recall items and quiz items. Keep the existing schema.~~ **Done for all 8 courses (24–25 Nov):**
+   - `cos409` (Lectures 0–5 + syllabus)
+   - `ins401` (all 11 slide decks)
+   - `sen412` (decks 0–3, 5, 7 + class exercises 28 Oct and 17 Nov)
+   - `sen401` (weeks 2–6, 8–11 slides + teaching plan; weeks 1, 12, 13 have no slides yet)
+   - `sen419` (all 7 slide/practical PDFs: UI/UX, Frontend Practical, Backend, Backend Practical Part 1, Mobile Dev, Deployment, Deployment Practical + Feb 2026 Exam past paper)
+   - `sen408` (all 16 PDFs including Moor, Zittrain, Nguyen, Susser, Barocas & Nissenbaum, Nissenbaum, UNESCO Ethics by Design, ACM & BCS Codes of Ethics, IP, VSD/HCD, Healthcare AI + CA2 + Feb 2026 Exam past paper)
+   - `csc420` (Lectures 1–6 PDFs, Compact syllabus, Practical Exam Lab Guide, CA1 Practical Test & official SQL solutions + Feb 2026 Exam past paper)
+   - `sen418` (Lectures 1, 2, 3, 4, 8, 9 `.pptx` decks, Coursework Assignment, CA2 Azure AlmaLinux report, and study guides)
 2. ~~Add `quiz` items to INS401 topics so its mock has a Section A.~~ Done 24 Nov (131 items).
 3. Add in-class transcripts when she provides them; tag those points "Said in class".
-4. SEN419 blockchain topic once notes exist.
-5. Replace the claude.ai leaderboard with a real backend, or hide the live board on GitHub Pages.
-6. After each edit, open every route headlessly and check for "undefined", "NaN" or "went wrong".
+4. ~~SEN419 blockchain topic~~ Added 25 Nov as additional context (t8). Replace if the lecturer shares notes. Same for SEN401 weeks 1/12/13 (t10–t12) and SEN418 lectures 5–7 (t7): built from the teaching plan + standard sources because no slides exist.
+5. ~~Replace the claude.ai leaderboard with a real backend~~ Done 25 Nov via `/api/board` (needs Upstash connected in Vercel; see README).
+6. ~~After each edit, open every route headlessly and check for "undefined", "NaN" or "went wrong".~~ Automated via `node build/routecheck.js <cids...>` (JSDOM headless route verifier; also covers guides, eve, essay and sit write/mark phases). Takes ~2 min for all 8.
 
 ## Token-saving habits
 - Edit one course file at a time; don't reread index.html unless changing the engine.

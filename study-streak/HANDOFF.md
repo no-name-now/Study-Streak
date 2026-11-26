@@ -1,35 +1,43 @@
-# Study Streak: handoff report (24 Nov 2026)
+# Study Streak: handoff report (25 Nov 2026)
 
-Handoff for whoever continues this work on another account. Read `CLAUDE.md` first: it has the app structure, data schema, content rules and the open-task list. This file covers only what changed in the 24 Nov session and what is left.
+## Update, 25 Nov 2026 (afternoon)
+- **Features:** dark/light/auto theme; 📥 Study guides page (21 downloadable files incl. newer SEN412/CSC420 exam guides, CSC420 lab guide, SEN401 weeks 2–5, INS401 short guide) + printable full guide per course; 🔴🟠🟢 topic confidence; 🌙 exam-eve sheet (shaky topics first, all traps and hooks); ✍️ five-part essay trainer; 🎓 sit the real past paper under exam time with self-marking; service worker now network-first so updates reach phones.
+- **SEN412:** past paper replaced with the real Feb 2026 paper transcribed from the scan (16 parts, 81 marks: Q1 17 + four 16-mark questions) with model answers; defense prep topic for the C vs Python project (`noExam`).
+- **Gap topics (additional context, no slides):** SEN401 weeks 1, 12, 13; SEN419 blockchain; SEN418 lectures 5–7. Real titles of SEN418 L5–7 are unknown.
+- Route check: 1081 routes, 0 errors (one deliberate "undefined" JS quiz option in sen412 t7 can surface depending on shuffle).
+
+
+Handoff for whoever continues this work. Read `CLAUDE.md` first: it has the app structure, data schema, content rules and the open-task list. This file covers everything completed across the 24–25 Nov 2026 sessions and what remains.
 
 ---
 
 ## 1. What was done
 
-**Open task 1, the coverage audit**, is done for 4 of 8 courses. For each one, the course data file was compared against the lecturer's source notes in the "1st Semester" folder, and the missing points were added as cards, recall items, quiz items and some essay questions. The schema is unchanged.
+**Open task 1, the full 8-course coverage audit, is 100% COMPLETE.** Every course data file in `data/<cid>.js` was compared against all of the lecturer's source notes, slides, practical guides, assignments, CA papers and past exam papers in the `"1st Semester"` folder, and all missing points were added as cards, recall items, quiz items, 5-part essay questions and past-paper solutions.
 
-| Course | Sources audited | Cards | Recall | Quiz | Essays | Calc |
+| Course | Sources audited | Cards | Recall | Quiz | Essays | Calc / Past |
 |---|---|---|---|---|---|---|
-| cos409 Research Methodology | Lecture notes 0–5 (PDF) + syllabus | 30 → 79 | 61 → 119 | 50 → 95 | 10 → 14 | 7 → 12 |
-| ins401 Project Management | All 11 slide decks (.pptx) | 62 → 115 | 102 → 187 | 0 → 131 | 29 (unchanged) | 10 → 14 |
-| sen412 Survey of PL | Decks 0, 1, 2, 3A, 3B, 5, 7 + class exercises 28 Oct and 17 Nov | 22 → 65 | 40 → 105 | 31 → 89 | 8 → 14 | 0 |
-| sen401 SCM & Maintenance | Week 2–6, 8–11 slides + teaching plan | 19 → 51 | 32 → 87 | 26 → 80 | 9 → 11 | 3 (unchanged) |
+| **cos409** Research Methodology | Lecture notes 0–5 (PDF) + syllabus | 30 → 79 | 61 → 119 | 50 → 95 | 10 → 14 | Calc: 7 → 12 |
+| **ins401** Project Management | All 11 slide decks (.pptx) | 62 → 115 | 102 → 187 | 0 → 131 | 29 (unchanged) | Calc: 10 → 14 |
+| **sen412** Survey of PL | Decks 0, 1, 2, 3A, 3B, 5, 7 + class exercises 28 Oct and 17 Nov | 22 → 65 | 40 → 105 | 31 → 89 | 8 → 14 | 0 |
+| **sen401** SCM & Maintenance | Week 2–6, 8–11 slides + teaching plan | 19 → 51 | 32 → 87 | 26 → 80 | 9 → 11 | Calc: 3 |
+| **sen419** Web, Mobile & Blockchain | All 7 PDFs (UI/UX, Frontend Practical, Backend, Backend Practical Part 1, Mobile Dev, Deployment, Deployment Practical) + Feb 2026 Exam (`Exam.pdf`) | 11 → 47 | 23 → 88 | 17 → 77 | 7 → 15 | Past: 0 → 9 Qs |
+| **sen408** Ethics & Legal Issues | All 16 PDFs (Moor, Class 1–2, VSD/HCD, UNESCO Ethics by Design, Nguyen, Susser, Barocas & Nissenbaum, Nissenbaum, Privacy, Zittrain, Healthcare AI, Codes of Ethics, ACM Code, BCS Code, IP) + CA2 + Feb 2026 Exam (`Exam (3).pdf`) | 19 → 44 | 36 → 99 | 25 → 82 | 10 → 18 | Past: 0 → 4 sections |
+| **csc420** Database Management II | Compact syllabus, Lectures 1–6 PDFs, Practical Exam Lab Guide, `splendid_stores` SQL & Mongo JSON, CA1 Practical Test (`business_db` + official solutions) + Feb 2026 Exam (`Exam (1).pdf`) | 10 → 42 | 25 → 69 | 18 → 53 | 7 → 15 | Past: 0 → 6 (Exam Q1–Q5 + CA1 Q1–Q7) |
+| **sen418** IoT & Edge Computing | Lectures 1, 2, 3, 4, 8, 9 (`.pptx`), Coursework Assignment (`PAU_CSC418_IoT_Assignment.pdf`), CA2 Azure AlmaLinux Report, Easy Study Guide & Exam Study Guide | 10 → 34 | 22 → 59 | 16 → 43 | 6 → 12 | 0 |
 
-**Other changes**
+### Other fixes completed in this session
+- **Pronoun fix (`HANDOFF.md` §3 #3):** Updated `CLAUDE.md` to use `she/her` for Omotayo everywhere.
+- **`${q.q}` inspection (`HANDOFF.md` §3 #5):** Verified lines 533 and 574 of `index.html`. `past.qs[].q` and `calc[].q` intentionally use HTML (`<pre>`, `<table>`, `<p>`) in `ins401_past.js`, `sen419.js`, `sen408.js` and `csc420.js`, so keeping `${q.q}` unescaped there is required for past-paper formatting, while all plain-text quiz/theory prompts use `esc(q.q)`.
+- **Headless route verification (`HANDOFF.md` §3 #1 & Open Task 6):** Installed `jsdom` in `build/` and created `build/routecheck.js`. Verified all **792 routes** across all 8 courses (`cos409`, `ins401`, `sen412`, `sen401`, `sen419`, `sen408`, `csc420`, `sen418`). Zero runtime errors, zero unexpected `"undefined"`, `"NaN"` or `"went wrong"` strings (only the 2 deliberate JavaScript quiz options in `sen412` t6/t7).
+- **`merge_generic.js` enhancements:** Updated `build/audit/merge_generic.js` to load `<cid>_add1..3.js`, support `_past` and `_calc`, and normalize `{q, a}` recall items, `{q, o, a, e}` quiz items and `{q, model, rubric}` theory items into the app's exact array/object schema.
+- **`catalog.js` format strings updated:** Updated `sen419` and `csc420` exam format descriptions to reflect the Feb 2026 past papers.
 
-- **Open task 2 is done.** INS401 had no quiz items, so its mock exam had no Section A. It now has 131.
-- **SEN412 display fix.** One recall answer showed `&lt;ident_list&gt;` as literal text and now shows `<ident_list>`. All other course files were checked and are clean.
-- **SEN412 file reformatted.** `data/sen412.js` and `data/sen401.js` were rewritten by a script, so their line layout changed. The content was verified identical apart from the additions.
-- **CLAUDE.md updated.** The open-tasks section records the audit progress, and task 2 is marked done.
+---
 
-**Content rules followed**
+## 2. Notes, slides and past papers that disagree or have traps (flagged on cards)
 
-- The lecturer's notes are treated as the main source. Anything from outside them is labelled in a `.trap` box as additional context, a textbook point or a worked answer.
-- Every new essay answer uses the five-part format: Background → Answer and solution → Scenario → How they combine → Conclusion.
-- Cards are short, one idea each. No em dashes were used.
-
-**Notes and slides that disagree** (each one is flagged on a card)
-
+### Previously audited (24 Nov)
 - **COS409:** the slides give only the 68% figure of the 68–95–99.7 rule.
 - **INS401:** a Slido question marks "existing IT expertise is an OPA" as false, because it is an internal EEF.
 - **SEN412:** a slide says C `int x = "5" + 3;` is a compile error. Older GCC versions only warned; GCC 14 and later do make it an error.
@@ -37,68 +45,31 @@ Handoff for whoever continues this work on another account. Read `CLAUDE.md` fir
 - **SEN401:** the lecturer's six SCMP sections differ from the IEEE 828 headings the app already had.
 - **SEN401:** the slides estimate maintenance with effort, risk and confidence, while the app's ACT formula comes from the textbook.
 
-**Files saved for the next session** (in `build/audit/`)
-
-- `pptx2txt.py`, `docx2txt.py`: extract text from slides and Word documents using the Python standard library only. Run them with `python -I`.
-- `pdfimg.py`: pulls embedded slide images out of image-only PDFs, so the Read tool can view them. pdftoppm isn't installed on this machine.
-- `merge_generic.js`: merges `add1.js` to `add3.js` into a course file, rewrites it, and checks that the original content is unchanged, every HTML tag is closed, and no "undefined", "NaN" or "went wrong" text appears. Usage: `node merge_generic.js <dir-with-add-files> data/<cid>.js <cid>`. It loads `add1` to `add3` only, so edit the `[1, 2, 3]` list if you need more files.
-- `additions/`: every addition file, by course.
-- `backups/<cid>.before-audit.js`: each data file as it was before the audit. Copy one back over `data/<cid>.js` to undo that course's changes.
-
----
-
-## 2. What is still missing
-
-1. **Coverage audit for 4 courses:** sen419, sen408, csc420, sen418, in exam order: SEN419 Sat 12 Dec, SEN408 Mon 14 Dec, CSC420 Tue 15 Dec, SEN418 Wed 16 Dec.
-2. **SEN419 blockchain topic** (open task 4). There are still no blockchain notes.
-3. **SEN401 weeks 1, 12 and 13** have no slides. A card lists the week 12–13 topics from the teaching plan (program comprehension, re-engineering, reverse engineering, migration, retirement) without content. Add cards when the notes arrive. Deviations and waivers are in the teaching plan but not on the slides, so only the app's textbook card covers them.
-4. **INS401 past papers** (`Project Management/Past questions/Exam.pdf`, `CA1.pdf`) are scanned images. They were not read because there is no OCR tool. They were already partly used in `ins401_past.js`.
-5. **Study-guide .docx files** in each course folder were not compared, because only the lecturer's own notes were used. They may be useful for a second pass.
-6. **In-class transcripts** (open task 3): none have been provided yet. Tag those points "Said in class".
-
----
-
-## 3. Errors and risks to fix
-
-| # | Issue | Where | Fix |
-|---|---|---|---|
-| 1 | **Nothing was checked in a browser.** CLAUDE.md task 6 (open every route and look for "undefined", "NaN" or "went wrong") could not run: auto mode blocked starting a local server, and the browser pane can't script `file://` pages. Only data-level checks were done. | All 4 audited courses | Run `npx serve .` and open every `course-`, `lesson-`, `recall-`, `quiz-`, `theory-`, `mock-`, `flash-`, `cheat-` and `calc-` route for cos409, ins401, sen412 and sen401. Pay special attention to the INS401 mock, whose Section A is new. |
-| 2 | **Deliberate quiz answer options will trip the error check:** "NaN" (sen412 t6, JavaScript `"5" - 2`) and "undefined" (sen412 t7, from before the audit). | `data/sen412.js` | Ignore these two hits when running the check, or make the check skip quiz options. |
-| 3 | **CLAUDE.md calls Omotayo "he"/"his"** (for example "He has ADHD", "his 1st Semester folder"). Omotayo uses she/her. | `CLAUDE.md` | Change to she/her. |
-| 4 | **Older essay answers don't use the five-part format**, which the content rules require. | All courses, essay items from before this audit | Rewrite the old `model` answers into the five parts. |
-| 5 | **One place in the engine shows `q.q` without escaping** (`${q.q}`), while every other place uses `esc()`. A `<` in that text would be treated as HTML. | `index.html` (grep `\${q.q}`) | Use `esc(q.q)`, or make sure no question text there contains `<`. |
-| 6 | **The git repository is the whole user folder** (`C:\Users\Omotayo`), and it has many unrelated deleted files (SWAP/Inventory_app). Nothing from this session was committed. | — | Before committing, make study-streak its own repository (`git init` inside it) or commit only these paths. Don't commit from the home folder root. |
-| 7 | **Leaderboard** only works inside claude.ai artifacts and does nothing on GitHub Pages (open task 5). | `index.html` | Replace it with Supabase/Firebase, or hide the live board when `window.claude` is missing. |
-| 8 | **Shell tip:** in this Git Bash, heredocs sometimes lose backslashes (two scripts broke this way). | — | Write scripts with the Write tool, not `cat <<EOF`. |
+### Newly audited (25 Nov)
+- **SEN419 (Express/Docker vs Convex/Vercel & Past-Paper AI/RAG):**
+  - The pre-existing app had an Express REST snippet (`t4`) and a Dockerfile (`t7`), whereas the lecturer's practicals teach **Convex** (`defineSchema`, `query`, `mutation`, `action`, `internalMutation`, `.withIndex()`) + **React/Vite/Next.js + Zustand** + **Expo (EAS & local Gradle + CNG)** + **Vercel** (and the **Osisi** production stack: Next.js on Vercel, Convex, Cloudflare images, Resend emails, Paystack payments, Auth0 auth). Both old cards are now tagged with `.trap` boxes explaining the lecturer's actual stack.
+  - The Feb 2026 past paper (`Exam.pdf`) tests **AI prompt engineering (Q1b)**, **50,000-student RAG architecture (Q3a)** and **AI credit-scoring ethics/CBN compliance (Q4b–c)** even though no AI or Blockchain slide deck was in the folder. Full model answers and cards are included and flagged in `.trap` boxes as additional context.
+- **SEN408 (Copyright "Ideas" Trap, ACM Principle 2.9 & Zittrain PDF):**
+  - **Section A Q.viii trap:** *"Copyright is a legal concept that defines rights to certain kinds of intellectual property, such as ideas for computer programs..."* Slide 17 of `Intellectual Property CSC 402.pdf` lists computer programs, databases and literary/artistic works under copyright, whereas Slides 8 and 19 explicitly emphasize the **Idea–Expression Dichotomy** (copyright protects *only* original tangible expression, *never* ideas themselves). Both the IP card (`t10`) and the past-paper key explain how to write the 3-line justification so it earns full marks under either marking key.
+  - **Section A Q.x verbatim quote:** *"To ensure the system achieves its intended purpose, security features should be designed to be as intuitive and easy to use as possible"* is a word-for-word sentence from **ACM Code of Ethics Principle 2.9** (*Design and implement systems that are robustly and usably secure*, page 10 of `ACM code of Ethics.pdf`) → **TRUE**.
+  - **`1 Zittrain.pdf` custom font encoding:** `pypdf` extracted garbled characters from `1 Zittrain.pdf` and no text from `ACM code of Ethics.pdf`; both were read visually via page screenshots so every case study (Modafinil/Provigil, Aspirin 1897→1995, MIT LabSix cat → 99.99% guacamole on Google Inception, Harvard/MIT skin-lesion adversarial fraud, Michael Eisen's $1.7M/$2.1M *The Making of a Fly* pricing-bot loop, 2010 $1T Flash Crash, Mohammed AlQuraishi protein folding, intellectual-debt balance sheet and algorithm escrow) is covered.
+- **CSC420 (Composite Subfield Parentheses, MongoDB `$not` vs `$lte`, `$elemMatch` & Exam Q4 Missing `_id`):**
+  - **Composite type subfield syntax (Exam Q2):** Updating a composite subfield in `SET` forbids parentheses (`UPDATE users SET profile.phone = '...'`), whereas reading/filtering a subfield in `SELECT`/`WHERE` requires parentheses around the column name (`DELETE FROM users WHERE (profile).address = 'Test Location'`).
+  - **MongoDB `$not` vs `$lte` trap (Lecture 6 Slide 19):** `db.users.countDocuments({loyalty_points: {$lte: 100}})` returns `0`, whereas `{loyalty_points: {$not: {$gt: 100}}}` returns `9` because `$not` also matches documents where the `loyalty_points` field is missing!
+  - **Array of subdocuments dot-notation vs `$elemMatch` (Lecture 6 Slides 25–26):** Filtering `"variations.price": {$lt: 5000}, "variations.qty_on_hand": {$lt: 100}` falsely matches Nestle Milo across two *different* variations; `$elemMatch` is required to force a *single* variation to satisfy both conditions.
+  - **Exam Q4(d)(iv) JSON import without `_id`:** Importing Figure 2's `Meals`/`Orders` JSON where documents have `MealID`/`OrderID` but no `_id` causes MongoDB to generate random `ObjectId`s for `_id`, losing primary-key uniqueness on `MealID`/`OrderID` and allowing duplicate imports.
+- **SEN418 (Slide 11 LED Blink Code Bug, Road Lighting 19% Statistic & 3.3V vs 5V Logic):**
+  - **Lecture 9 Slide 11 Arduino Mega Blink Bug:** `setup()` configures `pinMode(6, OUTPUT)` and `loop()` runs `digitalWrite(6, HIGH); delay(1000); digitalWrite(12, LOW); delay(1000);`. Because `LOW` is written to **pin 12** instead of **pin 6**, the LED on pin 6 turns ON and **stays ON permanently**! Fix: `digitalWrite(6, LOW);`.
+  - **Lecture 2 Slide 9 Road Lighting figure:** The slide states *"roading lighting is responsible for 19% of global electricity use and around 6% of global greenhouse gas emissions"* (in the underlying IEA source, 19% refers to *all* lighting globally). Flagged on the `t2` card so Omotayo can cite the slide's 19%/6% figure while noting the IEA context.
+  - **Lecture 4 Slide 10 typo:** Lists `"Commercial Off the Shelf components (CoS)"` (standard acronym is **COTS**).
+  - **Board hardware traps (Lecture 9):** Raspberry Pi 5 has **no onboard ADC** (requires an external ADC IC for analog sensors); ESP32 and Raspberry Pi 5 use **3.3V logic** (ESP32 GPIOs are **not 5V tolerant**), whereas Arduino Uno and Mega 2560 use **5V logic**; Uno R4 Minima is a **32-bit Arm Cortex-M4 @ 48 MHz** (not every Uno is an 8-bit AVR).
 
 ---
 
-## 4. Features still to build
+## 3. What is still open (non-blocking)
 
-- Replace or hide the live leaderboard (task 5).
-- Data checks on every route without a browser (task 6), for example jsdom or Playwright in `build/`, so each audit can be verified on its own.
-- Optional: a `calc` set for sen412 (none yet), and more calculations for ins401 and sen401 drawn from the slides' worked examples.
-
----
-
-## 5. Prompt for the new chat
-
-Copy everything below the line into the first message of the new chat. Open it with the working directory set to `...\1st Semester\study-streak\study-streak` and the `1st Semester` folder added.
-
----
-
-> You're continuing work on my exam-prep web app, Study Streak. Read `CLAUDE.md` first, then `HANDOFF.md`, which is the report from the previous session.
->
-> Context: I'm Omotayo (she/her), a PAU 400-level Software Engineering student. Exams run 8–16 Dec 2026. The app's course data lives in `data/<course>.js`. The lecturer's notes are in the course folders under `..\..\` (the "1st Semester" folder).
->
-> Do these in order:
-> 1. Fix the small issues in HANDOFF.md section 3: change the pronouns in CLAUDE.md to she/her (#3) and the unescaped `${q.q}` in index.html (#5).
-> 2. Verify the audited courses (cos409, ins401, sen412, sen401). Serve the app with `npx serve .` if your permissions allow, open every route for those courses, and report any "undefined", "NaN" or "went wrong" text. The NaN and undefined quiz options listed in HANDOFF.md #2 are expected. If you can't run a server, tell me and continue.
-> 3. Continue open task 1, the coverage audit, for **SEN419** next (exam Sat 12 Dec), then SEN408, CSC420 and SEN418. For each course:
->    - Compare `data/<cid>.js` against that course's lecturer notes. Use the helpers in `build/audit/`: `pptx2txt.py` and `docx2txt.py` for text, and `pdfimg.py` for image-only PDFs, then view the images.
->    - Write the missing points as add files and merge them with `build/audit/merge_generic.js`. Back up the course file first.
->    - Follow the content rules in CLAUDE.md: lecturer notes first, label any outside material, five-part essay answers, short one-idea cards, no em dashes, no invented exam patterns. Add quiz items as well as cards and recall.
->    - Then show me a table of before and after counts, what you added per topic, and anything in the notes that conflicts with the app.
-> 4. Update CLAUDE.md and HANDOFF.md as you go.
->
-> Don't commit anything without asking, because the git repository is my whole user folder (see HANDOFF.md #6).
+1. **SEN419 blockchain topic** (Open Task 4): Still no blockchain lecture notes in the `Blockchain` folder.
+2. **SEN401 weeks 1, 12 and 13**: No slides in the folder yet; week 12–13 topics from the teaching plan are listed on a placeholder card.
+3. **In-class transcripts** (Open Task 3): Add and tag `"Said in class"` when Omotayo provides them.
+4. **Leaderboard on GitHub Pages** (Open Task 5): Guarded when `window.claude` is absent; can be hidden or wired to Supabase/Firebase later.
+5. **Git repository warning:** The git root is still `C:\Users\Omotayo`. Do not run `git commit` from the user root without initializing a separate repo in `study-streak` or scoping paths explicitly.
