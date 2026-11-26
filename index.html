@@ -209,6 +209,8 @@ a.btn{text-decoration:none}
 <script src="data/csc420.js"></script>
 <script src="data/sen418.js"></script>
 <script src="data/sen418_extra.js"></script>
+<script src="data/nov26_slides.js"></script>
+<script src="data/csc420_l6.js"></script>
 <script src="data/past_rules.js"></script>
 <script>
 /* =====================================================================
@@ -867,14 +869,14 @@ var syTimer=null,syBusy=false,syMsg='',syLastPull=0;
 function sySave(){try{localStorage.setItem(SYNC_KEY,JSON.stringify(SY))}catch(e){}}
 async function syApi(path,opt){const r=await fetch('/api/'+path,Object.assign({headers:{'Content-Type':'application/json'}},opt||{}));let j=null;try{j=await r.json()}catch(e){}
   if(!r.ok&&r.status!==409){const err=new Error((j&&j.error)||('Server replied '+r.status));err.status=r.status;throw err}return{status:r.status,body:j}}
-function syncSchedule(){if(!SY.code)return;SY.dirty=true;sySave();clearTimeout(syTimer);syTimer=setTimeout(()=>syncPush(),4000)}
+let syEdits=0;function syncSchedule(){if(!SY.code)return;syEdits++;SY.dirty=true;sySave();clearTimeout(syTimer);syTimer=setTimeout(()=>syncPush(),4000)}
 function boardEntry(){if(!SY.board||!ST.profile)return null;return{name:ST.profile.name,xp:ST.xp,streak:streakAlive()?ST.streak.count:0,mastered:masteredCount()}}
 const mx=(x,y)=>x==null?y:y==null?x:Math.max(x,y);
 function mergeState(a,b){/* a = this browser, b = cloud. Keeps the best of both. */
   a=a||blank();b=b||blank();const m=Object.assign(blank(),b,a);
   m.xp=Math.max(a.xp||0,b.xp||0);m.freezes=Math.max(a.freezes||0,b.freezes||0);m.profile=a.profile||b.profile;
   m.days=Object.assign({},b.days);Object.entries(a.days||{}).forEach(([k,d])=>{const o=m.days[k];if(!o){m.days[k]=d;return}const out={};new Set([...Object.keys(o),...Object.keys(d)]).forEach(f=>{out[f]=(typeof d[f]==='boolean'||typeof o[f]==='boolean')?!!(d[f]||o[f]):Math.max(+d[f]||0,+o[f]||0)});m.days[k]=out});
-  const sa=a.streak||{},sb=b.streak||{};m.streak=Object.assign({},(sa.last||'')>=(sb.last||'')?sa:sb);m.streak.best=Math.max(sa.best||0,sb.best||0);
+  const sa=a.streak||{},sb=b.streak||{};m.streak=Object.assign({},(sa.last||'')>=(sb.last||'')?sa:sb);if(sa.last&&sa.last===sb.last)m.streak.count=Math.max(sa.count||0,sb.count||0);m.streak.best=Math.max(sa.best||0,sb.best||0,m.streak.count||0);
   ['badges','examsDone','feyn','conf','quests','planCache','flags','weak','sitDraft'].forEach(k=>m[k]=Object.assign({},b[k],a[k]));
   m.topics=Object.assign({},b.topics);Object.entries(a.topics||{}).forEach(([k,t])=>{const o=m.topics[k];if(!o){m.topics[k]=t;return}
     m.topics[k]=Object.assign({},o,t,{cards:[...new Set([...(o.cards||[]),...(t.cards||[])])],recallBest:mx(o.recallBest,t.recallBest),theoryBest:mx(o.theoryBest,t.theoryBest),quizBest:mx(o.quizBest,t.quizBest),started:o.started&&t.started?(o.started<t.started?o.started:t.started):(o.started||t.started)})});
@@ -883,18 +885,19 @@ function mergeState(a,b){/* a = this browser, b = cloud. Keeps the best of both.
   m.essays=Object.assign({},b.essays);Object.entries(a.essays||{}).forEach(([k,v])=>{const o=m.essays[k];m.essays[k]=o?Object.assign({},o,v,{best:mx(o.best,v.best)}):v});
   m.sits={};new Set([...Object.keys(a.sits||{}),...Object.keys(b.sits||{})]).forEach(k=>{const seen=new Set();m.sits[k]=[...((b.sits||{})[k]||[]),...((a.sits||{})[k]||[])].filter(x=>{const s=JSON.stringify(x);if(seen.has(s))return false;seen.add(s);return true})});
   return m}
+function streakNewer(a,b){const sa=(a&&a.streak)||{},sb=(b&&b.streak)||{};return (sa.last||'')>(sb.last||'')||((sa.last||'')===(sb.last||'')&&(sa.count||0)>(sb.count||0))||(a.xp||0)>((b&&b.xp)||0)}
 function applyRemote(state,rev){ST=Object.assign(blank(),state);saveNow(true);SY.rev=rev;sySave()}
 async function syncPush(keepalive,depth){if(!SY.code||!SYNC_OK)return;if(syBusy&&!depth)return;syBusy=true;
-  try{const payload=JSON.stringify({action:'put',code:SY.code,rev:SY.rev||0,state:ST,board:boardEntry()});
+  const edits0=syEdits;try{const payload=JSON.stringify({action:'put',code:SY.code,rev:SY.rev||0,state:ST,board:boardEntry()});
     const {status,body:j}=await syApi('sync',{method:'POST',body:payload,keepalive:!!keepalive&&payload.length<60000});
     if(status===409){if((depth||0)>2)throw new Error('conflict');applyRemote(mergeState(ST,j.state),j.rev);SY.dirty=true;sySave();return await syncPush(false,(depth||0)+1)}
-    SY.rev=j.rev;SY.dirty=false;SY.last=Date.now();syMsg=''}
+    SY.rev=j.rev;SY.last=Date.now();syMsg='';if(syEdits===edits0)SY.dirty=false;else{clearTimeout(syTimer);syTimer=setTimeout(()=>syncPush(),4000)}}
   catch(e){syMsg=e.status===404?'This sync code no longer exists on the server. Turn sync off and on again.':e.status===503?'Sync is not set up on this site yet.':'Offline right now. Your changes are saved here and will sync when you are back online.'}
   finally{if(!depth)syBusy=false;sySave();syncUI()}}
 async function syncPull(force){if(!SY.code||!SYNC_OK||syBusy)return;if(!force&&Date.now()-syLastPull<20000)return;syLastPull=Date.now();
   try{const {body:j}=await syApi('sync',{method:'POST',body:JSON.stringify({action:'get',code:SY.code})});
     if(j.rev>(SY.rev||0)){const typing=document.activeElement&&/TEXTAREA|INPUT/.test(document.activeElement.tagName);
-      if(SY.dirty){applyRemote(mergeState(ST,j.state),j.rev);SY.dirty=true;sySave();syncPush()}else applyRemote(j.state,j.rev);
+      if(SY.dirty||streakNewer(ST,j.state)){applyRemote(mergeState(ST,j.state),j.rev);SY.dirty=true;sySave();syncPush()}else applyRemote(j.state,j.rev);
       if(!typing)render();toast('☁️ Progress updated from your other device')}
     SY.last=Date.now();syMsg='';sySave()}
   catch(e){syMsg=e.status===404?'This sync code no longer exists on the server.':e.status===503?'Sync is not set up on this site yet.':'Offline right now. Your changes are saved here and will sync later.'}
@@ -941,18 +944,30 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){if(SY.dirt
 window.addEventListener('online',()=>{if(SY.dirty)syncPush();else syncPull(true)});
 if(SY.code)setTimeout(()=>{if(SY.dirty)syncPush();syncPull(true)},800);
 
-/* ---------- FOCUS TIMER (minutes count toward goal) ---------- */
-let tLeft=25*60,tLen=25,tMode='focus',timerRun=false,tInt=null,secAcc=0;
+/* ---------- FOCUS TIMER (minutes count toward goal) ----------
+   Wall-clock based: minutes are credited from Date.now(), so a locked phone screen,
+   a background tab or a reload no longer loses them. State lives in its own key. */
+const TKEY='pau400sen_timer';
+let tLeft=25*60,tLen=25,tMode='focus',timerRun=false,tInt=null,tEnd=0,tCred=0;
 function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function setTimer(m,mode){if(timerRun)toggleTimer();tLen=m;tMode=mode;tLeft=m*60;document.getElementById('clock').textContent=fmt(tLeft);
-  document.getElementById('tlabel').textContent=mode==='focus'?'Focus block · minutes count toward your daily goal':'Break · stand up, water, no phone'}
-function toggleTimer(){timerRun=!timerRun;document.getElementById('tgo').textContent=timerRun?'⏸ Pause':'▶ Start';
-  if(timerRun){chime(1);tInt=setInterval(()=>{tLeft--;document.getElementById('clock').textContent=fmt(Math.max(0,tLeft));
-    if(tMode==='focus'){secAcc++;if(secAcc>=60){secAcc=0;day().focus++;addMinutes(1)}}
-    if(tLeft<=0){clearInterval(tInt);timerRun=false;document.getElementById('tgo').textContent='▶ Start';chime(4);
-      if(tMode==='focus'){addXP(20,'focus block');confetti();modal(`<div class="bigemoji">✅</div><h2>Block done!</h2><p>+${tLen} minutes. Take 5: stand up, drink water, no phone.</p><button class="btn green big" onclick="closeModal();setTimer(5,'break');toggleTimer()">Start 5-min break</button><button class="btn ghost" onclick="closeModal();setTimer(25,'focus')">Skip break</button>`)}
-      else{modal(`<div class="bigemoji">💪</div><h2>Break over</h2><p>Next block. Open your next item on Today's plan.</p><button class="btn green big" onclick="closeModal();setTimer(25,'focus');toggleTimer();go('home')">Start next block</button>`)}}},1000)}
-  else clearInterval(tInt);renderStats()}
+function tSave(){try{localStorage.setItem(TKEY,JSON.stringify({len:tLen,mode:tMode,left:tLeft,run:timerRun,end:tEnd,cred:tCred}))}catch(e){}}
+function tLabel(){const c=document.getElementById('clock'),g=document.getElementById('tgo'),l=document.getElementById('tlabel');if(c)c.textContent=fmt(Math.max(0,tLeft));if(g)g.textContent=timerRun?'⏸ Pause':'▶ Start';
+  if(l)l.textContent=tMode==='focus'?'Focus block · minutes count toward your daily goal':'Break · stand up, water, no phone'}
+function tCredit(){if(tMode!=='focus')return;const mins=Math.floor((tLen*60-Math.max(0,tLeft))/60);if(mins>tCred){const n=mins-tCred;tCred=mins;day().focus+=n;addMinutes(n)}}
+function setTimer(m,mode){if(timerRun)toggleTimer();tLen=m;tMode=mode;tLeft=m*60;tCred=0;tEnd=0;tSave();tLabel()}
+function tTick(quiet){tLeft=Math.ceil((tEnd-Date.now())/1000);tCredit();tLabel();
+  if(tLeft<=0){clearInterval(tInt);timerRun=false;tLeft=0;tSave();tLabel();if(!quiet)chime(4);
+    if(tMode==='focus'){addXP(20,'focus block');if(!quiet)confetti();modal(`<div class="bigemoji">✅</div><h2>Block done!</h2><p>+${tLen} minutes. Take 5: stand up, drink water, no phone.</p><button class="btn green big" onclick="closeModal();setTimer(5,'break');toggleTimer()">Start 5-min break</button><button class="btn ghost" onclick="closeModal();setTimer(25,'focus')">Skip break</button>`)}
+    else{modal(`<div class="bigemoji">💪</div><h2>Break over</h2><p>Next block. Open your next item on Today's plan.</p><button class="btn green big" onclick="closeModal();setTimer(25,'focus');toggleTimer();go('home')">Start next block</button>`)}}
+  else tSave()}
+function toggleTimer(){if(!timerRun&&tLeft<=0){tLeft=tLen*60;tCred=0}timerRun=!timerRun;
+  if(timerRun){chime(1);tEnd=Date.now()+tLeft*1000;tSave();clearInterval(tInt);tInt=setInterval(()=>tTick(),1000)}
+  else{clearInterval(tInt);tLeft=Math.max(0,Math.ceil((tEnd-Date.now())/1000));tCredit();tEnd=0;tSave()}
+  tLabel();renderStats()}
+(function tRestore(){let s=null;try{s=JSON.parse(localStorage.getItem(TKEY))}catch(e){}if(!s)return;
+  tLen=s.len||25;tMode=s.mode||'focus';tLeft=s.left!=null?s.left:tLen*60;tCred=s.cred||0;tEnd=s.end||0;timerRun=!!(s.run&&tEnd);
+  if(timerRun){tTick(true);if(timerRun)tInt=setInterval(()=>tTick(),1000)}else tLabel()})();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&timerRun)tTick()});
 window.addEventListener('beforeunload',saveNow);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveNow(true)});
 setInterval(()=>{renderStats();pushBoard()},60000);

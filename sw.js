@@ -1,12 +1,12 @@
 // Network-first for the app shell and course data (so content updates reach phones),
 // with the cache as the offline fallback. Bump CACHE when the file list changes.
-const CACHE = 'study-streak-v3';
+const CACHE = 'study-streak-v4';
 const CORE = [
   './', './index.html', './manifest.json', './icon.svg',
   './data/catalog.js', './data/cos409.js', './data/ins401.js', './data/ins401_past.js',
   './data/sen412.js', './data/sen412_extra.js', './data/sen401.js', './data/sen401_extra.js',
   './data/sen419.js', './data/sen419_chain.js', './data/sen408.js',
-  './data/csc420.js', './data/sen418.js', './data/sen418_extra.js', './data/past_rules.js'
+  './data/csc420.js', './data/sen418.js', './data/sen418_extra.js', './data/nov26_slides.js', './data/csc420_l6.js', './data/past_rules.js'
 ];
 self.addEventListener('install', event => {
   self.skipWaiting();

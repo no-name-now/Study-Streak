@@ -48,12 +48,12 @@ window.CATALOG = {
       exam:"2026-12-15T12:00:00+01:00", examEnd:"2026-12-15T14:00:00+01:00", elective:true, color:"#6b6a1e", status:"full",
       format:"Past paper (2 hrs): Section A (answer Q1 or Q2 — 25m) + Section B (answer any two of Q3, Q4, Q5 — 20m each). Expect writing SQL & MQL (transactions, B+-tree simulation, composite types, arrays, JSONB, PL/pgSQL functions, stored procedures, MongoDB CRUD) plus short theory.",
       topics:["Transactions and ACID","Indexing","Complex types: arrays and JSON/JSONB","Functions, procedures and triggers",
-        "SQL practice workbook","NoSQL data models","MongoDB basics"] },
+        "SQL practice workbook","NoSQL data models","MongoDB basics","MongoDB Query Language (Lecture 6)"] },
     { id:"sen418", code:"SEN 418", title:"IoT & Edge Computing", short:"IoT & Edge",
       exam:"2026-12-16T12:00:00+01:00", examEnd:"2026-12-16T14:00:00+01:00", elective:true, color:"#a0451f", status:"full",
       format:"New course, no past paper. Expect objective and theory questions, plus scenario questions (edge vs cloud, protocol and board choice).",
       topics:["Introduction to IoT and edge computing","Domain-specific IoT","Evolution and architecture: protocols, models, M2M",
-        "Embedded systems fundamentals","Cloud provisioning and deployment on Azure","Choosing the right board","Lectures 5–7 gap fill: edge/fog tiers, IoT data and security"] }
+        "Embedded systems fundamentals","Cloud provisioning and deployment on Azure","Choosing the right board","Lectures 5–7 gap fill: edge/fog tiers, IoT data and security","Lecture 10: Arduino ultrasonic sensor practical"] }
   ]
 };
 window.COURSE_DATA = window.COURSE_DATA || {};
